@@ -1,4 +1,5 @@
 #include "MainScene.h"
+
 USING_NS_CC;
 
 Scene* MainScene::createScene()
@@ -8,5 +9,7 @@ Scene* MainScene::createScene()
 
 bool MainScene::init()
 {
+	Node * mainGame = MainGame::create();
+	this->addChild(mainGame,1);
 	return true;
 }

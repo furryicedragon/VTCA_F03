@@ -1,20 +1,18 @@
 #pragma once
-
 #ifndef MainScene_hpp
 #define MainScene_hpp
 
-#include <cocos2d.h>
 
+#include<cocos2d.h>
+#include<MainGame.h>
 USING_NS_CC;
 
 class MainScene : public cocos2d::Scene
 {
 public:
 	static Scene* createScene();
-
+	CREATE_FUNC(MainScene);
 	virtual bool init() override;
 
-	CREATE_FUNC(MainScene);
 };
-
-#endif //MainScene_hpp
+#endif // !MainScene_hpp
