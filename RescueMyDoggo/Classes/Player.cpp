@@ -226,62 +226,59 @@ void Player::checkDash(){
 void Player::attack() {
 	if (this->isSpawn && !this->isAttacking && !this->isRolling && !this->isDead && !this->isHit) {
 		this->isAttacking = true;
-		this->slashEffect();
-		this->stopAllActions();
-		std::string name = "Attack/Attack Chain/" + std::to_string(this->attackChainNumber);
-		int frameNumbers = attackFrameNumber[this->attackChainNumber - 1];
+		this->slashEffect();                 //thuc hien animation cua slash
+		this->stopAllActions();				//stop all hanh dong de attack
+		std::string name = "Attack/Attack Chain/" + std::to_string(this->attackChainNumber); //name = Folder chua Animate cua (attack)
+		int frameNumbers = attackFrameNumber[this->attackChainNumber - 1]; //check xem thu tu don danh tiep theo (1,2,3 combo auto attack)  (**)
 		this->runAction(Sequence::create(animation(name, attackSpeed), CallFunc::create([=]() {this->isAttacking = false; this->idleStatus(); }),nullptr));
-		this->attackCount();
+		this->attackCount(); //dung de tang them 1 don vi moi khi attack (**)
 	}
 }
 void Player::attackCount() {
-		this->attackHelper->stopAllActionsByTag(1);
-	if (attackChainNumber == 3) 
-		attackChainNumber = 1;
+		this->attackHelper->stopAllActionsByTag(1); //neu attack lien tiep se stop "helperAction(sau vai giay khong danh thu tu combo se ve 1)"
+	if (attackChainNumber == 3) //(**)
+		attackChainNumber = 1; //sau don danh thu 3 se tu dong quay ve don danh thu nhat (**)
 	else {
-		attackChainNumber++;
-		int frameNumbers = attackFrameNumber[this->attackChainNumber - 1];
+		attackChainNumber++; //tang thu tu don danh them 1
+		int frameNumbers = attackFrameNumber[this->attackChainNumber - 1]; //check so luong frame animation trong folder cua Attack dua theo 
+							//																									attack ChainNumber
 		auto helperAction(Sequence::create(DelayTime::create(0.12*(frameNumbers-1) +0.1), CallFunc::create([=]() {this->attackChainNumber = 1; }), nullptr));
-		helperAction->setTag(1);
+		helperAction->setTag(1); // check dong 238
 		this->attackHelper->runAction(helperAction);
 	}
 
 }
 void Player::slashEffect() {
-	Vector<SpriteFrame *> runningFrames;
-	for (int i = 1; i < 4; i++) {
-		auto frameName = "/MainChar/Effects/Slash/" + to_string(i) + ".png";
-		auto frame = SpriteFrame::create(frameName, Rect(0, 0, 192, 192));
-		runningFrames.pushBack(frame);
-	}
-	Animation* runningAnimation = Animation::createWithSpriteFrames(runningFrames, attackSpeed*2/3);
-	Animate* anim = Animate::create(runningAnimation);
+		Vector<SpriteFrame *> runningFrames;
+		for (int i = 1; i < 4; i++) {
+			auto frameName = "/MainChar/Effects/Slash/" + to_string(i) + ".png";
+			auto frame = SpriteFrame::create(frameName, Rect(0, 0, 192, 192));
+			runningFrames.pushBack(frame);
+		}
+		Animation* runningAnimation = Animation::createWithSpriteFrames(runningFrames, attackSpeed * 2 / 3);
+		Animate* anim = Animate::create(runningAnimation);
+//slash frame
+
 	float delayTime1 = 0;
 	float delayTime2 = 0;
-	int xAngle = 0;
+	int xAngle = 0; //goc de xoay hieu ung slash
 	int yAngle = 0;
-	int xPos = 0;
+	int xPos = 0; //vi tri cua slash cach nhan vat bao nhieu
 	int yPos = 0;
 	bool flippedY = true;
 	switch (this->attackChainNumber)
 	{
 	case 1:
 	{
-		//delayTime1 = 0.08 * 3 + 0.1;
 		delayTime1 = attackSpeed * 4;
 		xAngle = -18;
 		yAngle = -36;
 		xPos = -63;
 		yPos = 210;
-		//this->slash->runAction(Sequence::create(CallFunc::create([=]() { slash->setVisible(true); }), anim, CallFunc::create([=]() { slash->setVisible(false); }), nullptr));
-		//this->slash->runAction(Sequence::create(RotateBy::create(0, -18, -36), DelayTime::create(0.08 * 3 + 0.1), RotateTo::create(0, 0, 0), nullptr));
-		//this->slash->setPosition(Vec2(this->getPosition().x - 63, this->getPosition().y + 210));
-		//this->slash->setFlippedY(true);
 		break;
 	}
 	case 2:
 	{
-		//delayTime1 = 0.08 * 3 + 0.11+0.05;
 		delayTime1 = attackSpeed * 4;
 		delayTime2 = attackSpeed*2;
 		xAngle = -8;
@@ -289,15 +286,10 @@ void Player::slashEffect() {
 		xPos = -36;
 		yPos = 99;
 		flippedY = false;
-		//this->slash->runAction(Sequence::create(RotateBy::create(0, -44,15), DelayTime::create(0.08 * 3 + 0.145+0.05), RotateTo::create(0, 0, 0), nullptr));
-		//this->slash->setPosition(Vec2(this->getPosition().x + 25, this->getPosition().y + 128));
-		//this->slash->setFlippedY(false);
-		//this->slash->runAction(Sequence::create(DelayTime::create(0.145), CallFunc::create([=]() { slash->setVisible(true); }), anim, CallFunc::create([=]() { slash->setVisible(false); }), nullptr));
 		break;
 	}
 	case 3:
 	{
-		//delayTime1 = 0.08 * 3 + 0.05 + 0.15;
 		delayTime1 = attackSpeed * 5;
 		delayTime2 = attackSpeed*3;
 		xAngle = -144;
@@ -312,7 +304,9 @@ void Player::slashEffect() {
 		xAngle *= -1;
 		yAngle *= -1;
 		xPos *= -1;
-	}
+	} //neu dang quay nguoi lai thi xoay hieu ung slash cung phai nguoc lai
+
+
 
 		this->slash->runAction(Sequence::create(RotateBy::create(0, xAngle, yAngle), DelayTime::create(delayTime1), RotateTo::create(0, 0, 0), nullptr));
 		this->slash->setPosition(Vec2(this->getPosition().x + xPos, this->getPosition().y + yPos));
@@ -320,6 +314,16 @@ void Player::slashEffect() {
 		this->slash->runAction(Sequence::create(DelayTime::create(delayTime2),
 			CallFunc::create([=]() { slash->setVisible(true); this->setDoneDamageTo(false); }), anim,
 			CallFunc::create([=]() { slash->setVisible(false); this->setDoneDamageTo(true); }), nullptr));
+		//setDoneDamage dung de gay dame khi dang tan cong, (false) co nghia la co the gay dame, true la het thoi gian gay dame(thoi gian slash)
+		//ket hop voi "void MainGame::checkAttackRange(Enemy * eee, int index)"
+}
+void Player::setDoneDamageTo(bool whatYouWant) {
+	int i = 0;
+	for each (auto item in doneDamage)
+	{
+		doneDamage[i] = whatYouWant;
+		i++;
+	}
 }
 
 void Player::getHit(int damage, float eeePosX) {
@@ -358,23 +362,15 @@ void Player::roll() {
 		if (this->getPosition().x < 259 + 44 + 32 * 2 && this->isFlippedX())
 			theX = this->getPosition().x - (44 + 32 * 2);
 		if (map1Size.width - this->getPosition().x < 259 + 44 + 32 * 2 && !this->isFlippedX())
-			theX = map1Size.width - this->getPosition().x - (44 + 32 * 2);
+			theX = map1Size.width - this->getPosition().x - (44 + 32 * 2); //dung de check xem neu shift evade co gan diem cuoi cung cua map k, "to make sure we can't jump out of the map"
 		//if (this->getPosition().x < 44 + 32*2)
 		//	theX = 0;
-		if (this->isFlippedX()) theX *= -1;
+		if (this->isFlippedX()) theX *= -1; // nhan voi -1 de nhay dung' huong'
 		this->runAction(Sequence::create(DelayTime::create(attackSpeed),JumpBy::create(attackSpeed * 6, Vec2(theX, 0),33,1),nullptr));
 		this->runAction(Sequence::create(animation("Roll", attackSpeed), CallFunc::create([=]() {this->isRolling = false; this->idleStatus(); }), nullptr));
 	}
 }
 
-void Player::setDoneDamageTo(bool whatYouWant) {
-	int i = 0;
-	for each (auto item in doneDamage)
-	{
-		doneDamage[i] = whatYouWant;
-		i++;
-	}
-}
 
 void Player::dead()
 {

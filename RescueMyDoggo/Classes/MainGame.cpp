@@ -90,7 +90,7 @@ void MainGame::setupTouchHandling() {
 bool MainGame::onTouchBegan(Touch* touch, Event* event)
 {
 	if(this->isGameOver)
-	this->delAll();
+		this->runAction(Sequence::create(DelayTime::create(1),CallFunc::create([=]() {this->delAll(); }),nullptr));
 
 	if (!this->isGameStart) {
 		isGameStart = true;
