@@ -24,7 +24,7 @@ void Player::initOption()
 	this->additionalHP = 0;
 	this->additionalAS = 0;
 	this->setHP(100);
-	this->damageCurrent = 16;
+	this->damageCurrent = 100;
 
 	for (int i = 0; i < 8; i++) {
 		doneDamage.push_back(true);
@@ -393,7 +393,7 @@ void Player::statUp(int damage, int HP, int speed)
 	this->additionalHP += HP;
 	this->additionalDmg += damage;
 	this->additionalAS += speed;
-	this->damageCurrent = 16 + additionalDmg;
+	this->damageCurrent = damageCurrent + additionalDmg;
 	this->attackSpeed = 0.08 - (additionalAS / 5000);
 	this->hp->setString(std::to_string(100+this->additionalHP));
 	auto statPlus = Label::create();

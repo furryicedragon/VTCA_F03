@@ -918,8 +918,5 @@ void MainGame::delAll() {
 	this->startGame->setPosition(Point(map1->getContentSize().width / 2, 0));
 	this->isGameStart = false;
 
-
-	this->setupPressedKeyHandling();
-	this->setupTouchHandling();
 	this->scheduleUpdate();
 }
