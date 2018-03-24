@@ -119,10 +119,6 @@ void Player::moving() {
 		&& !this->isDead 
 		&&(!this->isMoving || this->secondLastDirection!=lastDirection)) 
 	{
-		this->count++;
-		if (count > 2) {
-			char*abc = "a";
-		}
 
 		this->stopAllActionsByTag(1);
 		if (!this->canMoveDirections[1]) {

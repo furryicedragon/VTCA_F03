@@ -276,8 +276,6 @@ void Enemy::attackLandedEffect() {
 		this->spellLanded->runAction(Sequence::create(
 			CallFunc::create([=]() {this->canDamage = true; this->spellLanded->setVisible(true); }), animation("Skill Landed", 0.12), CallFunc::create([=]() {this->canDamage = false; this->spellLanded->setVisible(false); }), nullptr));
 	}
-
-
 }
 
 
