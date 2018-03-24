@@ -6,8 +6,9 @@
 # Icon must end with two \r
 Icon
 
-# Ignore the whole Cocos2d folder
+# Ignore the whole Cocos2d folder and Debug folders
 cocos2d/
+Debug.win32/
 
 # Thumbnails
 ._*
