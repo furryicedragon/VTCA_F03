@@ -79,7 +79,7 @@ bool MainGame::init()
 	this->setupPressedKeyHandling();
 	this->setupTouchHandling();
 	this->scheduleUpdate();
-	//return true;
+	return true;
 }
 
 void MainGame::setupTouchHandling() {
@@ -668,7 +668,7 @@ void MainGame::allEnemyInit()
 		wave->line1X = line1["x"].asFloat() * 2;
 		wave->line2X = line2["x"].asFloat() * 2;
 		wave->line3X = line3["x"].asFloat() * 2;
-		wave->setPosition(RandomHelper::random_real(wave->line2X, wave->line1X), RandomHelper::random_real(50.f, 129*map1->getScale()));
+		wave->setPosition(RandomHelper::random_real(wave->line2X, wave->line1X), this->ppp->getPosition().y);
 		wave->ppp = ppp;
 		//wave->isSpawned = true;
 		wave->setVisible(false);
