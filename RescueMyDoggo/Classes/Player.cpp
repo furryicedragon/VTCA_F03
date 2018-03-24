@@ -384,7 +384,7 @@ void Player::statUp(int damage, int HP, int speed)
 	this->additionalHP += HP;
 	this->additionalDmg += damage;
 	this->additionalAS += speed;
-	this->damageCurrent = damageCurrent + additionalDmg;
+	this->damageCurrent = 16 + additionalDmg;
 	this->attackSpeed = 0.08 - (additionalAS / 5000);
 	this->hp->setString(std::to_string(100+this->additionalHP));
 	auto statPlus = Label::create();

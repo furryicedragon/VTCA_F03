@@ -128,20 +128,6 @@ void Enemy::idleStatus() {
 	}
 }
 
-float Enemy::calculateDuration(float x, float y) {
-	bool equal0is = false;
-	if (x == 0) {
-		return y / moveSpeed;
-		equal0is = true;
-	}
-	if (y == 0) {
-		return x / moveSpeed;
-		equal0is = true;
-	}
-	if (!equal0is)
-		return sqrt((x*x) + (y*y)) / moveSpeed;
-
-}
 void Enemy::movingAnimation()
 {
 	if (this->canMove) {
@@ -157,10 +143,8 @@ void Enemy::movingAnimation()
 void Enemy::chasing()
 {
 	float howFar = ppp->getPosition().x - (this->getPosition().x + this->getContentSize().width / 2);
-	auto howFarY = ppp->getPosition().y - this->getPosition().y;
 	if (howFar < 0) howFar *= -1;
-	//if (howFar > visionRange + 200)
-	//	this->isChasing = false;
+
 	if (!this->isMoving && !this->isAttacking &&this->isChasing && howFar>skillRange-69) {
 		float pppX = ppp->getPosition().x;
 		float moveByX = pppX - (this->getPosition().x + this->getContentSize().width / 2);
@@ -174,7 +158,7 @@ void Enemy::chasing()
 		this->isMoving = true;
 		this->breakTime = false;
 		this->movingAnimation();
-		auto move2 = Sequence::create(MoveTo::create(calculateDuration(moveByX, ppp->getPosition().y), Vec2(ppp->getPosition().x, ppp->getPosition().y)),
+		auto move2 = Sequence::create(MoveTo::create(moveByX/moveSpeed, Vec2(ppp->getPosition().x, this->getPosition().y)),
 			CallFunc::create([=]() 
 		{this->isMoving = false; if (ppp->getPosition().x - (this->getPosition().x + this->getContentSize().width / 2) > visionRange + 200) this->isChasing = false; else this->idleStatus(); }), nullptr);
 		//could need some fix?! nah
@@ -188,18 +172,18 @@ void Enemy::randomMoving() {
 	randomX = RandomHelper::random_real(line2X, line1X); //di chuyen trong 1 khoang giua line1 va line2 trong tiledMap
 	if(this->waveNumber==2 || this->bossNumber==1) randomX = RandomHelper::random_real(line3X, line2X);
 	if (this->bossNumber == 2 || this->bossNumber == 3) randomX = RandomHelper::random_real(33.f, line3X);
-	randomY = RandomHelper::random_real(50.f,129.f*2);
 	float eX = this->getPosition().x;
-	float eY = this->getPosition().y;
 	float moveByX = randomX - eX;
-	float moveByY = randomY - eY;
+
 	this->isIdle = false;
 
 	this->movingAnimation();
 	if (moveByX > 0) this->setFlippedX(false); //done
-	else this->setFlippedX(true);
-	float duration = calculateDuration(moveByX, moveByY);
-	auto seq = Sequence::create(MoveTo::create(duration, Vec2(randomX, randomY)),
+	else {
+		moveByX *= -1;
+		this->setFlippedX(true);
+	}
+	auto seq = Sequence::create(MoveTo::create(moveByX/moveSpeed, Vec2(randomX, this->getPosition().y)),
 		CallFunc::create([=]() {this->isMoving = false; this->breakTime = false; }), /*DelayTime::create(1),*/ nullptr);
 	seq->setTag(2);
 	this->runAction(seq);
@@ -221,7 +205,6 @@ void Enemy::moving() {
 			this->breakTime = true;
 			this->idleStatus();
 			this->runAction(Sequence::create(DelayTime::create(1), CallFunc::create([=]() {this->randomMoving(); }), nullptr));
-		//this->randomMoving(); 
 		}
 		else
 		{
