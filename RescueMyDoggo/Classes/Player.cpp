@@ -24,7 +24,7 @@ void Player::initOption()
 	this->additionalHP = 0;
 	this->additionalAS = 0;
 	this->setHP(100);
-	this->damageCurrent = 100;
+	this->damageCurrent = 16;
 
 	for (int i = 0; i < 8; i++) {
 		doneDamage.push_back(true);
