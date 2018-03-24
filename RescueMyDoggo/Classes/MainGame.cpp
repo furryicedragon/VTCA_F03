@@ -109,7 +109,7 @@ void MainGame::setupPressedKeyHandling() {
 	Director::getInstance()->getEventDispatcher()->addEventListenerWithSceneGraphPriority(keyboardListener, this);
 }
 bool MainGame::keyPressed(EventKeyboard::KeyCode keyCode, Event* event) {
-	if(keyCode==EventKeyboard::KeyCode::KEY_A || keyCode==EventKeyboard::KeyCode::KEY_S || keyCode==EventKeyboard::KeyCode::KEY_D || keyCode==EventKeyboard::KeyCode::KEY_W){
+	if(keyCode==EventKeyboard::KeyCode::KEY_A || keyCode==EventKeyboard::KeyCode::KEY_D){
 		if (howManyKeyPressed == 0) ppp->notCombination = true;
 		howManyKeyPressed++;
 		ppp->inputKeys.push_back(keyCode);
@@ -140,7 +140,7 @@ void MainGame::checkIfRepeated(EventKeyboard::KeyCode keyCode) {
 		this->dashHelper->runAction(Sequence::create(DelayTime::create(0.2), CallFunc::create([=]() {this->repeatedKeys.clear(); }), nullptr));
 }
 bool MainGame::keyReleased(EventKeyboard::KeyCode keyCode, Event* event) {
-	if (keyCode == EventKeyboard::KeyCode::KEY_A || keyCode == EventKeyboard::KeyCode::KEY_S || keyCode == EventKeyboard::KeyCode::KEY_D || keyCode == EventKeyboard::KeyCode::KEY_W) {
+	if (keyCode == EventKeyboard::KeyCode::KEY_A || keyCode == EventKeyboard::KeyCode::KEY_D) {
 		int doTheMath = 0;
 		for each (auto item in ppp->inputKeys)
 		{
@@ -215,6 +215,8 @@ void MainGame::whatYouWant(EventKeyboard::KeyCode keyCode, int yourStatus) {
 			else
 			{
 				theKey = keyCode;
+				if (theKey == cocos2d::EventKeyboard::KeyCode::KEY_S || theKey == cocos2d::EventKeyboard::KeyCode::KEY_W)
+					return;
 			}
 			switch (theKey)
 			{
