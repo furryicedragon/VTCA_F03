@@ -52,9 +52,6 @@ public:
 	int count;
 	void setupPressedKeyHandling();
 	void setupTouchHandling();
-	void checkCombinationMovement();
-	void notTheSameKey();
-	void checkIfRepeated(EventKeyboard::KeyCode keyCode);
 	void whatYouWant(EventKeyboard::KeyCode keyCode,int yourStatus); //yourStatus = 1-idle,2-move,3-attack
 	void updatePlayerPosition();
 	void check4Directions(Point posDirection,int directionClock);

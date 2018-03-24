@@ -113,7 +113,6 @@ bool MainGame::keyPressed(EventKeyboard::KeyCode keyCode, Event* event) {
 		howManyKeyPressed++;
 		ppp->inputKeys.push_back(keyCode);
 		ppp->isHoldingKey = true;
-		this->checkIfRepeated(keyCode);
 		whatYouWant(keyCode, 2);
 		return true;	
 	}
@@ -125,16 +124,6 @@ bool MainGame::keyPressed(EventKeyboard::KeyCode keyCode, Event* event) {
 	if (keyCode == EventKeyboard::KeyCode::KEY_ENTER) {
 		this->gameOver->runAction(FadeOut::create(0.1f));
 	}
-}
-void MainGame::checkIfRepeated(EventKeyboard::KeyCode keyCode) {
-	if (repeatedKeys.size() == 0) {
-		repeatedKeys.push_back(keyCode);
-		this->isRepeated = false;
-	}
-	else
-		if (keyCode == repeatedKeys[0]) this->isRepeated=true;
-		else this->isRepeated = false;
-		this->dashHelper->runAction(Sequence::create(DelayTime::create(0.2), CallFunc::create([=]() {this->repeatedKeys.clear(); }), nullptr));
 }
 bool MainGame::keyReleased(EventKeyboard::KeyCode keyCode, Event* event) {
 	if (keyCode == EventKeyboard::KeyCode::KEY_A || keyCode == EventKeyboard::KeyCode::KEY_D) {
