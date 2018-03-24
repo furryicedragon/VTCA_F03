@@ -122,11 +122,9 @@ void Player::moving() {
 		&& !this->isDead 
 		&&(!this->isMoving || this->secondLastDirection!=lastDirection)) 
 	{
-		//this->stopAllActions();
 		this->stopAllActionsByTag(1);
 		if (this->canDash||this->isDashing) {
 			this->isDashing = true;
-			if(lastX==-45||lastX==45 ||lastX==32||lastX==-32)
 			lastX = lastX*2.4;
 		}
 		if (!this->canMoveDirections[1]) {
@@ -135,13 +133,13 @@ void Player::moving() {
 		if (!this->canMoveDirections[3]) {
 			if (lastX < 0) lastX = 0;
 		}
-		if (lastX == 80 && lastY==0) lastX = 45 * 2.5;
-		if (lastX == -80 && lastY==0) lastX = -45 * 2.5;
+		if (lastX == 80) lastX = 45 * 2.5;
+		if (lastX == -80) lastX = -45 * 2.5;
 
 		smootherMove();
 		secondLastDirection = lastDirection;
 		this->stopAllActionsByTag(3);
-		auto moveBy = MoveBy::create(lastDuration, Vec2(lastX,lastY));
+		auto moveBy = MoveBy::create(lastDuration, Vec2(lastX,0));
 		auto repeatMove = RepeatForever::create(moveBy);
 		repeatMove->setTag(3);
 		this->runAction(repeatMove);
@@ -153,7 +151,7 @@ void Player::moving() {
 			this->slash->setFlippedX(true);
 			this->setFlippedX(false);
 		}
-		this->runAction(Sequence::create(DelayTime::create(0.1) , CallFunc::create([=]() {this->notCombination = true; }), nullptr));
+		//this->runAction(Sequence::create(DelayTime::create(0.1) , CallFunc::create([=]() {this->notCombination = true; }), nullptr));
 		this->isMoving = true;
 
 	}

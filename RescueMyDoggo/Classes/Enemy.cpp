@@ -118,8 +118,8 @@ Animate* Enemy::animation(std::string actionName, float timeEachFrame) {
 
 void Enemy::idleStatus() {
 	if (!this->isIdle && !this->isDead) {
-		this->stopAllActionsByTag(1); //stop idle Action
-		this->stopAllActionsByTag(3); //stop moving Action
+		this->stopAllActionsByTag(1);
+		this->stopAllActionsByTag(3);
 		auto idleState = RepeatForever::create(animation("Idle", 0.12));
 		idleState->setTag(1);
 		this->runAction(idleState);

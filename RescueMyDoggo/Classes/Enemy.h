@@ -41,7 +41,6 @@ public:
 	float line3X;
 	float randomX;
 	float randomY;
-	float calculateDuration(float x, float y);
 	bool invulnerable;
 	bool breakTime;
 	bool isSpawned;

@@ -79,7 +79,7 @@ bool MainGame::init()
 	this->setupPressedKeyHandling();
 	this->setupTouchHandling();
 	this->scheduleUpdate();
-	return true;
+	//return true;
 }
 
 void MainGame::setupTouchHandling() {
@@ -110,7 +110,6 @@ void MainGame::setupPressedKeyHandling() {
 }
 bool MainGame::keyPressed(EventKeyboard::KeyCode keyCode, Event* event) {
 	if(keyCode==EventKeyboard::KeyCode::KEY_A || keyCode==EventKeyboard::KeyCode::KEY_D){
-		if (howManyKeyPressed == 0) ppp->notCombination = true;
 		howManyKeyPressed++;
 		ppp->inputKeys.push_back(keyCode);
 		ppp->isHoldingKey = true;
@@ -152,20 +151,13 @@ bool MainGame::keyReleased(EventKeyboard::KeyCode keyCode, Event* event) {
 		}
 		if (howManyKeyPressed>0)
 			howManyKeyPressed--;
-		if (howManyKeyPressed > 0){
-			if (howManyKeyPressed == 1) 
-				ppp->notCombination = true;
-			whatYouWant(ppp->inputKeys[0], 2);
-		}
+		if (howManyKeyPressed > 0) whatYouWant(ppp->inputKeys[0], 2);
 
 		if (howManyKeyPressed == 0) {
 			ppp->isHoldingKey = false;
 			whatYouWant(keyCode, 1);
-			ppp->notCombination = true;
 		}
 	}
-
-
 	return true;
 }
 void MainGame::whatYouWant(EventKeyboard::KeyCode keyCode, int yourStatus) {
@@ -174,123 +166,30 @@ void MainGame::whatYouWant(EventKeyboard::KeyCode keyCode, int yourStatus) {
 	case 1: //idle
 	{
 		ppp->idleStatus();
-		//if (ppp->notCombination == false) {
-		//	ppp->idleStatus(ppp->lastDirection);
-		//}
-		//else
-		//{
-		//	switch (keyCode) //last was keyCode
-		//	{
-		//	case cocos2d::EventKeyboard::KeyCode::KEY_A:
-		//		ppp->idleStatus("Left");
-		//		break;
-		//	case cocos2d::EventKeyboard::KeyCode::KEY_D:
-		//		ppp->idleStatus("Right");
-		//		break;
-		//	case cocos2d::EventKeyboard::KeyCode::KEY_S:
-		//		ppp->idleStatus("Down");
-		//		break;
-		//	case cocos2d::EventKeyboard::KeyCode::KEY_W:
-		//		ppp->idleStatus("Up");
-		//		break;
-		//	}
-		//}
 	}
 	case 2: //moving
 	{
-		//if (count == 0)
-		//	char* abc = "ok";
-		//else count++;
-		if (ppp->inputKeys.size()>1)
-			this->notTheSameKey();
-		if ((ppp->inputKeys.size() > 1 && ppp->notCombination == false) || (ppp->inputKeys.size()>2)) {
-			this->checkCombinationMovement();
-		}
-		else
-		{
-			EventKeyboard::KeyCode theKey;
-			if (ppp->inputKeys.size() > 1) {
-				theKey = ppp->inputKeys[1];
-			}
-			else
-			{
-				theKey = keyCode;
-				if (theKey == cocos2d::EventKeyboard::KeyCode::KEY_S || theKey == cocos2d::EventKeyboard::KeyCode::KEY_W)
-					return;
-			}
+		EventKeyboard::KeyCode theKey;
+			theKey = keyCode;
 			switch (theKey)
 			{
 			case cocos2d::EventKeyboard::KeyCode::KEY_A:
 			{
 				ppp->lastDuration = 0.25;
 				ppp->lastX = -45;
-				ppp->lastY = 0;
-				if (ppp->notCombination == true)
-					ppp->lastDirection = "Left";
+				ppp->lastDirection = "Left";
 				break;
 			}
 			case cocos2d::EventKeyboard::KeyCode::KEY_D:
 			{
 				ppp->lastDuration = 0.25;
 				ppp->lastX = 45;
-				ppp->lastY = 0;
-				if (ppp->notCombination == true)
-					ppp->lastDirection = "Right";
-				break;
-			}
-			case cocos2d::EventKeyboard::KeyCode::KEY_S:
-			{
-				/*ppp->lastDuration = 0.25;
-				ppp->lastX = 0;
-				ppp->lastY = -45;
-				if (ppp->notCombination == true)
-					ppp->lastDirection = "Down";*/
-				break;
-			}
-			case cocos2d::EventKeyboard::KeyCode::KEY_W:
-			{
-				/*ppp->lastDuration = 0.25;
-				ppp->lastX = 0;
-				ppp->lastY = 45;
-				if (ppp->notCombination == true)
-					ppp->lastDirection = "Up";*/
+				ppp->lastDirection = "Right";
 				break;
 			}
 			}
-		}
-		//ppp->moving();
-
 		break;
 	}
-	}
-
-}
-void MainGame::checkCombinationMovement() {
-	EventKeyboard::KeyCode key1 = ppp->inputKeys[0];
-	EventKeyboard::KeyCode key2 = ppp->inputKeys[1];
-	EventKeyboard::KeyCode a = EventKeyboard::KeyCode::KEY_A;
-	EventKeyboard::KeyCode s = EventKeyboard::KeyCode::KEY_S;
-	EventKeyboard::KeyCode d = EventKeyboard::KeyCode::KEY_D;
-	EventKeyboard::KeyCode w = EventKeyboard::KeyCode::KEY_W;
-	if (ppp->notCombination == true && ppp->inputKeys.size() > 2) {
-		key1 = ppp->inputKeys[1];
-		key2 = ppp->inputKeys[2];
-	}
-}
-void MainGame::notTheSameKey() {
-	EventKeyboard::KeyCode key1 = ppp->inputKeys[0];
-	EventKeyboard::KeyCode key2 = ppp->inputKeys[1];
-	EventKeyboard::KeyCode a = EventKeyboard::KeyCode::KEY_A;
-	EventKeyboard::KeyCode s = EventKeyboard::KeyCode::KEY_S;
-	EventKeyboard::KeyCode d = EventKeyboard::KeyCode::KEY_D;
-	EventKeyboard::KeyCode w = EventKeyboard::KeyCode::KEY_W;
-	if ((key1 == a || key2 == a) && (key1 == d || key2 == d))
-		ppp->notCombination = true;
-	else ppp->notCombination = false;
-	if (ppp->notCombination == false) {
-		if ((key1 == w || key2 == w) && (key1 == s || key2 == s))
-			ppp->notCombination = true;
-		else ppp->notCombination = false;
 	}
 
 }
