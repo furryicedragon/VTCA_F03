@@ -59,9 +59,9 @@ bool AppDelegate::applicationDidFinishLaunching() {
     auto glview = director->getOpenGLView();
     if(!glview) {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32) || (CC_TARGET_PLATFORM == CC_PLATFORM_MAC) || (CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
-        glview = GLViewImpl::createWithRect("MazeRunner", cocos2d::Rect(0, 0, designResolutionSize.width, designResolutionSize.height)/*, 2*/);
+        glview = GLViewImpl::createWithRect("RescueMyDoggo", cocos2d::Rect(0, 0, designResolutionSize.width, designResolutionSize.height)/*, 2*/);
 #else
-        glview = GLViewImpl::create("MazeRunner");
+        glview = GLViewImpl::create("RescueMyDoggo");
 #endif
         director->setOpenGLView(glview);
     }

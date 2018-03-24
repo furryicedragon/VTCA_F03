@@ -18,7 +18,16 @@
     <ClCompile Include="..\Classes\AppDelegate.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\Enemy.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\MainGame.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
     <ClCompile Include="..\Classes\MainScene.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Player.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
@@ -29,7 +38,16 @@
     <ClInclude Include="..\Classes\AppDelegate.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="..\Classes\Enemy.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\MainGame.h">
+      <Filter>src</Filter>
+    </ClInclude>
     <ClInclude Include="..\Classes\MainScene.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Player.h">
       <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>
