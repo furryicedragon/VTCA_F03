@@ -76,23 +76,7 @@ void Player::setHP(int HP)
 }
 
 Animate * Player::animation(std::string actionName, float timeEachFrame) {
-	//{
-	//	Vector<SpriteFrame *> runningFrames;
-	//	for (int i = 1; i < frameNumbers; i++) {
-	//		auto frameName = "/" + actionName + "/(" + to_string(i) + ").png";
-	//		auto frame = SpriteFrame::create(frameName, Rect(0, 0, fWidth, fHeight));
-	//		runningFrames.pushBack(frame);
-	//	}
-	//	Animation* runningAnimation = Animation::createWithSpriteFrames(runningFrames, timeEachFrame);
-	//	Animate* anim = Animate::create(runningAnimation);
-	//	if (repeat) {
-	//		Action* theAction = (RepeatForever::create(anim));
-	//		theAction->setTag(tag);
-	//		this->runAction(theAction);
-	//	}
-	//	else
-	//		this->runAction(anim);
-	//}
+	
 	Vector<SpriteFrame *> runningFrames;
 	for (int i = 1; i < 99; i++) {
 		auto frameName = "/MainChar/" + actionName +"/"+ this->weaponKind +"/(" + to_string(i) + ").png";
@@ -112,7 +96,12 @@ Animate * Player::animation(std::string actionName, float timeEachFrame) {
 
 void Player::idleStatus() {
 
-	if (!this->isAttacking && !this->isRolling && !this->isDead && !this->isHit && this->isSpawn) {
+	if (!this->isAttacking 
+		&& !this->isRolling 
+		&& !this->isDead 
+		&& !this->isHit 
+		&& this->isSpawn) 
+	{
 		this->isAttacking = false;
 		this->isMoving = false;
 		this->isDashing = false;
@@ -120,30 +109,28 @@ void Player::idleStatus() {
 		auto repeatIdle = RepeatForever::create(animation("Idle", 0.16969));
 		repeatIdle->setTag(1);
 		this->runAction(repeatIdle);
-		}
+	}
 	this->secondLastDirection = "";
 }
 
 void Player::moving() {
 
-	if (this->isSpawn && !this->isHit && !this->isRolling && !this->isAttacking && !this->isDead &&(!this->isMoving || this->secondLastDirection!=lastDirection)) {
+	if (this->isSpawn 
+		&& !this->isHit 
+		&& !this->isRolling 
+		&& !this->isAttacking 
+		&& !this->isDead 
+		&&(!this->isMoving || this->secondLastDirection!=lastDirection)) 
+	{
 		//this->stopAllActions();
 		this->stopAllActionsByTag(1);
 		if (this->canDash||this->isDashing) {
 			this->isDashing = true;
 			if(lastX==-45||lastX==45 ||lastX==32||lastX==-32)
 			lastX = lastX*2.4;
-			if(lastY==-45||lastY==45||lastY==32||lastY==-32)
-			lastY = lastY*2.4;
-		}
-		if (!this->canMoveDirections[0]) {
-			if (lastY > 0) lastY = 0;
 		}
 		if (!this->canMoveDirections[1]) {
 			if (lastX > 0) lastX = 0;
-		}
-		if (!this->canMoveDirections[2]) {
-			if (lastY < 0) lastY = 0;
 		}
 		if (!this->canMoveDirections[3]) {
 			if (lastX < 0) lastX = 0;
@@ -158,11 +145,11 @@ void Player::moving() {
 		auto repeatMove = RepeatForever::create(moveBy);
 		repeatMove->setTag(3);
 		this->runAction(repeatMove);
-		if (lastDirection == "Left" || lastDirection == "DownLeft" || lastDirection == "UpLeft") {
+		if (lastDirection == "Left") {
 			this->slash->setFlippedX(false);
 			this->setFlippedX(true);
 		}
-		if (lastDirection == "Right" || lastDirection == "DownRight" || lastDirection == "UpRight") {
+		if (lastDirection == "Right") {
 			this->slash->setFlippedX(true);
 			this->setFlippedX(false);
 		}
@@ -206,21 +193,25 @@ void Player::smootherMove() {
 }
 int Player::checkDirectionInNumber(std::string direction) {
 	int directionNumber = 0;
-	if (direction == "Up") directionNumber = 1; // 1 = no change
-	if (direction == "Down")
-		directionNumber = 1;
-	if (direction == "UpLeft") directionNumber = 2;
+	
 	if (direction == "Left") directionNumber = 2;
-	if (direction == "DownLeft") directionNumber = 2;
-	if (direction == "DownRight") directionNumber = 3;
 	if (direction == "Right") directionNumber = 3;
-	if (direction == "UpRight") directionNumber = 3;
 	return directionNumber;
 }
 
 
 void Player::checkDash(){
-	this->movementHelper->runAction(Sequence::create(CallFunc::create([=]() {this->canDash = true; }), DelayTime::create(0.2), CallFunc::create([=]() {this->canDash = false; }), nullptr));
+	this->movementHelper->runAction(
+		Sequence::create(CallFunc::create([=]() 
+						 {
+							this->canDash = true; 
+						 }), 
+						DelayTime::create(0.2), 
+						CallFunc::create([=]() 
+						{
+							this->canDash = false; 
+						}), 
+							 nullptr));
 }
 
 void Player::attack() {

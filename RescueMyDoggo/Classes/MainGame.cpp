@@ -5,7 +5,8 @@ USING_NS_CC;
 
 bool MainGame::init()
 {
-	if (!Node::init()) {
+	if (!Node::init()) 
+	{
 		return false;
 	}
 	this->enemyAdded = false;
@@ -237,20 +238,20 @@ void MainGame::whatYouWant(EventKeyboard::KeyCode keyCode, int yourStatus) {
 			}
 			case cocos2d::EventKeyboard::KeyCode::KEY_S:
 			{
-				ppp->lastDuration = 0.25;
+				/*ppp->lastDuration = 0.25;
 				ppp->lastX = 0;
 				ppp->lastY = -45;
 				if (ppp->notCombination == true)
-					ppp->lastDirection = "Down";
+					ppp->lastDirection = "Down";*/
 				break;
 			}
 			case cocos2d::EventKeyboard::KeyCode::KEY_W:
 			{
-				ppp->lastDuration = 0.25;
+				/*ppp->lastDuration = 0.25;
 				ppp->lastX = 0;
 				ppp->lastY = 45;
 				if (ppp->notCombination == true)
-					ppp->lastDirection = "Up";
+					ppp->lastDirection = "Up";*/
 				break;
 			}
 			}
@@ -272,37 +273,6 @@ void MainGame::checkCombinationMovement() {
 	if (ppp->notCombination == true && ppp->inputKeys.size() > 2) {
 		key1 = ppp->inputKeys[1];
 		key2 = ppp->inputKeys[2];
-	}
-	if ((key1 == a || key2 == a) && (key1 == s || key2 == s))
-	{
-		ppp->lastDuration = 0.25;
-		ppp->lastX = -32;
-		ppp->lastY = -32;
-		ppp->lastDirection = "DownLeft";
-	}
-
-	if ((key1 == a || key2 == a) && (key1 == w || key2 == w))
-	{
-		ppp->lastDuration = 0.25;
-		ppp->lastX = -32;
-		ppp->lastY = 32;
-		ppp->lastDirection = "UpLeft";
-	}
-
-	if ((key1 == d || key2 == d) && (key1 == s || key2 == s))
-	{
-		ppp->lastDuration = 0.25;
-		ppp->lastX = 32;
-		ppp->lastY = -32;
-		ppp->lastDirection = "DownRight";
-	}
-
-	if ((key1 == d || key2 == d) && (key1 == w || key2 == w))
-	{
-		ppp->lastDuration = 0.25;
-		ppp->lastX = 32;
-		ppp->lastY = 32;
-		ppp->lastDirection = "UpRight";
 	}
 }
 void MainGame::notTheSameKey() {
@@ -338,9 +308,7 @@ bool MainGame::checkCollision(Player* pPlayer)
 		posLeft.y += 50;
 		posDown.y += 25;
 	}
-	this->check4Directions(posUp, 0);
 	this->check4Directions(posRight, 1);
-	this->check4Directions(posDown, 2);
 	this->check4Directions(posLeft, 3);
 	//int tileGID = meta->getTileGIDAt(this->tileCoordForPosition(posDown));
 	//CCLOG("%d", tileGID);
