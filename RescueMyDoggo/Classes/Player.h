@@ -38,12 +38,9 @@ public:
 	bool isSpawn;
 	bool isHit;
 	bool isDead;
-	bool isDashing;
 	bool isHoldingKey;
 	bool isMoving;
 	bool isAttacking;
-	bool notCombination;
-	bool canDash;
 	bool isRolling;
 	bool canShowStatUp;
 	void attack();
@@ -51,7 +48,6 @@ public:
 	void idleStatus();
 	void attackCount();
 	void smootherMove();
-	void checkDash();
 	void slashEffect();
 	void getHit(int damage,float eeePosX);
 	void roll();

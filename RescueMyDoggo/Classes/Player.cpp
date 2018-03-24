@@ -42,14 +42,12 @@ void Player::initOption()
 	slash = Sprite::create("/MainChar/Effects/Slash/1.png");
 	slash->setVisible(false);
 	slash->setScale(1.9);
-	isDashing = false;
 	attackHelper = Sprite::create();
 	if(attackHelper)
 	this->addChild(attackHelper);
 	movementHelper = Sprite::create();
 	if(movementHelper)
 	this->addChild(movementHelper);
-	canDash = false;
 	int one = 5;
 	int two = 7;
 	int three = 8;
@@ -104,7 +102,6 @@ void Player::idleStatus() {
 	{
 		this->isAttacking = false;
 		this->isMoving = false;
-		this->isDashing = false;
 		this->stopAllActions();
 		auto repeatIdle = RepeatForever::create(animation("Idle", 0.16969));
 		repeatIdle->setTag(1);
@@ -122,19 +119,18 @@ void Player::moving() {
 		&& !this->isDead 
 		&&(!this->isMoving || this->secondLastDirection!=lastDirection)) 
 	{
-		this->stopAllActionsByTag(1);
-		if (this->canDash||this->isDashing) {
-			this->isDashing = true;
-			lastX = lastX*2.4;
+		this->count++;
+		if (count > 2) {
+			char*abc = "a";
 		}
+
+		this->stopAllActionsByTag(1);
 		if (!this->canMoveDirections[1]) {
 			if (lastX > 0) lastX = 0;
 		}
 		if (!this->canMoveDirections[3]) {
 			if (lastX < 0) lastX = 0;
 		}
-		if (lastX == 80) lastX = 45 * 2.5;
-		if (lastX == -80) lastX = -45 * 2.5;
 
 		smootherMove();
 		secondLastDirection = lastDirection;
@@ -177,16 +173,9 @@ void Player::smootherMove() {
 	if(OK) {
 		this->stopAllActionsByTag(2);
 		this->stopAllActionsByTag(4);
-		if (this->canDash || this->isDashing) {
 			auto dashIt = RepeatForever::create(animation("Dash/Dash Normal/Dash", 0.14));
 			dashIt->setTag(4);
 			this->runAction(dashIt);
-		}
-		else {
-			auto walkIt = RepeatForever::create(animation("Walk/Walk Forward/", 0.14));
-			walkIt->setTag(2);
-			this->runAction(walkIt);
-		}
 	}
 }
 int Player::checkDirectionInNumber(std::string direction) {
@@ -197,20 +186,6 @@ int Player::checkDirectionInNumber(std::string direction) {
 	return directionNumber;
 }
 
-
-void Player::checkDash(){
-	this->movementHelper->runAction(
-		Sequence::create(CallFunc::create([=]() 
-						 {
-							this->canDash = true; 
-						 }), 
-						DelayTime::create(0.2), 
-						CallFunc::create([=]() 
-						{
-							this->canDash = false; 
-						}), 
-							 nullptr));
-}
 
 void Player::attack() {
 	if (this->isSpawn && !this->isAttacking && !this->isRolling && !this->isDead && !this->isHit) {

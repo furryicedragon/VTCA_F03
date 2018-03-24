@@ -114,8 +114,6 @@ bool MainGame::keyPressed(EventKeyboard::KeyCode keyCode, Event* event) {
 		ppp->inputKeys.push_back(keyCode);
 		ppp->isHoldingKey = true;
 		this->checkIfRepeated(keyCode);
-		if(!ppp->canDash &&this->isRepeated)
-		ppp->checkDash();
 		whatYouWant(keyCode, 2);
 		return true;	
 	}
@@ -176,14 +174,14 @@ void MainGame::whatYouWant(EventKeyboard::KeyCode keyCode, int yourStatus) {
 			case cocos2d::EventKeyboard::KeyCode::KEY_A:
 			{
 				ppp->lastDuration = 0.25;
-				ppp->lastX = -45;
+				ppp->lastX = -110;
 				ppp->lastDirection = "Left";
 				break;
 			}
 			case cocos2d::EventKeyboard::KeyCode::KEY_D:
 			{
 				ppp->lastDuration = 0.25;
-				ppp->lastX = 45;
+				ppp->lastX = 110;
 				ppp->lastDirection = "Right";
 				break;
 			}
