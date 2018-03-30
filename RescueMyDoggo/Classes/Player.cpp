@@ -59,8 +59,9 @@ void Player::initOption()
 	isAttacking = false;
 	this->idleStatus();
 
-	this->projectile = Sprite::create("Enemies/Map 2/Wave 1/Spell/0.png");
-	this->projectile->setVisible(false);
+	// projectile
+	this->skill1 = Projectile::create();
+	this->skill1->setScale(3.0f);
 }
 
 void Player::setHP(int HP)
@@ -185,13 +186,11 @@ int Player::checkDirectionInNumber(std::string direction) {
 	return directionNumber;
 }
 
-void Player::launchProjectile()
+void Player::launchSkill1()
 {
-	this->projectile->setPosition(this->getPosition());
-
 	Vector<SpriteFrame *> runningFrames;
-	for (int i = 1; i < 4; i++) {
-		auto frameName = "/Enemies/Map2/Wave1/Spell/" + to_string(i) + ".png";
+	for (int i = 0; i < 3; i++) {
+		auto frameName = "/Enemies/Map 2/Wave 1/Spell/" + std::to_string(i) + ".png";
 		Sprite* getSize = Sprite::create(frameName);
 		if (!getSize)
 			break;
@@ -203,6 +202,23 @@ void Player::launchProjectile()
 	Animation* runningAnimation = Animation::createWithSpriteFrames(runningFrames, 0.1f);
 	Animate* anim = Animate::create(runningAnimation);
 
+	float side;
+
+	if (!this->isFlippedX())
+	{
+		skill1->setFlippedX(false);
+		side = 500;
+	}
+	else
+	{
+		skill1->setFlippedX(true);
+		side = -500;
+	}
+
+	skill1->setPosition(this->getPositionX() + 50, this->getPositionY() + 100);
+	skill1->setVisible(true);
+
+	skill1->launch(anim, side);
 
 }
 
@@ -216,7 +232,8 @@ void Player::attack() {
 		this->runAction(Sequence::create(animation(name, attackSpeed), 
 			CallFunc::create([=]() 
 			{
-				this->launchProjectile();    //test launch projectile
+				launchSkill1(); //test launch projectile
+
 				this->isAttacking = false; 
 				this->idleStatus(); 
 		}),	nullptr));

@@ -6,6 +6,7 @@
 #include<cocos2d.h>
 #include<Player.h>
 #include<Enemy.h>
+#include<Projectile.h>
 USING_NS_CC;
 
 class MainGame : public cocos2d::Node
@@ -21,10 +22,12 @@ public:
 	Enemy* bossfm1;
 	Enemy* bossfm2;
 	Player* ppp;
+
 	Sprite* pppPositionHelper;
 	Sprite* dashHelper;
 	Sprite* gameOver;
 	Sprite* startGame;
+	
 	EventKeyboard::KeyCode lastKeyPressed;
 	EventKeyboard::KeyCode anotherKeyPressed;
 	TMXLayer* meta;
@@ -67,6 +70,7 @@ public:
 	void spawnPlayer();
 	Animate* animation(std::string actionName, float timeEachFrame);
 	void delAll();
+
 private:
 	virtual void update(float elapsed) override;
 	bool checkCollision(Player* pPlayer);

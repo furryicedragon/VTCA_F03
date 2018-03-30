@@ -3,6 +3,7 @@
 #define Player_hpp
 
 #include<cocos2d.h>
+#include<Projectile.h>
 USING_NS_CC;
 class Player :public cocos2d::Sprite {
 public:
@@ -19,7 +20,6 @@ public:
 	Sprite* attackHelper;
 	Sprite* slash;
 	Sprite* movementHelper;
-	Sprite* projectile;
 	Label* hp;
 	Size map1Size;
 	float lastDuration;
@@ -60,7 +60,9 @@ public:
 	void statUp(int damage,int HP,int speed);
 	void spawnEffect();
 
-	void launchProjectile();
+	Projectile* skill1;
+	void launchSkill1();
+	
 private:
 	void initOption();
 };
