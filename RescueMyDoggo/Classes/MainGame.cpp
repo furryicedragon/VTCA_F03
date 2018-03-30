@@ -80,6 +80,8 @@ bool MainGame::init()
 	this->setupTouchHandling();
 	this->scheduleUpdate();
 	//return true;
+
+	this->addChild(ppp->skill1, 3);
 }
 
 void MainGame::setupTouchHandling() {
@@ -88,6 +90,7 @@ void MainGame::setupTouchHandling() {
 	touchListener->onTouchBegan = CC_CALLBACK_2(MainGame::onTouchBegan, this);
 	this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(touchListener, this);
 }
+
 bool MainGame::onTouchBegan(Touch* touch, Event* event)
 {
 	if(this->isGameOver)
@@ -288,7 +291,8 @@ void MainGame::update(float elapsed)
 			this->gameOver->runAction(FadeIn::create(3.0f));
 			this->isGameOver = true;
 		}
-	}
+
+		}
 
 
 
@@ -346,6 +350,16 @@ void MainGame::checkAttackRange(Enemy * eee, int index)
 		}
 	}
 
+	if (ppp->skill1->launching)
+	{
+		//check projectile collision
+		if (ppp->skill1->getBoundingBox().intersectsRect(eee->getBoundingBox()) && ppp->skill1->canDamage[index])
+		{
+			ppp->skill1->canDamage[index] = false;
+				
+			eee->getHit(ppp->damageCurrent);
+		}
+	}
 }
 void MainGame::waveXMapXInit() {
 	std::vector<Enemy*> waveXMapX;
