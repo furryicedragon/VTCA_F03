@@ -125,3 +125,6 @@ lib/
 *.db
 *.db
 RescueMyDoggo/proj.win32/RescueMyDoggo.VC.db
+*.db
+*.db
+RescueMyDoggo/proj.win32/RescueMyDoggo.VC.db

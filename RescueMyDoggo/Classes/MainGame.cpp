@@ -350,11 +350,11 @@ void MainGame::waveXMapXInit() {
 			this->checkAttackRange(item, i);
 			i++;
 		}
-		if (ppp->w1kills > 8 && !boss1) {
+		if (ppp->w1kills > 20 && !boss1) {
 			this->spawnEffect(allEnemy[8], 1);
 			boss1 = true;
 		}
-		if (ppp->w2kills > 8 && !boss2) { 
+		if (ppp->w2kills > 20 && !boss2) { 
 			this->spawnEffect(allEnemy[17], 1);
 			boss2 = true; 
 		}
