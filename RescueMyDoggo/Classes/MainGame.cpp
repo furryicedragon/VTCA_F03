@@ -312,7 +312,7 @@ void MainGame::spawnPlayer()
 
 void MainGame::checkAttackRange(Enemy * eee, int index)
 {
-	if (index != 8 || allEnemy[8]->isSpawned) {
+	if ((index != 8 || boss1)||(index!=17 || boss2)) {
 		auto itemWidth = eee->getContentSize().width*eee->getScale();
 		auto howfarX = ppp->getPosition().x - (eee->getPosition().x + itemWidth / 2);
 		auto howfarY = ppp->getPosition().y - eee->getPosition().y;
@@ -350,12 +350,12 @@ void MainGame::waveXMapXInit() {
 			this->checkAttackRange(item, i);
 			i++;
 		}
-		if (ppp->w1kills > 20 && !boss1) {
+		if (ppp->w1kills > 8 && !boss1) {
 			this->spawnEffect(allEnemy[8], 1);
 			boss1 = true;
 		}
-		if (ppp->w2kills > 20 && !boss2) { 
-			this->spawnEffect(allEnemy[16], 1);
+		if (ppp->w2kills > 8 && !boss2) { 
+			this->spawnEffect(allEnemy[17], 1);
 			boss2 = true; 
 		}
 }
@@ -400,6 +400,7 @@ void MainGame::spawnEffect(Enemy* enemy2Spawn,int index)
 	this->addChild(spawnGate, 4);
 
 	spawnGate->runAction(Sequence::create(DelayTime::create((index+1)/4),animB,animLoop, CallFunc::create([=]() {enemy2Spawn->setVisible(true); }), animF, CallFunc::create([=]() {this->removeChild(spawnGate); enemy2Spawn->isSpawned = true; }), nullptr));
+
 }
 
 bool MainGame::checkDeath(std::vector<Enemy*> what2Check) {
@@ -551,8 +552,10 @@ void MainGame::allEnemyInit()
 		boss2m1->setVisible(false);
 		boss2m1->isSpawned = false;
 		boss2m1->setAnchorPoint(Vec2(0, 0));
-		if(boss2m1)
-		this->addChild(boss2m1, 1);
+		if (boss2m1) {
+			allEnemy.push_back(boss2m1);
+			this->addChild(allEnemy[17], 1);
+		}
 	}
 
 	{	//boss3
