@@ -9,6 +9,7 @@ bool MainGame::init()
 	{
 		return false;
 	}
+
 	this->enemyAdded = false;
 	this->gameOver = Sprite::create("/Game Over/0.png");
 	gameOver->setAnchorPoint(Vec2(0, 0));

@@ -32,6 +32,7 @@ public:
 	Vec2 lastMovePos; //for retrieving last y
 	Point tileCoordForPosition(Point position);
 	std::vector<EventKeyboard::KeyCode> repeatedKeys;
+	std::vector<Enemy*> allEnemy;
 	std::vector<Enemy*> map1Wave1;
 	std::vector<Enemy*> map1Wave2;
 	std::vector<Enemy*> map2Wave1;
