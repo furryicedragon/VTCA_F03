@@ -63,6 +63,7 @@ public:
 	void spawnEffect();
 
 	Projectile* skill1;
+	float cd_reduction;
 	void launchSkill1();
 	
 private:

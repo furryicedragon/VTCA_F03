@@ -13,7 +13,7 @@ bool MainGame::init()
 	this->enemyAdded = false;
 	this->gameOver = Sprite::create("/Game Over/0.png");
 	gameOver->setAnchorPoint(Vec2(0, 0));
-	auto itsOverMan = RepeatForever::create(animation("Game Over",0.1));
+	auto itsOverMan = RepeatForever::create(animation("Game Over",0.1f));
 	this->gameOver->runAction(itsOverMan);
 	this->gameOver->runAction(FadeOut::create(0));
 	if(gameOver)
@@ -46,8 +46,8 @@ bool MainGame::init()
 	while (ppp==nullptr) ppp = Player::create();
 	ppp->map1Size = map1->getContentSize();
 	ppp->setPosition(sPx*2, sPy*2);
-	ppp->setAnchorPoint(Vec2(0.5, 0));
-	ppp->setScale(0.6);
+	ppp->setAnchorPoint(Vec2(0.5f, 0));
+	ppp->setScale(0.6f);
 	ppp->setFlippedX(true);
 	if(ppp!=nullptr)
 	this->addChild(ppp, 2);
@@ -80,9 +80,10 @@ bool MainGame::init()
 	this->setupPressedKeyHandling();
 	this->setupTouchHandling();
 	this->scheduleUpdate();
-	//return true;
-
+	
 	this->addChild(ppp->skill1, 3);
+
+	return true;
 }
 
 void MainGame::setupTouchHandling() {
@@ -99,7 +100,7 @@ bool MainGame::onTouchBegan(Touch* touch, Event* event)
 
 	if (!this->isGameStart) {
 		isGameStart = true;
-		this->startGame->runAction(FadeOut::create(0.9));
+		this->startGame->runAction(FadeOut::create(0.9f));
 		this->spawnPlayer();
 	}
 	ppp->attack();
@@ -128,6 +129,8 @@ bool MainGame::keyPressed(EventKeyboard::KeyCode keyCode, Event* event) {
 	if (keyCode == EventKeyboard::KeyCode::KEY_ENTER) {
 		this->gameOver->runAction(FadeOut::create(0.1f));
 	}
+
+	return true;
 }
 bool MainGame::keyReleased(EventKeyboard::KeyCode keyCode, Event* event) {
 	if (keyCode == EventKeyboard::KeyCode::KEY_A || keyCode == EventKeyboard::KeyCode::KEY_D) {
@@ -239,8 +242,8 @@ Point MainGame::tileCoordForPosition(Point position) {
 void MainGame::updatePlayerPosition() {
 	auto pppPos = this->ppp->getPosition();
 	auto movePos = this->pppPositionHelper->getPosition();
-	movePos.x = MathUtil::lerp(movePos.x, pppPos.x, 0.8);
-	movePos.y = MathUtil::lerp(movePos.y, pppPos.y + 168, 0.8);
+	movePos.x = MathUtil::lerp(movePos.x, pppPos.x, 0.8f);
+	movePos.y = MathUtil::lerp(movePos.y, pppPos.y + 168, 0.8f);
 	auto theLineRight = map1->getContentSize().width - map1->getContentSize().width / 4;
 	auto theLineLeft = map1->getContentSize().width / 4;
 	auto theLineDown = map1->getContentSize().height / 8;
@@ -269,7 +272,7 @@ void MainGame::update(float elapsed)
 			if(!this->isGameOver)
 				if (ppp->statUpBox.size() > 0 && ppp->canShowStatUp) {
 					ppp->statUpBox[0]->setVisible(true);
-					ppp->statUpBox[0]->runAction(Sequence::create(CallFunc::create([=]() {ppp->canShowStatUp=false; }), MoveBy::create(0.69, Vec2(0, 50)),
+					ppp->statUpBox[0]->runAction(Sequence::create(CallFunc::create([=]() {ppp->canShowStatUp=false; }), MoveBy::create(0.69f, Vec2(0, 50)),
 						CallFunc::create([=]() {ppp->removeChild(ppp->statUpBox[0], true); ppp->statUpBox.erase(ppp->statUpBox.begin()); ppp->canShowStatUp = true; }), nullptr));
 				}
 
@@ -305,7 +308,7 @@ void MainGame::spawnPlayer()
 	if(zap)
 	this->addChild(zap);
 	zap->setScale(2);
-	zap->runAction(Sequence::create(DelayTime::create(0.69), CallFunc::create([=]() {ppp->spawnEffect(); }), animation("Spawn", 0.1),
+	zap->runAction(Sequence::create(DelayTime::create(0.69f), CallFunc::create([=]() {ppp->spawnEffect(); }), animation("Spawn", 0.1f),
 		CallFunc::create([=]() {this->removeChild(zap, true); }), nullptr));
 }
 
@@ -380,8 +383,8 @@ void MainGame::spawnEffect(Enemy* enemy2Spawn,int index)
 		backwardsFrame.insert(0, frame);
 		if (i < 4) loopFrame.pushBack(frame);
 	}
-	Animation* runningAnimation = Animation::createWithSpriteFrames(runningFrames, 0.1234);
-	Animation* backwardsAnimation = Animation::createWithSpriteFrames(backwardsFrame, 0.1234);
+	Animation* runningAnimation = Animation::createWithSpriteFrames(runningFrames, 0.1234f);
+	Animation* backwardsAnimation = Animation::createWithSpriteFrames(backwardsFrame, 0.1234f);
 	Animate* animF = Animate::create(runningAnimation);
 	Animate* animB = Animate::create(backwardsAnimation);
 	for (int z = 0; z < 2; z++) {
@@ -390,7 +393,7 @@ void MainGame::spawnEffect(Enemy* enemy2Spawn,int index)
 			loopFrame.pushBack(loopFrame.at(j));
 		}
 	}
-	Animation* loopAnimation = Animation::createWithSpriteFrames(loopFrame, 0.1234);
+	Animation* loopAnimation = Animation::createWithSpriteFrames(loopFrame, 0.1234f);
 	Animate* animLoop = Animate::create(loopAnimation);
 
 	auto spawnGate = Sprite::create();
@@ -435,13 +438,13 @@ void MainGame::allEnemyInit()
 	auto line3 = oj->getObject("Line3");
 	for (int i = 0; i < 8; i++) {
 		Enemy* wave = Enemy::create(1, 1, 0);
-		wave->setScale(1.6);
+		wave->setScale(1.6f);
 		wave->skillDamage = 20;
 		wave->visionRange = 310;
 		wave->moveSpeed = 120;
 		wave->isCaster = true;
-		wave->castSpeed = 0.12;
-		wave->skillSpeed = 0.1;
+		wave->castSpeed = 0.12f;
+		wave->skillSpeed = 0.1f;
 		wave->skillCD = 4;
 		wave->skillRange = 300;
 		wave->setHP(100);
@@ -469,10 +472,10 @@ void MainGame::allEnemyInit()
 		this->boss1m1 = Enemy::create(1, 0, 1);
 		boss1m1->visionRange = 420;
 		boss1m1->skillDamage = 150;
-		boss1m1->setScale(1.6);
+		boss1m1->setScale(1.6f);
 		boss1m1->moveSpeed = 333;
 		boss1m1->isSSMobility = true;
-		boss1m1->castSpeed = 0.069;
+		boss1m1->castSpeed = 0.069f;
 		boss1m1->skillCD = 2;
 		boss1m1->skillRange = 400;
 		boss1m1->mobilitySSAt = 3;
@@ -499,13 +502,13 @@ void MainGame::allEnemyInit()
 
 	for (int i = 0; i < 8; i++) {
 		Enemy* wave = Enemy::create(1, 2, 0);
-		wave->setScale(1.6);
+		wave->setScale(1.6f);
 		wave->skillDamage = 96;
 		wave->visionRange = 350;
 		wave->moveSpeed = 196;
 		wave->isCaster = true;
-		wave->castSpeed = 0.12;
-		wave->skillSpeed = 0.1;
+		wave->castSpeed = 0.12f;
+		wave->skillSpeed = 0.1f;
 		wave->skillCD = 4;
 		wave->skillRange = 400;
 		wave->setHP(100);
@@ -529,12 +532,12 @@ void MainGame::allEnemyInit()
 
 	{	//boss2
 		this->boss2m1 = Enemy::create(1, 0, 2);
-		boss2m1->setScale(1.6);
+		boss2m1->setScale(1.6f);
 		boss2m1->skillDamage = 222;
 		boss2m1->visionRange = 450;
 		boss2m1->moveSpeed = 500;
 		boss2m1->isSSMobility = true;
-		boss2m1->castSpeed = 0.041;
+		boss2m1->castSpeed = 0.041f;
 		boss2m1->skillCD = 2;
 		boss2m1->skillRange = 420;
 		boss2m1->mobilitySSAt = 2;
@@ -566,7 +569,7 @@ void MainGame::allEnemyInit()
 		bossfm1->visionRange = 500;
 		bossfm1->setScale(3);
 		bossfm1->moveSpeed = 555;
-		bossfm1->castSpeed = 0.08;
+		bossfm1->castSpeed = 0.08f;
 		bossfm1->skillCD = 2;
 		bossfm1->skillRange = 120;
 		bossfm1->setHP(500);
@@ -615,7 +618,7 @@ void MainGame::delAll() {
 	this->enemyAdded = false;
 	this->gameOver = Sprite::create("/Game Over/0.png");
 	gameOver->setAnchorPoint(Vec2(0, 0));
-	auto itsOverMan = RepeatForever::create(animation("Game Over", 0.1));
+	auto itsOverMan = RepeatForever::create(animation("Game Over", 0.1f));
 	this->gameOver->runAction(itsOverMan);
 	this->gameOver->runAction(FadeOut::create(0));
 	if(gameOver)
@@ -648,7 +651,7 @@ void MainGame::delAll() {
 	ppp->map1Size = map1->getContentSize();
 	ppp->setPosition(sPx * 2, sPy * 2);
 	ppp->setAnchorPoint(Vec2(0.5, 0));
-	ppp->setScale(0.6);
+	ppp->setScale(0.6f);
 	ppp->setFlippedX(true);
 	if (ppp != nullptr)
 		this->addChild(ppp, 2);

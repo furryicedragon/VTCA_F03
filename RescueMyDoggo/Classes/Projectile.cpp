@@ -23,20 +23,27 @@ void Projectile::initOptions()
 
 	this->setVisible(false);
 	this->launching = false;
+	this->onCD = false;
 }
 
-void Projectile::launch(Animate* anim, float range)
+void Projectile::launch(Animate* anim, float range, float cooldown)
 {
 	launching = true;
+	onCD = true;
 
 	this->runAction(
 		Sequence::create(
 			Spawn::create(Repeat::create(anim, 2), MoveBy::create(0.5f, Vec2(range, 0)), nullptr),
 			CallFunc::create([=]()
-	{
-		this->setVisible(false);
-		this->launching = false;
-
-		std::fill(canDamage.begin(), canDamage.end(), true);
-	}), nullptr));
+			{
+				this->setVisible(false);
+				this->launching = false;
+				
+				std::fill(canDamage.begin(), canDamage.end(), true);
+			}), DelayTime::create(cooldown),
+				CallFunc::create([=]()
+				{
+					onCD = false;
+				}),
+		nullptr));
 }

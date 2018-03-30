@@ -26,13 +26,11 @@ void Player::initOption()
 	this->setHP(100);
 	this->damageCurrent = 16;
 
-	for (int i = 0; i < 8; i++) {
-		doneDamage.push_back(true);
-	}
+	doneDamage.resize(8, false);
 
 
 
-	attackSpeed = 0.08;
+	attackSpeed = 0.08f;
 
 
 	for(int i=0;i<4;i++){
@@ -41,7 +39,7 @@ void Player::initOption()
 	this->count = 0;
 	slash = Sprite::create("/MainChar/Effects/Slash/1.png");
 	slash->setVisible(false);
-	slash->setScale(1.9);
+	slash->setScale(1.9f);
 	attackHelper = Sprite::create();
 	if(attackHelper)
 	this->addChild(attackHelper);
@@ -62,12 +60,14 @@ void Player::initOption()
 	// projectile
 	this->skill1 = Projectile::create();
 	this->skill1->setScale(3.0f);
+
+	this->cd_reduction = 1.0f;
 }
 
 void Player::setHP(int HP)
 {
 	hp = Label::create();
-	hp->setScale(2.8);
+	hp->setScale(2.8f);
 	hp->setAnchorPoint(Vec2(0.5, 0));
 	hp->setString(std::to_string(HP));
 	hp->setPosition(this->getContentSize().width/2, this->getPosition().y + this->getContentSize().height);
@@ -107,7 +107,7 @@ void Player::idleStatus() {
 		this->isAttacking = false;
 		this->isMoving = false;
 		this->stopAllActions();
-		auto repeatIdle = RepeatForever::create(animation("Idle", 0.16969));
+		auto repeatIdle = RepeatForever::create(animation("Idle", 0.16969f));
 		repeatIdle->setTag(1);
 		this->runAction(repeatIdle);
 	}
@@ -173,7 +173,7 @@ void Player::smootherMove() {
 	if(OK) {
 		this->stopAllActionsByTag(2);
 		this->stopAllActionsByTag(4);
-			auto dashIt = RepeatForever::create(animation("Dash/Dash Normal/Dash", 0.14));
+			auto dashIt = RepeatForever::create(animation("Dash/Dash Normal/Dash", 0.14f));
 			dashIt->setTag(4);
 			this->runAction(dashIt);
 	}
@@ -188,6 +188,8 @@ int Player::checkDirectionInNumber(std::string direction) {
 
 void Player::launchSkill1()
 {
+	if (skill1->launching || skill1->onCD)	return;
+
 	Vector<SpriteFrame *> runningFrames;
 	for (int i = 0; i < 3; i++) {
 		auto frameName = "/Enemies/Map 2/Wave 1/Spell/" + std::to_string(i) + ".png";
@@ -218,7 +220,7 @@ void Player::launchSkill1()
 	skill1->setPosition(this->getPositionX() + 50, this->getPositionY() + 100);
 	skill1->setVisible(true);
 
-	skill1->launch(anim, side);
+	skill1->launch(anim, side, 3.0f * cd_reduction);
 
 }
 
@@ -355,7 +357,7 @@ void Player::getHit(int damage, float eeePosX) {
 			this->hp->setString(std::to_string(healthP));
 		if (!this->isDead) {
 			this->isHit = true;
-			this->runAction(Sequence::create(animation("Get hit/Get Hit Stand", 0.14), CallFunc::create([=]() {this->isHit = false; this->idleStatus(); }), nullptr));
+			this->runAction(Sequence::create(animation("Get hit/Get Hit Stand", 0.14f), CallFunc::create([=]() {this->isHit = false; this->idleStatus(); }), nullptr));
 		}
 	}
 }
@@ -384,7 +386,7 @@ void Player::dead()
 	//this->stopAllActions();
 	this->forbidAllAction();
 		//this->runAction(Sequence::create(animation("Death", 0.12), CallFunc::create([=]() {this->runAction(FadeOut::create(1.0)); }), nullptr));
-		this->runAction(animation("Death", 0.12));
+		this->runAction(animation("Death", 0.12f));
 }
 
 void Player::forbidAllAction()
@@ -436,5 +438,5 @@ void Player::spawnEffect(){
 	if (this->isSpawning)
 		this->isSpawning = false;
 		this->runAction(FadeIn::create(0.8f));
-		this->runAction(Sequence::create(animation("Spawned", 0.1), CallFunc::create([=]() {  this->isSpawn = true;this->idleStatus(); }), nullptr));
+		this->runAction(Sequence::create(animation("Spawned", 0.1f), CallFunc::create([=]() {  this->isSpawn = true;this->idleStatus(); }), nullptr));
 }

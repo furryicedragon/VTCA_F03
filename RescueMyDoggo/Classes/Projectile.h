@@ -14,8 +14,9 @@ public:
 
 	std::vector<bool> canDamage;
 	bool launching;
+	bool onCD;
 
-	void launch(Animate* anim, float range);
+	void launch(Animate* anim, float range, float cooldown);
 };
 
 #endif // !Projectile_hpp

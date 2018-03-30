@@ -132,7 +132,7 @@ void Enemy::idleStatus() {
 	if (!this->isIdle && !this->isDead) {
 		this->stopAllActionsByTag(1);
 		this->stopAllActionsByTag(3);
-		auto idleState = RepeatForever::create(animation("Idle", 0.12));
+		auto idleState = RepeatForever::create(animation("Idle", 0.12f));
 		idleState->setTag(1);
 		this->runAction(idleState);
 		this->isIdle = true;
@@ -144,7 +144,7 @@ void Enemy::movingAnimation()
 {
 	if (this->canMove) {
 		this->stopAllActionsByTag(1);
-		auto anim = RepeatForever::create(animation("Moving", 0.12));
+		auto anim = RepeatForever::create(animation("Moving", 0.12f));
 		anim->setTag(3);
 		this->runAction(anim);
 		this->isMoving = true;
@@ -286,7 +286,7 @@ void Enemy::attackLandedEffect() {
 	if (this->checkFrame("Skill Landed")) {
 		this->spellLanded->setPosition(Vec2(ppp->getPosition().x, ppp->getPosition().y));
 		this->spellLanded->runAction(Sequence::create(
-			CallFunc::create([=]() {this->canDamage = true; this->spellLanded->setVisible(true); }), animation("Skill Landed", 0.12), CallFunc::create([=]() {this->canDamage = false; this->spellLanded->setVisible(false); }), nullptr));
+			CallFunc::create([=]() {this->canDamage = true; this->spellLanded->setVisible(true); }), animation("Skill Landed", 0.12f), CallFunc::create([=]() {this->canDamage = false; this->spellLanded->setVisible(false); }), nullptr));
 	}
 }
 
@@ -318,7 +318,7 @@ void Enemy::getHit(int damage) {
 			this->setFlippedX(true);
 		}
 		else this->setFlippedX(false);
-		this->runAction(MoveBy::create(0.33,Vec2(x, 0)));
+		this->runAction(MoveBy::create(0.33f,Vec2(x, 0)));
 		int healthP = std::stoi(this->hp->getString());
 		healthP -= damage;
 		if (healthP < 0 || healthP == 0) {
@@ -328,7 +328,7 @@ void Enemy::getHit(int damage) {
 		else
 		this->hp->setString(std::to_string(healthP));
 		if(!this->isDead)
-		this->runAction(Sequence::create(DelayTime::create(0.3), CallFunc::create([=]() { this->idleStatus(); }), DelayTime::create(0.4), CallFunc::create([=]() {this->isMoving=false;}), nullptr));
+		this->runAction(Sequence::create(DelayTime::create(0.3f), CallFunc::create([=]() { this->idleStatus(); }), DelayTime::create(0.4), CallFunc::create([=]() {this->isMoving=false;}), nullptr));
 	}
 
 }
@@ -354,7 +354,7 @@ void Enemy::dead() {
 		//this->stopAllActions();
 		this->forbidAllAction();
 		if(this->checkFrame("Dead"))
-		this->runAction(Sequence::create(animation("Dead", 0.12), CallFunc::create([=]() {this->setVisible(false); }), nullptr));
+		this->runAction(Sequence::create(animation("Dead", 0.12f), CallFunc::create([=]() {this->setVisible(false); }), nullptr));
 
 		this->autoRespawn();
 
