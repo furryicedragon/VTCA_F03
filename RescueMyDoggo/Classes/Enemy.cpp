@@ -362,25 +362,14 @@ void Enemy::dead() {
 		auto theX = 40.f;
 		if (howFar > 0) theX *= -1;
 		this->runAction(MoveBy::create(0.5, Vec2(theX, 0)));
-		auto randomShit = RandomHelper::random_int(1, 12);
-		if (bossNumber == 0) 
-		{
-			if (randomShit < 3) ppp->statUp(10, 0,0);
-			else {
-				if(randomShit<10)
-				ppp->statUp(0, 20,0);
-				else ppp->statUp(0, 0, 10);
-			}
-		}
-		else
-		{
-			if (randomShit < 5) ppp->statUp(30, 0,0);
-			else {
-				if(randomShit<9)
-				ppp->statUp(0, 60, 0); 
-				else ppp->statUp(0, 0, 30);
-			}
-		}
+		if (this->waveNumber == 1) 
+			ppp->currentEXP += 25;
+		if (this->waveNumber == 2) 
+			ppp->currentEXP += 50;
+		if (this->bossNumber == 1) 
+			ppp->currentEXP += 150;
+		if (this->bossNumber == 2) 
+			ppp->currentEXP += 300;
 }
 
 void Enemy::forbidAllAction()

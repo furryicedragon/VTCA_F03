@@ -13,7 +13,6 @@ public:
 	std::vector<bool> canMoveDirections;
 	std::vector<bool> doneDamage;
 	std::vector<Sprite*> effectStatus;
-	std::vector<Label*> statUpBox;
 	std::string weaponKind;
 	std::string lastDirection;
 	std::string secondLastDirection;
@@ -21,12 +20,16 @@ public:
 	Sprite* slash;
 	Sprite* movementHelper;
 	Label* hp;
+	Label* statPlus;
+	Label* level;
 	Size map1Size;
 	float lastDuration;
 	float lastX;
 	float lastY;
 	float attackSpeed;
-	float additionalAS;
+	int currentEXP;
+	int baseEXP;
+	int baseHP;
 	int w1kills;
 	int w2kills;
 	int count;
@@ -35,8 +38,6 @@ public:
 	int previousDirectionInNumber;
 	int checkDirectionInNumber(std::string direction);
 	int damageCurrent;
-	int additionalHP;
-	int additionalDmg;
 	bool isSpawning;
 	bool isSpawn;
 	bool isHit;
@@ -59,8 +60,9 @@ public:
 	void dead();
 	Animate* animation(std::string actionName, float timeEachFrame);
 	void forbidAllAction();
-	void statUp(int damage,int HP,int speed);
+	void statUp();
 	void spawnEffect();
+	void levelUp();
 
 	Projectile* skill1;
 	float cd_reduction;
@@ -68,6 +70,7 @@ public:
 	
 private:
 	void initOption();
+	virtual void update(float elapsed) override;
 };
 
 #endif // !Player_hpp

@@ -51,6 +51,22 @@ bool MainGame::init()
 	ppp->setFlippedX(true);
 	if(ppp!=nullptr)
 	this->addChild(ppp, 2);
+	this->ppp->statPlus = Label::create();
+	if (ppp->statPlus) {
+		this->ppp->addChild(ppp->statPlus);
+		ppp->statPlus->setVisible(false);
+	}
+	this->ppp->level = Label::create();
+	if (this->ppp->level) {
+		this->ppp->level->setScale(2.8f);
+		this->ppp->level->setAnchorPoint(Vec2(0.5, 0));
+		this->ppp->level->setString("1");
+		this->ppp->level->setColor(Color3B(255, 255, 255));
+		this->ppp->level->setSystemFontSize(16);
+		this->ppp->level->setPosition(this->ppp->getContentSize().width/2.7, ppp->getContentSize().height-69);
+		this->ppp->addChild(ppp->level);
+	}
+
 	//this->setPosition(Vec2(-map1->getContentSize().width / 2, 0));
 	if(ppp->slash)
 	this->addChild(ppp->slash,9);
@@ -269,12 +285,6 @@ void MainGame::update(float elapsed)
 		}
 
 		if (this->enemyAdded) {
-			if(!this->isGameOver)
-				if (ppp->statUpBox.size() > 0 && ppp->canShowStatUp) {
-					ppp->statUpBox[0]->setVisible(true);
-					ppp->statUpBox[0]->runAction(Sequence::create(CallFunc::create([=]() {ppp->canShowStatUp=false; }), MoveBy::create(0.69f, Vec2(0, 50)),
-						CallFunc::create([=]() {ppp->removeChild(ppp->statUpBox[0], true); ppp->statUpBox.erase(ppp->statUpBox.begin()); ppp->canShowStatUp = true; }), nullptr));
-				}
 
 			this->updatePlayerPosition();
 

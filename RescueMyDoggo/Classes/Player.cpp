@@ -20,10 +20,9 @@ void Player::initOption()
 	this->setOpacity(255);
 	this->runAction(FadeOut::create(0));
 	this->canShowStatUp = true;
-	this->additionalDmg = 0;
-	this->additionalHP = 0;
-	this->additionalAS = 0;
 	this->setHP(100);
+	this->baseHP = 100;
+	this->baseEXP = 100;
 	this->damageCurrent = 16;
 
 	doneDamage.resize(8, false);
@@ -62,6 +61,8 @@ void Player::initOption()
 	this->skill1->setScale(3.0f);
 
 	this->cd_reduction = 1.0f;
+
+	this->scheduleUpdate();
 }
 
 void Player::setHP(int HP)
@@ -396,42 +397,55 @@ void Player::forbidAllAction()
 	this->slash->setVisible(false);
 }
 
-void Player::statUp(int damage, int HP, int speed)
+void Player::statUp()
 {
-	this->additionalHP += HP;
-	this->additionalDmg += damage;
-	this->additionalAS += speed;
-	this->damageCurrent = 16 + additionalDmg;
-	this->attackSpeed = 0.08 - (additionalAS / 5000);
-	this->hp->setString(std::to_string(100+this->additionalHP));
-	auto statPlus = Label::create();
-	statPlus = Label::create();
+	this->damageCurrent += 6;
+	this->attackSpeed = 0.08 - (0.08 / 10);
+	baseHP += 50;
+	this->hp->setString(std::to_string(baseHP));
 	statPlus->setScale(3);
 	statPlus->setAnchorPoint(Vec2(0.5, 0));
 	statPlus->setPosition(this->getContentSize().width / 2, this->getPosition().y + this->getContentSize().height);
 	statPlus->setSystemFontSize(20);
 
-	if (damage > 0) {
-		statPlus->setColor(Color3B(204, 0, 62));
-		statPlus->setString("+ " + std::to_string(damage) +"DMG");
-	}
-	else
-	{
-		if (HP > 0) {
+		this->statPlus->runAction(Sequence::create(
+			CallFunc::create([=]() 
+		{
+			statPlus->setColor(Color3B(0, 0, 255));
+			statPlus->setString("+1 Level");
+			statPlus->setVisible(true);
+		}),
+			MoveBy::create(1, Vec2(0, 100)),
+			MoveBy::create(0, Vec2(0, -100)),
+			CallFunc::create([=]() {
+			statPlus->setColor(Color3B(204, 0, 62));
+			statPlus->setString("+ 6 Damage");
+		}),
+			MoveBy::create(1,Vec2(0,100)),
+			MoveBy::create(0, Vec2(0, -100)),
+			CallFunc::create([=]() {
 			statPlus->setColor(Color3B(0, 255, 0));
-			statPlus->setString("+ " + std::to_string(HP) +"HP");
-		}
-		else {
+			statPlus->setString("+ 40 Health Point");
+		}),
+			MoveBy::create(1, Vec2(0, 100)),
+			MoveBy::create(0, Vec2(0, -100)),
+			CallFunc::create([=]() {
 			statPlus->setColor(Color3B(255, 255, 0));
-			statPlus->setString("+ " + std::to_string(speed) + "AS");
-		}
+			statPlus->setString("+ 10% Speed");
+		}),
+			MoveBy::create(1, Vec2(0, 100)),
+			CallFunc::create([=]() {statPlus->setVisible(false); }), nullptr));
 
-	}
-	statPlus->setVisible(false);
-	statUpBox.push_back(statPlus);
-	if(statUpBox[statUpBox.size()-1])
-	this->addChild(statUpBox[statUpBox.size()-1], 1);
 
+
+
+}
+
+void Player::levelUp() {
+	this->statUp();
+	int lvl = std::stoi(level->getString());
+	this->baseEXP += 100 * lvl;
+	level->setString(std::to_string(lvl+1));
 }
 
 void Player::spawnEffect(){
@@ -439,4 +453,12 @@ void Player::spawnEffect(){
 		this->isSpawning = false;
 		this->runAction(FadeIn::create(0.8f));
 		this->runAction(Sequence::create(animation("Spawned", 0.1f), CallFunc::create([=]() {  this->isSpawn = true;this->idleStatus(); }), nullptr));
+}
+
+void Player::update(float elapsed)
+{
+	if (this->currentEXP > this->baseEXP) {
+		this->currentEXP = 0 + baseEXP-currentEXP;
+		this->levelUp();
+	}
 }
