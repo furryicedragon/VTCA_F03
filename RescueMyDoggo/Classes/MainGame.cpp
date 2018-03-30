@@ -196,8 +196,8 @@ bool MainGame::checkCollision(Player* pPlayer)
 		posLeft.y += 50;
 		posDown.y += 25;
 	}
-	//this->check4Directions(posRight, 1);
-	//this->check4Directions(posLeft, 3);
+	this->check4Directions(posRight, 1);
+	this->check4Directions(posLeft, 3);
 	
 	return true;
 }

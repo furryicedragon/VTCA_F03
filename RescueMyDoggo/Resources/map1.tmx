@@ -2,6 +2,7 @@
 <map version="1.0" tiledversion="2018.03.21" orientation="orthogonal" renderorder="right-down" width="40" height="15" tilewidth="32" tileheight="32" infinite="0" nextobjectid="17">
  <tileset firstgid="1" source="big_1423131203_image.tsx"/>
  <tileset firstgid="521" source="tileset.tsx"/>
+ <tileset firstgid="575" source="meta.tsx"/>
  <layer name="Bgr" width="40" height="15">
   <data encoding="base64" compression="zlib">
    eJzt1cO2GAYARdGXF1uN7bSxbVsNG9u2bdtWGzuNbdu2bXT3GzrtWnfPz+wGCQgICCQowQhOCEISitCEISzhCE8EIhKJyEQhKr8QjejEICaxiE0c4hKP+CQgIYlITBKSkozkpCAlv/IbqUhNGtKSjvRkICOZyEwWspKN7OQgJ7nITR7yko/8FKAghShMEYpSjOKUoCSlKE0ZylKO8lSgIpX4ncpUoSrVqE4N/qAmtahNHepSj/o0oCGNaEwTmtKM5rSgJa1oTRva0o72dKAjnehMF7rSje70oCe96E0f+tKP/gxgIIMYzBCGMozhjGAkoxjNGMYyjvFMYCKTmMwUpjKN6cxgJrOYzRzmMo/5LGAhi1jMEpbyJ3+xjOWsYCWrWM0a1rKO9WxgI5vYzN9sYSvb2M4OdrKL3exhL/vYzwEOcojDHOEoxzjOCU5yitOc4SznOM8FLnKJy1zhKte4zg1ucovb3OEu97jPAx7yiMc84SnPeM4LXvKK17zhLe94zwc+8onPfOEr3/jOD34SEMQIJCjBCE4IQhKK0IQhLOEITwQiEonIRCEqvxCN6MQgJrGITRziEo/4JCAhiUhMEpKSjOSkICW/8hupSE0a0pKO9GQgI5nITBayko3s5CAnuchNHvKSj/wUoCCFKEwRilKM4pSgJKUoTRnKUo7yVKAilfidylShKtWoTg3+oCa1qE0d6lKP+jSgIY1oTBOa0ozmtKAlrWhNG9rSjvZ0oCOd6EwXutKN7vSgJ73oTR/60o/+DGAggxjMEIYyjOGMYCSjGM0YxjKO8UxgIpOYzBSmMo3pzGAms5jNHOYyj/ksYCGLWMwSlvInf7GM5axgJatYzRrWso71bGAjm9jM32xhK9vYzg52sovd7GEv+9jPAQ5yiMMc4SjHOM4JTnKK05zhLOc4zwUuconLXOEq17jODW5yi9vc4S73uM8DHvKIxzzhKc94zgte8orXvOEt73jPBz7yic984Svf+M4PfvLv8QchkKAEIzghCEmowP/7/mvfP9LaOxA=
@@ -14,7 +15,7 @@
  </layer>
  <objectgroup name="Objects">
   <object id="2" name="FinalBoss" x="1065.67" y="306.667" width="36" height="57.3333"/>
-  <object id="5" name="SpawnPoint" x="43" y="400" width="13" height="12"/>
+  <object id="5" name="SpawnPoint" x="81" y="400" width="13" height="12"/>
   <object id="6" name="FinishPoint" x="1226" y="364" width="20" height="21"/>
   <object id="7" name="Line1" x="234" y="253" width="4" height="147"/>
   <object id="8" name="Line2" x="624" y="223" width="8" height="177"/>
@@ -22,4 +23,9 @@
   <object id="13" name="Boss1" x="552" y="400" width="13" height="12"/>
   <object id="14" name="Boss2" x="943" y="400" width="13" height="13"/>
  </objectgroup>
+ <layer name="meta" width="40" height="15" opacity="0.03">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFo2AUjIJRMBiBA9NAuwA3ALlt1H3kg6HgvsEMBrv7QAAAYAECUw==
+  </data>
+ </layer>
 </map>
