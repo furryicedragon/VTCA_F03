@@ -122,9 +122,4 @@ proj.win32/Release.*/
 lib/
 *.db
 *.opendb
-*.db
-*.db
-RescueMyDoggo/proj.win32/RescueMyDoggo.VC.db
-*.db
-*.db
-RescueMyDoggo/proj.win32/RescueMyDoggo.VC.db
+*.VC.db
