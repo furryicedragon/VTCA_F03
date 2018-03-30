@@ -61,16 +61,28 @@ void Enemy::initOption()
 
 void Enemy::setHP(int HP)
 {
-	hp = Label::create();
-	hp->setAnchorPoint(Vec2(0.5, 0));
+	if (hp == nullptr)	
+	{ 
+		hp = Label::create();
+
+		hp->setAnchorPoint(Vec2(0.5, 0));
+
+		hp->setPosition(this->getPosition().x +
+			(this->getContentSize().width / 2), this->getPosition().y + this->getContentSize().height);
+		hp->setColor(Color3B(255, 0, 0));
+		//hp->setColor(Color4B::RED);
+		hp->setSystemFontSize(16);
+
+		this->hpBar = false;
+	}
+
 	hp->setString(std::to_string(HP));
-	hp->setPosition(this->getPosition().x + 
-		(this->getContentSize().width/2), this->getPosition().y + this->getContentSize().height);
-	hp->setColor(Color3B(255, 0, 0));
-	//hp->setColor(Color4B::RED);
-	hp->setSystemFontSize(16);
-	if(hp)
-	this->addChild(hp, 1);
+
+	if (!hpBar)
+	{
+		this->addChild(hp, 1);
+		this->hpBar = true;
+	}
 }
 
 void Enemy::getFolderName()
@@ -321,18 +333,36 @@ void Enemy::getHit(int damage) {
 
 }
 
+void Enemy::autoRespawn()
+{
+	this->runAction(
+		Sequence::create(DelayTime::create(RandomHelper::random_int(10,20)), 
+			CallFunc::create([=]()
+			{
+				this->setVisible(true);
+				this->isDead = false;
+				this->setHP(100);
+				this->isSpawned = true;
+	}), nullptr));
+}
+
 void Enemy::dead() {
 		this->isDead = true;
+		this->isSpawned = false;
 		//this->stopAllActions();
 		this->forbidAllAction();
 		if(this->checkFrame("Dead"))
 		this->runAction(Sequence::create(animation("Dead", 0.12), CallFunc::create([=]() {this->setVisible(false); }), nullptr));
+
+		this->autoRespawn();
+
 		auto howFar = ppp->getPosition().x - this->getPosition().x;
 		auto theX = 40.f;
 		if (howFar > 0) theX *= -1;
 		this->runAction(MoveBy::create(0.5, Vec2(theX, 0)));
 		auto randomShit = RandomHelper::random_int(1, 12);
-		if (bossNumber == 0) {
+		if (bossNumber == 0) 
+		{
 			if (randomShit < 3) ppp->statUp(10, 0,0);
 			else {
 				if(randomShit<10)

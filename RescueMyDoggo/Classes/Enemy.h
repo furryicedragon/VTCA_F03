@@ -56,6 +56,7 @@ public:
 	bool isMoving;
 	bool isAttacking;
 	bool checkFrame(std::string action);
+	bool hpBar;
 	void attack();
 	void mobilitySS();
 	void casterSpell();
@@ -63,6 +64,7 @@ public:
 	void moving();
 	void idleStatus();
 	void getHit(int damage);
+	void autoRespawn();
 	void dead();
 	void initOption();
 	void setHP(int HP);

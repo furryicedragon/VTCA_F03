@@ -58,6 +58,9 @@ void Player::initOption()
 	this->weaponKind = "onehanded";
 	isAttacking = false;
 	this->idleStatus();
+
+	this->projectile = Sprite::create("Enemies/Map 2/Wave 1/Spell/0.png");
+	this->projectile->setVisible(false);
 }
 
 void Player::setHP(int HP)
@@ -182,6 +185,26 @@ int Player::checkDirectionInNumber(std::string direction) {
 	return directionNumber;
 }
 
+void Player::launchProjectile()
+{
+	this->projectile->setPosition(this->getPosition());
+
+	Vector<SpriteFrame *> runningFrames;
+	for (int i = 1; i < 4; i++) {
+		auto frameName = "/Enemies/Map2/Wave1/Spell/" + to_string(i) + ".png";
+		Sprite* getSize = Sprite::create(frameName);
+		if (!getSize)
+			break;
+
+		Size theSize = getSize->getContentSize();
+		auto frame = SpriteFrame::create(frameName, Rect(0, 0, theSize.width, theSize.height));
+		runningFrames.pushBack(frame);
+	}
+	Animation* runningAnimation = Animation::createWithSpriteFrames(runningFrames, 0.1f);
+	Animate* anim = Animate::create(runningAnimation);
+
+
+}
 
 void Player::attack() {
 	if (this->isSpawn && !this->isAttacking && !this->isRolling && !this->isDead && !this->isHit) {
@@ -190,7 +213,13 @@ void Player::attack() {
 		this->stopAllActions();				//stop all hanh dong de attack
 		std::string name = "Attack/Attack Chain/" + std::to_string(this->attackChainNumber); //name = Folder chua Animate cua (attack)
 		int frameNumbers = attackFrameNumber[this->attackChainNumber - 1]; //check xem thu tu don danh tiep theo (1,2,3 combo auto attack)  (**)
-		this->runAction(Sequence::create(animation(name, attackSpeed), CallFunc::create([=]() {this->isAttacking = false; this->idleStatus(); }),nullptr));
+		this->runAction(Sequence::create(animation(name, attackSpeed), 
+			CallFunc::create([=]() 
+			{
+				this->launchProjectile();    //test launch projectile
+				this->isAttacking = false; 
+				this->idleStatus(); 
+		}),	nullptr));
 		this->attackCount(); //dung de tang them 1 don vi moi khi attack (**)
 	}
 }

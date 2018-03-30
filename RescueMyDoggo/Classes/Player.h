@@ -19,6 +19,7 @@ public:
 	Sprite* attackHelper;
 	Sprite* slash;
 	Sprite* movementHelper;
+	Sprite* projectile;
 	Label* hp;
 	Size map1Size;
 	float lastDuration;
@@ -58,6 +59,8 @@ public:
 	void forbidAllAction();
 	void statUp(int damage,int HP,int speed);
 	void spawnEffect();
+
+	void launchProjectile();
 private:
 	void initOption();
 };
