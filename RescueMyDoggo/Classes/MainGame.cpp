@@ -50,7 +50,7 @@ bool MainGame::init()
 	ppp->setFlippedX(true);
 	if(ppp!=nullptr)
 	this->addChild(ppp, 2);
-	this->setPosition(Vec2(-map1->getContentSize().width / 2, 0));
+	//this->setPosition(Vec2(-map1->getContentSize().width / 2, 0));
 	if(ppp->slash)
 	this->addChild(ppp->slash,9);
 
@@ -72,7 +72,7 @@ bool MainGame::init()
 	this->startGame->runAction(playIt);
 	if(startGame)
 	this->addChild(startGame, 100);
-	this->startGame->setPosition(Point(map1->getContentSize().width/2, 0));
+	//this->startGame->setPosition(Point(map1->getContentSize().width/2, 0));
 	this->isGameStart = false;
 
 
@@ -196,33 +196,8 @@ bool MainGame::checkCollision(Player* pPlayer)
 		posLeft.y += 50;
 		posDown.y += 25;
 	}
-	this->check4Directions(posRight, 1);
-	this->check4Directions(posLeft, 3);
-	//int tileGID = meta->getTileGIDAt(this->tileCoordForPosition(posDown));
-	//CCLOG("%d", tileGID);
-	//if (tileGID) {
-	//	auto properties = map1->getPropertiesForGID(tileGID).asValueMap();
-
-	//	if (!properties.empty()) {
-	//		bool collide = properties["Collidable"].asBool();
-	//		if (collide) {
-	//			if (ppp->canMoveDown) {
-	//			ppp->stopAllActionsByTag(3);
-	//			ppp->moving();
-	//			}
-	//			ppp->canMoveDown = false;
-	//			return true; //-----> need to ask
-	//		}
-
-	//		bool  collect = properties["Collectible"].asBool();
-	//		if (collect) {
-	//			//do something else 
-	//			return true;
-	//		}
-
-	//	}
-	//}
-	//if (tileGID == 0 && !ppp->canMoveDown) ppp->canMoveDown = true;
+	//this->check4Directions(posRight, 1);
+	//this->check4Directions(posLeft, 3);
 	
 	return true;
 }
@@ -554,7 +529,7 @@ void MainGame::allEnemyInit()
 		wave->line1X = line1["x"].asFloat() * 2;
 		wave->line2X = line2["x"].asFloat() * 2;
 		wave->line3X = line3["x"].asFloat() * 2;
-		wave->setPosition(RandomHelper::random_real(wave->line2X, wave->line1X), this->ppp->getPosition().y);
+		wave->setPosition(RandomHelper::random_real(wave->line1X, wave->line2X), this->ppp->getPosition().y);
 		wave->ppp = ppp;
 		//wave->isSpawned = true;
 		wave->setVisible(false);
@@ -585,7 +560,7 @@ void MainGame::allEnemyInit()
 		wave->line1X = line1["x"].asFloat() * 2;
 		wave->line2X = line2["x"].asFloat() * 2;
 		wave->line3X = line3["x"].asFloat() * 2;
-		wave->setPosition(RandomHelper::random_real(wave->line3X, wave->line2X), RandomHelper::random_real(50.f, 129 * map1->getScale()));
+		wave->setPosition(RandomHelper::random_real(wave->line2X, wave->line3X), RandomHelper::random_real(50.f, 129 * map1->getScale()));
 		wave->ppp = ppp;
 		wave->setVisible(false);
 		wave->isSpawned = false;
