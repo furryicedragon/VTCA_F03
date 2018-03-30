@@ -274,7 +274,6 @@ void MainGame::update(float elapsed)
 				}
 
 			this->updatePlayerPosition();
-			this->doTheMath();
 
 			if (ppp->isHoldingKey && !ppp->isAttacking) {
 				ppp->moving();
@@ -282,7 +281,7 @@ void MainGame::update(float elapsed)
 			checkCollision(ppp);
 			if(currentWave!=0)
 			this->waveXMapXInit();
-			this->waveSpawn();
+			//this->waveSpawn();
 		}
 
 		if (ppp->isDead && !this->isGameOver) {
@@ -297,21 +296,6 @@ void MainGame::update(float elapsed)
 
 
 
-}
-void MainGame::doTheMath()
-{
-	if (currentMap == 1 && !this->checkDeath(map1Wave2) && boss1m1->isDead && this->currentWave != 2) this->currentWave = 2;
-	if (currentMap == 1 && this->checkDeath(map1Wave2) && !boss2m1->isDead && this->currentBoss != 2) this->currentBoss = 2;
-	if (currentMap == 1 && boss2m1->isDead && !bossfm1->isDead && this->currentBoss != 3) this->currentBoss = 3;
-
-	if (currentMap == 2 && !this->checkDeath(map2Wave1) && bossfm1->isDead && this->currentBoss != 1) {
-		this->currentBoss = 1;
-		this->currentWave = 1;
-	}
-
-	if (currentMap == 2 && !this->checkDeath(map2Wave2) && boss1m2->isDead && this->currentWave != 2) this->currentWave = 2;
-	if (currentMap == 2 && this->checkDeath(map2Wave2) && !boss2m2->isDead && this->currentWave != 2) this->currentBoss = 2;
-	if (currentMap == 2 && boss2m2->isDead && !bossfm2->isDead && this->currentBoss != 3) this->currentBoss = 3;
 }
 
 void MainGame::spawnPlayer()
@@ -328,134 +312,46 @@ void MainGame::spawnPlayer()
 
 void MainGame::checkAttackRange(Enemy * eee, int index)
 {
-	auto itemWidth = eee->getContentSize().width*eee->getScale();
-	auto howfarX = ppp->getPosition().x - (eee->getPosition().x + itemWidth / 2);
-	auto howfarY = ppp->getPosition().y - eee->getPosition().y;
-	if (howfarX < 0) howfarX *= -1;
-	if (howfarY < 0) howfarY *= -1;
-	if (howfarX < itemWidth + 69 && howfarY < 33) {
-		if (ppp->isAttacking && !ppp->doneDamage[index]) {
-			eee->getHit(ppp->damageCurrent);
-			ppp->doneDamage[index] = true;
+	if (index != 8 || allEnemy[8]->isSpawned) {
+		auto itemWidth = eee->getContentSize().width*eee->getScale();
+		auto howfarX = ppp->getPosition().x - (eee->getPosition().x + itemWidth / 2);
+		auto howfarY = ppp->getPosition().y - eee->getPosition().y;
+		if (howfarX < 0) howfarX *= -1;
+		if (howfarY < 0) howfarY *= -1;
+		if (howfarX < itemWidth + 69 && howfarY < 33) {
+			if (ppp->isAttacking && !ppp->doneDamage[index]) {
+				eee->getHit(ppp->damageCurrent);
+				ppp->doneDamage[index] = true;
+			}
+
+			if (eee->canDamage && !ppp->isRolling) {
+				ppp->getHit(eee->skillDamage, eee->getPosition().x);
+				eee->canDamage = false;
+			}
 		}
 
-		if (eee->canDamage && !ppp->isRolling) { 
-			ppp->getHit(eee->skillDamage, eee->getPosition().x); 
-			eee->canDamage = false;
-		}
-	}
-	if (!this->checkDeath(map1Wave1) || (!this->checkDeath(map1Wave2) && boss1m1->isDead)) {
-		if (eee->canDamage && !ppp->isRolling) {
-			ppp->getHit(eee->skillDamage, eee->getPosition().x);
-			eee->canDamage = false;
-		}
-	}
-
-	if (ppp->skill1->launching)
-	{
-		//check projectile collision
-		if (ppp->skill1->getBoundingBox().intersectsRect(eee->getBoundingBox()) && ppp->skill1->canDamage[index])
+		if (ppp->skill1->launching)
 		{
-			ppp->skill1->canDamage[index] = false;
-				
-			eee->getHit(ppp->damageCurrent);
+			//check projectile collision
+			if (ppp->skill1->getBoundingBox().intersectsRect(eee->getBoundingBox()) && ppp->skill1->canDamage[index])
+			{
+				ppp->skill1->canDamage[index] = false;
+
+				eee->getHit(ppp->damageCurrent);
+			}
 		}
 	}
+
 }
 void MainGame::waveXMapXInit() {
-	std::vector<Enemy*> waveXMapX;
-	if (currentMap == 1 && currentWave == 1) waveXMapX = map1Wave1;
-	else if (currentMap == 1 && currentWave == 2) waveXMapX = map1Wave2;
-	else if (currentMap == 2 && currentWave == 1) waveXMapX = map2Wave1;
-	else if (currentMap == 2 && currentWave == 2) waveXMapX = map2Wave2;
-
-	Enemy* boss;
-	if (currentMap == 1 && currentBoss == 1) boss = boss1m1;
-	if (currentMap == 1 && currentBoss == 2) boss = boss2m1;
-	if (currentMap == 1 && currentBoss == 3) boss = bossfm1;
-	if (currentMap == 2 && currentBoss == 1) boss = boss1m2;
-	if (currentMap == 2 && currentBoss == 2) boss = boss2m2;
-	if (currentMap == 2 && currentBoss == 3) boss = bossfm2;
-
-	nextWave(waveXMapX,boss);
 	int i = 0;
-	if (!this->checkDeath(waveXMapX)) {
-		for each (auto item in waveXMapX)
+		for each (auto item in allEnemy)
 		{
-			if (item->getPosition().y > ppp->getPosition().y) item->setZOrder(1);
-			if (item->getPosition().y < ppp->getPosition().y) item->setZOrder(3);
-			if (item->getPosition().y == ppp->getPosition().y) item->setZOrder(2);
 			this->checkAttackRange(item, i);
 			i++;
 		}
-	}
-	else if (boss->isSpawned)
-		this->checkAttackRange(boss, i);
-
-}
-void MainGame::nextWave(std::vector<Enemy*> waveXMapX,Enemy* boss)
-{
-		if (this->checkDeath(waveXMapX) && waveXMapX.size()!=0 && boss->canSpawn) {
-			this->bossSpawn();
-		}
 }
 
-void MainGame::waveSpawn() {
-	if (this->checkSpawn(map1Wave2) && boss1m1->isDead) {
-		int i = 0;
-		for each (auto item in this->map1Wave2) {
-			this->spawnEffect(item,i);
-			i++;
-		}
-		currentWave = 2;
-	}
-	if (this->checkSpawn(map2Wave1) && currentMap==2 && bossfm1->isDead) {
-		int i = 0;
-		for each (auto item in this->map2Wave1) {
-			this->spawnEffect(item,i);
-			i++;
-		}
-		currentWave = 1;
-	}
-	if (this->checkSpawn(map2Wave2) && currentMap==2 && boss1m2->isDead) {
-		int i = 0;
-		for each (auto item in this->map2Wave2) {
-			this->spawnEffect(item,i);
-			i++;
-		}
-		currentWave = 2;
-	}
-}
-void MainGame::bossSpawn()
-{
-	if (this->checkDeath(map1Wave1) && !boss1m1->isSpawned) {
-		this->spawnEffect(boss1m1,0);
-	}
-	if (this->checkDeath(map1Wave2) && !boss2m1->isSpawned) {
-		this->spawnEffect(boss2m1,0);
-		this->currentBoss = 2;
-	}
-	if (boss2m1->isDead && !bossfm1->isSpawned) {
-		this->spawnEffect(bossfm1,0);
-		this->currentBoss = 3;
-	}
-
-	//if (currentMap == 2 && this->checkDeath(map2Wave1) && !boss1m2->isSpawned) {
-	//	this->spawnEffect(boss1m2,0);
-	//	//boss1m2->canSpawn = false;
-	//}
-	//if (this->checkDeath(map2Wave2) && currentMap == 2 && !boss2m2->isSpawned) {
-	//	this->spawnEffect(boss2m2,0);
-	//	//boss2m2->canSpawn = false;
-	//	this->currentBoss = 2;
-	//}
-
-	//if (boss2m2->isDead&&currentMap == 2 && !bossfm2->isSpawned) {
-	//	this->spawnEffect(bossfm2,0);
-	//	//bossfm2->canSpawn = false;
-	//	this->currentBoss = 3;
-	//}
-}
 void MainGame::spawnEffect(Enemy* enemy2Spawn,int index)
 {
 	enemy2Spawn->canSpawn=false;
@@ -552,12 +448,45 @@ void MainGame::allEnemyInit()
 		if (wave->spell != nullptr) this->addChild(wave->spell, 9);
 		if (wave->spellLanded != nullptr) this->addChild(wave->spellLanded, 9);
 		wave->setAnchorPoint(Vec2(0, 0));
-		map1Wave1.push_back(wave);
-		if (map1Wave1[i]) {
-			this->addChild(map1Wave1[i], 0);
-			this->spawnEffect(map1Wave1[i],i);
+		allEnemy.push_back(wave);
+		if (allEnemy[i]) {
+			this->addChild(allEnemy[i], 0);
+			this->spawnEffect(allEnemy[i],i);
 		}
 	}
+
+
+	{	//boss 1
+		this->boss1m1 = Enemy::create(1, 0, 1);
+		boss1m1->visionRange = 420;
+		boss1m1->skillDamage = 150;
+		boss1m1->setScale(1.6);
+		boss1m1->moveSpeed = 333;
+		boss1m1->isSSMobility = true;
+		boss1m1->castSpeed = 0.069;
+		boss1m1->skillCD = 2;
+		boss1m1->skillRange = 400;
+		boss1m1->mobilitySSAt = 3;
+		boss1m1->mobilitySpeed = 4;
+		boss1m1->setHP(250);
+		boss1m1->initOption();
+		auto boss1Pos = oj->getObject("Boss1");
+		boss1m1->setPosition(Vec2(boss1Pos["x"].asFloat() * 2, boss1Pos["y"].asFloat() * 2));
+		if (boss1m1->spell != nullptr) this->addChild(boss1m1->spell, 9);
+		if (boss1m1->spellLanded != nullptr) this->addChild(boss1m1->spellLanded, 9);
+		boss1m1->line1X = line1["x"].asFloat() * 2;
+		boss1m1->line2X = line2["x"].asFloat() * 2;
+		boss1m1->line3X = line3["x"].asFloat() * 2;
+		boss1m1->ppp = ppp;
+		boss1m1->setVisible(false);
+		boss1m1->isSpawned = false;
+		boss1m1->setAnchorPoint(Vec2(0, 0));
+		if (boss1m1) {
+			allEnemy.push_back(boss1m1);
+			this->addChild(allEnemy[8], 1);
+		}
+	}
+
 
 	for (int i = 0; i < 8; i++) {
 		Enemy* wave = Enemy::create(1, 2, 0);
@@ -575,46 +504,20 @@ void MainGame::allEnemyInit()
 		wave->line1X = line1["x"].asFloat() * 2;
 		wave->line2X = line2["x"].asFloat() * 2;
 		wave->line3X = line3["x"].asFloat() * 2;
-		wave->setPosition(RandomHelper::random_real(wave->line2X, wave->line3X), RandomHelper::random_real(50.f, 129 * map1->getScale()));
+		wave->setPosition(RandomHelper::random_real(wave->line2X, wave->line3X), ppp->getPosition().y);
 		wave->ppp = ppp;
 		wave->setVisible(false);
 		wave->isSpawned = false;
 		if (wave->spell != nullptr) this->addChild(wave->spell, 9);
 		if (wave->spellLanded != nullptr) this->addChild(wave->spellLanded, 9);
 		wave->setAnchorPoint(Vec2(0, 0));
-		map1Wave2.push_back(wave);
-		if(map1Wave2[i])
-		this->addChild(map1Wave2[i], 0);
+		allEnemy.push_back(wave);
+		if (allEnemy[i + 9]) {
+			this->addChild(allEnemy[i + 9], 0);
+			this->spawnEffect(allEnemy[i + 9], i);
+		}
 	}
 
-	{	//boss 1
-		this->boss1m1 = Enemy::create(1, 0, 1);
-		boss1m1->visionRange = 420;
-		boss1m1->skillDamage = 150;
-		boss1m1->setScale(1.6);
-		boss1m1->moveSpeed = 333;
-		boss1m1->isSSMobility = true;
-		boss1m1->castSpeed = 0.069;
-		boss1m1->skillCD = 2;
-		boss1m1->skillRange = 400;
-		boss1m1->mobilitySSAt = 3;
-		boss1m1->mobilitySpeed = 4;
-		boss1m1->setHP(250);
-		boss1m1->initOption();
-		auto boss1Pos = oj->getObject("Boss1");
-		boss1m1->setPosition(Vec2(boss1Pos["x"].asFloat()*2,boss1Pos["y"].asFloat()*2));
-		if (boss1m1->spell != nullptr) this->addChild(boss1m1->spell, 9);
-		if (boss1m1->spellLanded != nullptr) this->addChild(boss1m1->spellLanded, 9);
-		boss1m1->line1X = line1["x"].asFloat() * 2;
-		boss1m1->line2X = line2["x"].asFloat() * 2;
-		boss1m1->line3X = line3["x"].asFloat() * 2;
-		boss1m1->ppp = ppp;
-		boss1m1->setVisible(false);
-		boss1m1->isSpawned = false;
-		boss1m1->setAnchorPoint(Vec2(0, 0));
-		if(boss1m1)
-		this->addChild(boss1m1, 1);
-	} 
 	{	//boss2
 		this->boss2m1 = Enemy::create(1, 0, 2);
 		boss2m1->setScale(1.6);
@@ -672,6 +575,7 @@ void MainGame::allEnemyInit()
 		this->addChild(bossfm1, 1);
 	}
 
+	ppp->doneDamage.resize(allEnemy.size(),true);
 }
 
 
@@ -694,10 +598,7 @@ Animate * MainGame::animation(std::string actionName,float timeEachFrame)
 }
 
 void MainGame::delAll() {
-	this->map1Wave1.clear();
-	this->map1Wave2.clear();
-	this->map2Wave1.clear();
-	this->map2Wave2.clear();
+	this->allEnemy.clear();
 	this->removeAllChildren();
 	this->enemyAdded = false;
 	this->gameOver = Sprite::create("/Game Over/0.png");

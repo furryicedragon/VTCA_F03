@@ -36,10 +36,6 @@ public:
 	Point tileCoordForPosition(Point position);
 	std::vector<EventKeyboard::KeyCode> repeatedKeys;
 	std::vector<Enemy*> allEnemy;
-	std::vector<Enemy*> map1Wave1;
-	std::vector<Enemy*> map1Wave2;
-	std::vector<Enemy*> map2Wave1;
-	std::vector<Enemy*> map2Wave2;
 	bool onTouchBegan(Touch* touch, Event* event);
 	bool keyPressed(EventKeyboard::KeyCode keyCode , Event* event);
 	bool keyReleased(EventKeyboard::KeyCode keyCode, Event* event);
@@ -60,13 +56,9 @@ public:
 	void updatePlayerPosition();
 	void check4Directions(Point posDirection,int directionClock);
 	void waveXMapXInit();
-	void nextWave(std::vector<Enemy*> waveXMapX,Enemy* boss);
 	void allEnemyInit();
-	void waveSpawn();
-	void bossSpawn();
 	void spawnEffect(Enemy* enemy2Spawn,int index);
 	void checkAttackRange(Enemy* eee,int index);
-	void doTheMath();
 	void spawnPlayer();
 	Animate* animation(std::string actionName, float timeEachFrame);
 	void delAll();
