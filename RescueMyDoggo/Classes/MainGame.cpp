@@ -350,6 +350,14 @@ void MainGame::waveXMapXInit() {
 			this->checkAttackRange(item, i);
 			i++;
 		}
+		if (ppp->w1kills > 20 && !boss1) {
+			this->spawnEffect(allEnemy[8], 1);
+			boss1 = true;
+		}
+		if (ppp->w2kills > 20 && !boss2) { 
+			this->spawnEffect(allEnemy[16], 1);
+			boss2 = true; 
+		}
 }
 
 void MainGame::spawnEffect(Enemy* enemy2Spawn,int index)
@@ -576,6 +584,7 @@ void MainGame::allEnemyInit()
 	}
 
 	ppp->doneDamage.resize(allEnemy.size(),true);
+	ppp->skill1->canDamage.resize(allEnemy.size(), true);
 }
 
 

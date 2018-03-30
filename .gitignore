@@ -120,3 +120,8 @@ proj.win32/Release.*/
 *cmake_install.cmake
 *Makefile
 lib/
+*.db
+*.opendb
+*.db
+*.db
+RescueMyDoggo/proj.win32/RescueMyDoggo.VC.db

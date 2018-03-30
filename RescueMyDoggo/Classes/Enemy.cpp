@@ -347,6 +347,8 @@ void Enemy::autoRespawn()
 }
 
 void Enemy::dead() {
+	if (this->waveNumber == 1) ppp->w1kills++;
+	if (this->waveNumber == 2) ppp->w2kills++;
 		this->isDead = true;
 		this->isSpawned = false;
 		//this->stopAllActions();

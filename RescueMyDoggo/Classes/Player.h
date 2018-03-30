@@ -27,6 +27,8 @@ public:
 	float lastY;
 	float attackSpeed;
 	float additionalAS;
+	int w1kills;
+	int w2kills;
 	int count;
 	int attackChainNumber;
 	int presentDirectionInNumber;

@@ -36,6 +36,8 @@ public:
 	Point tileCoordForPosition(Point position);
 	std::vector<EventKeyboard::KeyCode> repeatedKeys;
 	std::vector<Enemy*> allEnemy;
+	bool boss1;
+	bool boss2;
 	bool onTouchBegan(Touch* touch, Event* event);
 	bool keyPressed(EventKeyboard::KeyCode keyCode , Event* event);
 	bool keyReleased(EventKeyboard::KeyCode keyCode, Event* event);
