@@ -344,6 +344,10 @@ void MainGame::checkAttackRange(Enemy * eee, int index)
 				eee->canDamage = false;
 			}
 		}
+		if (eee->isCaster && !eee->canDamage && std::fabsf(eee->spell->getPosition().x - ppp->getPosition().x) < 22) {
+			eee->spell->setPosition(999, 999);
+			eee->attackLandedEffect();
+		}
 		if (eee->isCaster && eee->canDamage && !ppp->isRolling && std::fabsf(eee->spellLanded->getPosition().x-ppp->getPosition().x)<5) {
 			ppp->getHit(eee->skillDamage, eee->getPosition().x);
 			eee->canDamage = false;
@@ -453,7 +457,7 @@ void MainGame::allEnemyInit()
 	auto line2 = oj->getObject("Line2");
 	auto line3 = oj->getObject("Line3");
 	for (int i = 0; i < 8; i++) {
-		Enemy* wave = Enemy::create(1, 1, 0);
+		Enemy* wave = Enemy::create(2, 1, 0);
 		wave->setScale(1.6f);
 		wave->skillDamage = 20;
 		wave->visionRange = 310;

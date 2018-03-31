@@ -258,9 +258,8 @@ void Enemy::attack() {
 }
 void Enemy::casterSpell()
 	{
-	float range = this->getPosition().x-ppp->getPosition().x;
-	if (range < 0) range *= -1;
-	float duration = range / 250;
+	float range = 500.f;
+	if (this->isFlippedX()) range *= -1;
 	float move2X = this->getPosition().x;
 	if (this->isFlippedX()) {
 		move2X -= this->getContentSize().width;
@@ -270,12 +269,18 @@ void Enemy::casterSpell()
 		MoveTo::create(0, Vec2(move2X, this->getPosition().y)),
 		CallFunc::create([=]() {this->spell->setVisible(true); }),
 		animation("Spell", castSpeed), CallFunc::create([=]() {this->spell->setVisible(false); this->attackLandedEffect(); }), nullptr));
-	if(this->mapNumber==2)
+	if (this->mapNumber == 2)
 		this->spell->runAction(Sequence::create(
-			MoveTo::create(0, Vec2(move2X, this->getPosition().y)),
-			CallFunc::create([=]() {this->spell->setVisible(true); }),
-			Spawn::create(Repeat::create(animation("Spell", castSpeed),10),MoveTo::create(duration,Vec2(ppp->getPosition().x,this->getPosition().y-100))),
-			CallFunc::create([=]() {this->spell->setVisible(false);}), nullptr));
+			DelayTime::create(castSpeed * 8),
+			CallFunc::create([=]() {
+		this->spell->setPosition(move2X, this->getPosition().y+40);
+		this->spell->setVisible(true); 
+		this->spell->runAction(RepeatForever::create(animation("Spell", castSpeed)));
+	}),
+			MoveBy::create(1, Vec2(range, 0)),
+		CallFunc::create([=]() {this->spell->setVisible(false); }), nullptr));
+
+		//this->spell->runAction(RepeatForever::create(animation("Spell", castSpeed)));
 
 }
 void Enemy::mobilitySS()
