@@ -280,8 +280,8 @@ void Enemy::casterSpell()
 		this->spell->setVisible(true); 
 		this->spell->runAction(RepeatForever::create(animation("Spell", castSpeed)));
 	}),
-			MoveBy::create(1, Vec2(range, 0)),
-		CallFunc::create([=]() {this->spell->setVisible(false);  this->spell->setPosition(9999, 9999); }), nullptr));
+			MoveBy::create(0.69, Vec2(range, 0)),
+		CallFunc::create([=]() {this->spell->setVisible(false);  this->spell->setPosition(0, 0); }), nullptr));
 
 		//this->spell->runAction(RepeatForever::create(animation("Spell", castSpeed)));
 
@@ -305,7 +305,7 @@ void Enemy::attackLandedEffect() {
 	if (this->checkFrame("Skill Landed")) {
 		this->spellLanded->setPosition(Vec2(ppp->getPosition().x, ppp->getPosition().y));
 		this->spellLanded->runAction(Sequence::create(
-			CallFunc::create([=]() {this->canDamage = true; this->spellLanded->setVisible(true); }), animation("Skill Landed", 0.12f), CallFunc::create([=]() {this->canDamage = false; this->spellLanded->setVisible(false); this->spellLanded->setPosition(9999, 9999); }), nullptr));
+			CallFunc::create([=]() {this->canDamage = true; this->spellLanded->setVisible(true); }), animation("Skill Landed", 0.12f), CallFunc::create([=]() {this->canDamage = false; this->spellLanded->setVisible(false); this->spellLanded->setPosition(0, 0); }), nullptr));
 	}
 }
 
