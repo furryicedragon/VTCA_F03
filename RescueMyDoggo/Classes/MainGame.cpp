@@ -339,10 +339,14 @@ void MainGame::checkAttackRange(Enemy * eee, int index)
 				ppp->doneDamage[index] = true;
 			}
 
-			if (eee->canDamage && !ppp->isRolling) {
+			if (eee->canDamage && !ppp->isRolling && !eee->isCaster) {
 				ppp->getHit(eee->skillDamage, eee->getPosition().x);
 				eee->canDamage = false;
 			}
+		}
+		if (eee->isCaster && eee->canDamage && !ppp->isRolling && std::fabsf(eee->spellLanded->getPosition().x-ppp->getPosition().x)<5) {
+			ppp->getHit(eee->skillDamage, eee->getPosition().x);
+			eee->canDamage = false;
 		}
 
 		if (ppp->skill1->launching)
