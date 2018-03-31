@@ -41,6 +41,7 @@ public:
 	float line3X;
 	float randomX;
 	float randomY;
+	bool interuptable;
 	bool invulnerable;
 	bool breakTime;
 	bool isSpawned;

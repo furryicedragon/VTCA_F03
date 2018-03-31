@@ -272,8 +272,10 @@ void Enemy::casterSpell()
 		animation("Spell", castSpeed), CallFunc::create([=]() {this->spell->setVisible(false); this->attackLandedEffect(); this->spell->setPosition(999, 999); }), nullptr));
 	if (this->mapNumber == 2)
 		this->spell->runAction(Sequence::create(
+			CallFunc::create([=]() {this->interuptable=true; }),
 			DelayTime::create(castSpeed * 8),
 			CallFunc::create([=]() {
+		this->interuptable = false;
 		this->spell->setPosition(this->getPosition().x+this->getContentSize().width/2, this->getPosition().y+40);
 		this->spell->setVisible(true); 
 		this->spell->runAction(RepeatForever::create(animation("Spell", castSpeed)));
@@ -394,7 +396,7 @@ void Enemy::dead() {
 void Enemy::forbidAllAction()
 {
 	this->stopAllActions();
-	if (this->mapNumber == 1 && this->waveNumber > 0) {
+	if ((this->mapNumber == 1 && this->waveNumber > 0)||this->interuptable) {
 		this->spell->stopAllActions();
 		this->spell->setVisible(false);
 	}
