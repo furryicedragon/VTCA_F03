@@ -258,14 +258,25 @@ void Enemy::attack() {
 }
 void Enemy::casterSpell()
 	{
+	float range = this->getPosition().x-ppp->getPosition().x;
+	if (range < 0) range *= -1;
+	float duration = range / 250;
 	float move2X = this->getPosition().x;
 	if (this->isFlippedX()) {
 		move2X -= this->getContentSize().width;
 	}
+	if(this->mapNumber==1)
 	this->spell->runAction(Sequence::create(
 		MoveTo::create(0, Vec2(move2X, this->getPosition().y)),
 		CallFunc::create([=]() {this->spell->setVisible(true); }),
 		animation("Spell", castSpeed), CallFunc::create([=]() {this->spell->setVisible(false); this->attackLandedEffect(); }), nullptr));
+	if(this->mapNumber==2)
+		this->spell->runAction(Sequence::create(
+			MoveTo::create(0, Vec2(move2X, this->getPosition().y)),
+			CallFunc::create([=]() {this->spell->setVisible(true); }),
+			Spawn::create(Repeat::create(animation("Spell", castSpeed),10),MoveTo::create(duration,Vec2(ppp->getPosition().x,this->getPosition().y-100))),
+			CallFunc::create([=]() {this->spell->setVisible(false);}), nullptr));
+
 }
 void Enemy::mobilitySS()
 {
@@ -293,7 +304,7 @@ void Enemy::attackLandedEffect() {
 
 void Enemy::getHit(int damage) {
 	if (!this->isDead && this->isSpawned && !this->invulnerable) {
-		if(this->mapNumber==1 && this->mapNumber==2) this->stopAllActions();
+		if(this->mapNumber==1 || this->mapNumber==2) this->stopAllActions();
 		else this->forbidAllAction();
 		this->isIdle = false;
 		this->isAttacking = false;

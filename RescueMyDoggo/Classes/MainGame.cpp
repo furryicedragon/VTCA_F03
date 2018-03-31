@@ -111,8 +111,10 @@ void MainGame::setupTouchHandling() {
 
 bool MainGame::onTouchBegan(Touch* touch, Event* event)
 {
-	if(this->isGameOver)
-		this->runAction(Sequence::create(DelayTime::create(1),CallFunc::create([=]() {this->delAll(); }),nullptr));
+	if (this->isGameOver && !ending) {
+		ending = true;
+		this->runAction(Sequence::create(DelayTime::create(1), CallFunc::create([=]() {this->delAll(); }), nullptr));
+	}
 
 	if (!this->isGameStart) {
 		isGameStart = true;
@@ -603,7 +605,6 @@ void MainGame::allEnemyInit()
 	ppp->skill1->canDamage.resize(allEnemy.size(), true);
 }
 
-
 Animate * MainGame::animation(std::string actionName,float timeEachFrame)
 {
 	Vector<SpriteFrame *> runningFrames;
@@ -665,10 +666,24 @@ void MainGame::delAll() {
 	ppp->setFlippedX(true);
 	if (ppp != nullptr)
 		this->addChild(ppp, 2);
-	this->setPosition(Vec2(-map1->getContentSize().width / 2, 0));
+	this->ppp->statPlus = Label::create();
+	if (ppp->statPlus) {
+		this->ppp->addChild(ppp->statPlus);
+		ppp->statPlus->setVisible(false);
+	}
+	this->ppp->level = Label::create();
+	if (this->ppp->level) {
+		this->ppp->level->setScale(2.8f);
+		this->ppp->level->setAnchorPoint(Vec2(0.5, 0));
+		this->ppp->level->setString("1");
+		this->ppp->level->setColor(Color3B(255, 255, 255));
+		this->ppp->level->setSystemFontSize(16);
+		this->ppp->level->setPosition(this->ppp->getContentSize().width / 2.7, ppp->getContentSize().height - 69);
+		this->ppp->addChild(ppp->level);
+	}
 	if(ppp->slash)
 	this->addChild(ppp->slash, 9);
-
+	this->setPosition(Vec2(0, 0));
 
 
 	pppPositionHelper = Sprite::create("CloseNormal.png");
@@ -687,8 +702,9 @@ void MainGame::delAll() {
 	this->startGame->runAction(playIt);
 	if(startGame)
 	this->addChild(startGame, 100);
-	this->startGame->setPosition(Point(map1->getContentSize().width / 2, 0));
 	this->isGameStart = false;
+	ending = false;
 
+	this->addChild(ppp->skill1, 3);
 	this->scheduleUpdate();
 }
