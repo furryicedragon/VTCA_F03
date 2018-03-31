@@ -399,9 +399,9 @@ void Player::forbidAllAction()
 
 void Player::statUp()
 {
-	this->damageCurrent += 6;
-	this->attackSpeed = 0.08 - (0.08 / 10);
-	baseHP += 50;
+	this->damageCurrent += 10;
+	this->attackSpeed = 0.08 - (0.08 / 20);
+	baseHP += 80;
 	this->hp->setString(std::to_string(baseHP));
 	statPlus->setScale(3);
 	statPlus->setAnchorPoint(Vec2(0.5, 0));
@@ -419,19 +419,19 @@ void Player::statUp()
 			MoveBy::create(0, Vec2(0, -100)),
 			CallFunc::create([=]() {
 			statPlus->setColor(Color3B(204, 0, 62));
-			statPlus->setString("+ 6 Damage");
+			statPlus->setString("+ 10 Damage");
 		}),
 			MoveBy::create(1,Vec2(0,100)),
 			MoveBy::create(0, Vec2(0, -100)),
 			CallFunc::create([=]() {
 			statPlus->setColor(Color3B(0, 255, 0));
-			statPlus->setString("+ 40 Health Point");
+			statPlus->setString("+ 80 Health Point");
 		}),
 			MoveBy::create(1, Vec2(0, 100)),
 			MoveBy::create(0, Vec2(0, -100)),
 			CallFunc::create([=]() {
 			statPlus->setColor(Color3B(255, 255, 0));
-			statPlus->setString("+ 10% Speed");
+			statPlus->setString("+ 20% Speed");
 		}),
 			MoveBy::create(1, Vec2(0, 100)),
 			CallFunc::create([=]() {statPlus->setVisible(false); }), nullptr));
