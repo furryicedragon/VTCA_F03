@@ -503,7 +503,7 @@ void MainGame::allEnemyInit()
 		boss1m1->skillRange = 400;
 		boss1m1->mobilitySSAt = 3;
 		boss1m1->mobilitySpeed = 4;
-		boss1m1->setHP(250);
+		boss1m1->setHP(400);
 		boss1m1->initOption();
 		auto boss1Pos = oj->getObject("Boss1");
 		boss1m1->setPosition(Vec2(boss1Pos["x"].asFloat() * 2, boss1Pos["y"].asFloat() * 2));
@@ -565,7 +565,7 @@ void MainGame::allEnemyInit()
 		boss2m1->skillRange = 420;
 		boss2m1->mobilitySSAt = 2;
 		boss2m1->mobilitySpeed = 2;
-		boss2m1->setHP(180);
+		boss2m1->setHP(420);
 		boss2m1->initOption();
 		auto boss2Pos = oj->getObject("Boss2");
 		boss2m1->setPosition(Vec2(boss2Pos["x"].asFloat() * 2, boss2Pos["y"].asFloat() * 2));
