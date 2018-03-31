@@ -269,7 +269,7 @@ void Enemy::casterSpell()
 	this->spell->runAction(Sequence::create(
 		MoveTo::create(0, Vec2(move2X, this->getPosition().y)),
 		CallFunc::create([=]() {this->spell->setVisible(true); }),
-		animation("Spell", castSpeed), CallFunc::create([=]() {this->spell->setVisible(false); this->attackLandedEffect(); this->spell->setPosition(999, 999); }), nullptr));
+		animation("Spell", castSpeed), CallFunc::create([=]() {this->spell->setVisible(false); this->attackLandedEffect(); }), nullptr));
 	if (this->mapNumber == 2)
 		this->spell->runAction(Sequence::create(
 			CallFunc::create([=]() {this->interuptable=true; }),
@@ -281,7 +281,7 @@ void Enemy::casterSpell()
 		this->spell->runAction(RepeatForever::create(animation("Spell", castSpeed)));
 	}),
 			MoveBy::create(1, Vec2(range, 0)),
-		CallFunc::create([=]() {this->spell->setVisible(false); }), nullptr));
+		CallFunc::create([=]() {this->spell->setVisible(false);  this->spell->setPosition(999, 999); }), nullptr));
 
 		//this->spell->runAction(RepeatForever::create(animation("Spell", castSpeed)));
 
