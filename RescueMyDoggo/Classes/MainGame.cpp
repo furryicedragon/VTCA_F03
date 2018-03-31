@@ -345,7 +345,7 @@ void MainGame::checkAttackRange(Enemy * eee, int index)
 				eee->canDamage = false;
 			}
 		}
-		if (eee->isCaster && !ppp->isRolling && !eee->canDamage && std::fabsf(eee->spell->getPosition().x - ppp->getPosition().x) < 22) {
+		if (eee->isCaster && !ppp->isRolling && !eee->canDamage && std::fabsf(eee->spell->getPosition().x - ppp->getPosition().x) < 22 && eee->mapNumber==2) {
 			eee->spell->setPosition(0, 0);
 			eee->spell->setVisible(false);
 			eee->spell->stopAllActions();
