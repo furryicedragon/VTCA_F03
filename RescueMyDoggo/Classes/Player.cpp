@@ -399,9 +399,9 @@ void Player::forbidAllAction()
 
 void Player::statUp()
 {
-	this->damageCurrent += 910;
+	this->damageCurrent += 10;
 	this->attackSpeed = 0.08 - (0.08 / 20);
-	baseHP += 980;
+	baseHP += 80;
 	this->hp->setString(std::to_string(baseHP));
 	statPlus->setScale(3);
 	statPlus->setAnchorPoint(Vec2(0.5, 0));
