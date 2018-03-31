@@ -269,7 +269,7 @@ void Enemy::casterSpell()
 	this->spell->runAction(Sequence::create(
 		MoveTo::create(0, Vec2(move2X, this->getPosition().y)),
 		CallFunc::create([=]() {this->spell->setVisible(true); }),
-		animation("Spell", castSpeed), CallFunc::create([=]() {this->spell->setVisible(false); this->attackLandedEffect(); }), nullptr));
+		animation("Spell", castSpeed), CallFunc::create([=]() {this->spell->setVisible(false); this->attackLandedEffect(); this->spell->setPosition(999, 999); }), nullptr));
 	if (this->mapNumber == 2)
 		this->spell->runAction(Sequence::create(
 			DelayTime::create(castSpeed * 8),
@@ -373,7 +373,7 @@ void Enemy::dead() {
 		//this->stopAllActions();
 		this->forbidAllAction();
 		if(this->checkFrame("Dead"))
-		this->runAction(Sequence::create(animation("Dead", 0.12f), CallFunc::create([=]() {this->setVisible(false); }), nullptr));
+		this->runAction(Sequence::create(animation("Dead", 0.12f), CallFunc::create([=]() {this->setVisible(true); }), nullptr));
 
 		this->autoRespawn();
 

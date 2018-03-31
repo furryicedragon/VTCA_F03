@@ -303,9 +303,9 @@ void MainGame::update(float elapsed)
 			auto where2Put = pppPositionHelper->getPosition().x - visibleSize.width / 2;
 			if (where2Put < 0) where2Put = 0;
 			this->gameOver->setPosition(Vec2(where2Put,0));
-			this->gameOver->runAction(FadeIn::create(3.0f));
+			this->gameOver->runAction(FadeIn::create(2.0f));
 			this->isGameOver = true;
-			this->runAction(Sequence::create(DelayTime::create(2), CallFunc::create([=]() {this->canRetry=true; }), nullptr));
+			this->runAction(Sequence::create(DelayTime::create(1), CallFunc::create([=]() {this->canRetry=true; }), nullptr));
 		}
 
 		}
