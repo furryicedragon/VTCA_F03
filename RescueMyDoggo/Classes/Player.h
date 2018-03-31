@@ -23,6 +23,7 @@ public:
 	Label* statPlus;
 	Label* level;
 	Size map1Size;
+	float mapScale;
 	float lastDuration;
 	float lastX;
 	float lastY;

@@ -39,6 +39,7 @@ public:
 	float line1X;
 	float line2X;
 	float line3X;
+	float line4X;
 	float randomX;
 	float randomY;
 	bool interuptable;

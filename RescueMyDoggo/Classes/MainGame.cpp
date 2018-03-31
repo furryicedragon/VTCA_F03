@@ -33,8 +33,8 @@ bool MainGame::init()
 	while(map1==nullptr)
 	map1 = TMXTiledMap::create("map1.tmx");
 	auto theTest = map1->getContentSize();
-	map1->setScale(2);
-	map1->setContentSize(map1->getContentSize()*2); //do nothing but helping *2 that's all
+	map1->setScale(1.6);
+	map1->setContentSize(map1->getContentSize()*map1->getScale()); //do nothing but helping *2 that's all
 	if(map1)
 	this->addChild(map1, 0, 33);
 	auto oj = map1->getObjectGroup("Objects");
@@ -45,7 +45,8 @@ bool MainGame::init()
 	meta = map1->getLayer("meta");
 	while (ppp==nullptr) ppp = Player::create();
 	ppp->map1Size = map1->getContentSize();
-	ppp->setPosition(sPx*2, sPy*2);
+	ppp->mapScale = map1->getScale();
+	ppp->setPosition(sPx*map1->getScale(), sPy*map1->getScale());
 	ppp->setAnchorPoint(Vec2(0.5f, 0));
 	ppp->setScale(0.6f);
 	ppp->setFlippedX(true);
@@ -67,7 +68,7 @@ bool MainGame::init()
 		this->ppp->addChild(ppp->level);
 	}
 
-	//this->setPosition(Vec2(-map1->getContentSize().width / 2, 0));
+	this->setPosition(Vec2(0, 0));
 	if(ppp->slash)
 	this->addChild(ppp->slash,9);
 
@@ -89,7 +90,7 @@ bool MainGame::init()
 	this->startGame->runAction(playIt);
 	if(startGame)
 	this->addChild(startGame, 100);
-	//this->startGame->setPosition(Point(map1->getContentSize().width/2, 0));
+	this->startGame->setPosition(0, 0);
 	this->isGameStart = false;
 
 
@@ -267,10 +268,11 @@ void MainGame::updatePlayerPosition() {
 	auto theLineDown = map1->getContentSize().height / 8;
 		auto followPlayer = Follow::create(pppPositionHelper,Rect::ZERO);
 		followPlayer->setTag(99);
-		if (pppPos.y < 145*map1->getScale()) 
+		if ((pppPos.y < 145*map1->getScale() &&!ppp->isRolling) || ((pppPos.y < 145*map1->getScale()+33)&&ppp->isRolling)) 
 			movePos.y = visibleSize.height/2;
 		
-		if (pppPos.x < theLineLeft) movePos.x = theLineLeft;
+		if (pppPos.x < theLineLeft) 
+			movePos.x = theLineLeft;
 		else if (pppPos.x > theLineRight) movePos.x = theLineRight;
 
 		this->runAction(followPlayer);
@@ -459,6 +461,7 @@ void MainGame::allEnemyInit()
 	auto line1 = oj->getObject("Line1");
 	auto line2 = oj->getObject("Line2");
 	auto line3 = oj->getObject("Line3");
+	auto line4 = oj->getObject("Line4");
 	for (int i = 0; i < 8; i++) {
 		Enemy* wave = Enemy::create(2, 1, 0);
 		wave->setScale(1.6f);
@@ -472,9 +475,10 @@ void MainGame::allEnemyInit()
 		wave->skillRange = 300;
 		wave->setHP(100);
 		wave->initOption();
-		wave->line1X = line1["x"].asFloat() * 2;
-		wave->line2X = line2["x"].asFloat() * 2;
-		wave->line3X = line3["x"].asFloat() * 2;
+		wave->line1X = line1["x"].asFloat() *map1->getScale();
+		wave->line2X = line2["x"].asFloat() *map1->getScale();
+		wave->line3X = line3["x"].asFloat() *map1->getScale();
+		wave->line4X = line4["x"].asFloat() *map1->getScale();
 		wave->setPosition(RandomHelper::random_real(wave->line1X, wave->line2X), this->ppp->getPosition().y);
 		wave->ppp = ppp;
 		//wave->isSpawned = true;
@@ -506,12 +510,13 @@ void MainGame::allEnemyInit()
 		boss1m1->setHP(400);
 		boss1m1->initOption();
 		auto boss1Pos = oj->getObject("Boss1");
-		boss1m1->setPosition(Vec2(boss1Pos["x"].asFloat() * 2, boss1Pos["y"].asFloat() * 2));
+		boss1m1->setPosition(Vec2(boss1Pos["x"].asFloat() *map1->getScale(), boss1Pos["y"].asFloat() *map1->getScale()));
 		if (boss1m1->spell != nullptr) this->addChild(boss1m1->spell, 9);
 		if (boss1m1->spellLanded != nullptr) this->addChild(boss1m1->spellLanded, 9);
-		boss1m1->line1X = line1["x"].asFloat() * 2;
-		boss1m1->line2X = line2["x"].asFloat() * 2;
-		boss1m1->line3X = line3["x"].asFloat() * 2;
+		boss1m1->line1X = line1["x"].asFloat() *map1->getScale();
+		boss1m1->line2X = line2["x"].asFloat() *map1->getScale();
+		boss1m1->line3X = line3["x"].asFloat() *map1->getScale();
+		boss1m1->line4X = line4["x"].asFloat() *map1->getScale();
 		boss1m1->ppp = ppp;
 		boss1m1->setVisible(false);
 		boss1m1->isSpawned = false;
@@ -536,10 +541,11 @@ void MainGame::allEnemyInit()
 		wave->skillRange = 400;
 		wave->setHP(175);
 		wave->initOption();
-		wave->line1X = line1["x"].asFloat() * 2;
-		wave->line2X = line2["x"].asFloat() * 2;
-		wave->line3X = line3["x"].asFloat() * 2;
-		wave->setPosition(RandomHelper::random_real(wave->line2X, wave->line3X), ppp->getPosition().y);
+		wave->line1X = line1["x"].asFloat() *map1->getScale();
+		wave->line2X = line2["x"].asFloat() *map1->getScale();
+		wave->line3X = line3["x"].asFloat() *map1->getScale();
+		wave->line4X = line4["x"].asFloat() *map1->getScale();
+		wave->setPosition(RandomHelper::random_real(wave->line3X, wave->line4X), ppp->getPosition().y);
 		wave->ppp = ppp;
 		wave->setVisible(false);
 		wave->isSpawned = false;
@@ -568,12 +574,13 @@ void MainGame::allEnemyInit()
 		boss2m1->setHP(420);
 		boss2m1->initOption();
 		auto boss2Pos = oj->getObject("Boss2");
-		boss2m1->setPosition(Vec2(boss2Pos["x"].asFloat() * 2, boss2Pos["y"].asFloat() * 2));
+		boss2m1->setPosition(Vec2(boss2Pos["x"].asFloat() *map1->getScale(), boss2Pos["y"].asFloat() *map1->getScale()));
 		if (boss2m1->spell != nullptr) this->addChild(boss2m1->spell, 9);
 		if (boss2m1->spellLanded != nullptr) this->addChild(boss2m1->spellLanded, 9);
-		boss2m1->line1X = line1["x"].asFloat() * 2;
-		boss2m1->line2X = line2["x"].asFloat() * 2;
-		boss2m1->line3X = line3["x"].asFloat() * 2;
+		boss2m1->line1X = line1["x"].asFloat() *map1->getScale();
+		boss2m1->line2X = line2["x"].asFloat() *map1->getScale();
+		boss2m1->line3X = line3["x"].asFloat() *map1->getScale();
+		boss2m1->line4X = line4["x"].asFloat() *map1->getScale();
 		boss2m1->ppp = ppp;
 		boss2m1->setVisible(false);
 		boss2m1->isSpawned = false;
@@ -598,12 +605,13 @@ void MainGame::allEnemyInit()
 		bossfm1->setHP(500);
 		bossfm1->initOption();
 		auto boss3Pos = oj->getObject("Boss3");
-		bossfm1->setPosition(Vec2(boss3Pos["x"].asFloat() * 2, boss3Pos["y"].asFloat() * 2));
+		bossfm1->setPosition(Vec2(boss3Pos["x"].asFloat() *map1->getScale(), boss3Pos["y"].asFloat() *map1->getScale()));
 		if (bossfm1->spell != nullptr) this->addChild(bossfm1->spell, 9);
 		if (bossfm1->spellLanded != nullptr) this->addChild(bossfm1->spellLanded, 9);
-		bossfm1->line1X = line1["x"].asFloat() * 2;
-		bossfm1->line2X = line2["x"].asFloat() * 2;
-		bossfm1->line3X = line3["x"].asFloat() * 2;
+		bossfm1->line1X = line1["x"].asFloat() *map1->getScale();
+		bossfm1->line2X = line2["x"].asFloat() *map1->getScale();
+		bossfm1->line3X = line3["x"].asFloat() *map1->getScale();
+		bossfm1->line4X = line4["x"].asFloat() *map1->getScale();
 		bossfm1->ppp = ppp;
 		bossfm1->setVisible(false);
 		bossfm1->isSpawned = false;
@@ -660,7 +668,7 @@ void MainGame::delAll() {
 		map1 = TMXTiledMap::create("map1.tmx");
 	auto theTest = map1->getContentSize();
 	map1->setScale(2);
-	map1->setContentSize(map1->getContentSize() * 2); //do nothing but helping *2 that's all
+	map1->setContentSize(map1->getContentSize() *map1->getScale()); //do nothing but helping *2 that's all
 	if(map1)
 	this->addChild(map1, 0, 33);
 	auto oj = map1->getObjectGroup("Objects");
@@ -671,7 +679,8 @@ void MainGame::delAll() {
 	meta = map1->getLayer("meta");
 	ppp = Player::create();
 	ppp->map1Size = map1->getContentSize();
-	ppp->setPosition(sPx * 2, sPy * 2);
+	ppp->mapScale = map1->getScale();
+	ppp->setPosition(sPx *map1->getScale(), sPy *map1->getScale());
 	ppp->setAnchorPoint(Vec2(0.5, 0));
 	ppp->setScale(0.6f);
 	ppp->setFlippedX(true);

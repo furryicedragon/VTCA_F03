@@ -181,10 +181,9 @@ void Enemy::chasing()
 	}
 }
 void Enemy::randomMoving() {
-	if(this->waveNumber==1)
+	if(this->waveNumber==1 || this->bossNumber==1)
 	randomX = RandomHelper::random_real(line1X, line2X); //di chuyen trong 1 khoang giua line1 va line2 trong tiledMap
-	if(this->waveNumber==2 || this->bossNumber==1) randomX = RandomHelper::random_real(line2X, line3X);
-	if (this->bossNumber == 2 || this->bossNumber == 3) randomX = RandomHelper::random_real(33.f, line3X);
+	if(this->waveNumber==2 || this->bossNumber>1) randomX = RandomHelper::random_real(line3X, line4X);
 	float eX = this->getPosition().x;
 	float moveByX = randomX - eX;
 

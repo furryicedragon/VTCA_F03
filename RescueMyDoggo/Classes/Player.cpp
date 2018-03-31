@@ -368,10 +368,10 @@ void Player::roll() {
 		this->stopAllActions();
 		isRolling = true;
 		int theX = 259;
-		if (this->getPosition().x < 259 + 44 + 32 * 2 && this->isFlippedX())
-			theX = this->getPosition().x - (44 + 32 * 2);
-		if (map1Size.width - this->getPosition().x < 259 + 44 + 32 * 2 && !this->isFlippedX())
-			theX = map1Size.width - this->getPosition().x - (44 + 32 * 2); //dung de check xem neu shift evade co gan diem cuoi cung cua map k, "to make sure we can't jump out of the map"
+		if (this->getPosition().x < 259 + 44 + 32 *mapScale && this->isFlippedX())
+			theX = this->getPosition().x - (44 + 32 *mapScale);
+		if (map1Size.width - this->getPosition().x < 259 + 44 + 32 *mapScale && !this->isFlippedX())
+			theX = map1Size.width - this->getPosition().x - (44 + 32 *mapScale); //dung de check xem neu shift evade co gan diem cuoi cung cua map k, "to make sure we can't jump out of the map"
 		//if (this->getPosition().x < 44 + 32*2)
 		//	theX = 0;
 		if (this->isFlippedX()) theX *= -1; // nhan voi -1 de nhay dung' huong'
@@ -399,9 +399,9 @@ void Player::forbidAllAction()
 
 void Player::statUp()
 {
-	this->damageCurrent += 10;
+	this->damageCurrent += 910;
 	this->attackSpeed = 0.08 - (0.08 / 20);
-	baseHP += 80;
+	baseHP += 980;
 	this->hp->setString(std::to_string(baseHP));
 	statPlus->setScale(3);
 	statPlus->setAnchorPoint(Vec2(0.5, 0));
