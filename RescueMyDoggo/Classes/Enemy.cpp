@@ -33,7 +33,8 @@ void Enemy::initOption()
 	this->isDead = false;
 	this->getFolderName();
 	spell = Sprite::create();
-	spell->setAnchorPoint(Vec2(-0.5, 0));
+	spell->setAnchorPoint(Vec2(0.5, 0));
+	if (this->waveNumber > 0 && this->mapNumber == 1) spell->setAnchorPoint(Vec2(-0.5, 0));
 	spellLanded = Sprite::create();
 	spellLanded->setAnchorPoint(Vec2(0.5, 0));
 	spellLanded->setScale(2);
@@ -273,7 +274,7 @@ void Enemy::casterSpell()
 		this->spell->runAction(Sequence::create(
 			DelayTime::create(castSpeed * 8),
 			CallFunc::create([=]() {
-		this->spell->setPosition(move2X, this->getPosition().y+40);
+		this->spell->setPosition(this->getPosition().x+this->getContentSize().width/2, this->getPosition().y+40);
 		this->spell->setVisible(true); 
 		this->spell->runAction(RepeatForever::create(animation("Spell", castSpeed)));
 	}),
@@ -302,15 +303,17 @@ void Enemy::attackLandedEffect() {
 	if (this->checkFrame("Skill Landed")) {
 		this->spellLanded->setPosition(Vec2(ppp->getPosition().x, ppp->getPosition().y));
 		this->spellLanded->runAction(Sequence::create(
-			CallFunc::create([=]() {this->canDamage = true; this->spellLanded->setVisible(true); }), animation("Skill Landed", 0.12f), CallFunc::create([=]() {this->canDamage = false; this->spellLanded->setVisible(false); }), nullptr));
+			CallFunc::create([=]() {this->canDamage = true; this->spellLanded->setVisible(true); }), animation("Skill Landed", 0.12f), CallFunc::create([=]() {this->canDamage = false; this->spellLanded->setVisible(false); this->spellLanded->setPosition(999, 999); }), nullptr));
 	}
 }
 
 
 void Enemy::getHit(int damage) {
 	if (!this->isDead && this->isSpawned && !this->invulnerable) {
-		if(this->mapNumber==1 || this->mapNumber==2) this->stopAllActions();
-		else this->forbidAllAction();
+/*		if(this->mapNumber==1 || this->mapNumber==2) this->stopAllActions();
+		else */
+		this->forbidAllAction();
+
 		this->isIdle = false;
 		this->isAttacking = false;
 		this->isMoving = false;
@@ -391,10 +394,13 @@ void Enemy::dead() {
 void Enemy::forbidAllAction()
 {
 	this->stopAllActions();
-	this->spell->stopAllActions();
-	this->spell->setVisible(false);
-	this->spellLanded->stopAllActions();
-	this->spellLanded->setVisible(false);
+	if (this->mapNumber == 1 && this->waveNumber > 0) {
+		this->spell->stopAllActions();
+		this->spell->setVisible(false);
+	}
+
+	//this->spellLanded->stopAllActions();
+	//this->spellLanded->setVisible(false);
 }
 
 bool Enemy::checkFrame(std::string action)

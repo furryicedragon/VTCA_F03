@@ -364,7 +364,7 @@ void Player::getHit(int damage, float eeePosX) {
 }
 
 void Player::roll() {
-	if (!this->isRolling && !this->isDead && !this->isAttacking && !this->isHit) {
+	if (!this->isRolling && !this->isDead && !this->isAttacking && !this->isHit &&!this->isSpawning) {
 		this->stopAllActions();
 		isRolling = true;
 		int theX = 259;

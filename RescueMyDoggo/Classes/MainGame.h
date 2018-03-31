@@ -36,6 +36,7 @@ public:
 	Point tileCoordForPosition(Point position);
 	std::vector<EventKeyboard::KeyCode> repeatedKeys;
 	std::vector<Enemy*> allEnemy;
+	bool canRetry;
 	bool boss1;
 	bool boss2;
 	bool onTouchBegan(Touch* touch, Event* event);
@@ -47,7 +48,6 @@ public:
 	bool isGameOver;
 	bool enemyAdded;
 	bool isGameStart;
-	bool ending;
 	int currentWave;
 	int currentMap;
 	int currentBoss;

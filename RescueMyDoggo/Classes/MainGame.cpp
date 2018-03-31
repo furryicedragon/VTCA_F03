@@ -9,7 +9,7 @@ bool MainGame::init()
 	{
 		return false;
 	}
-
+	this->canRetry = false;
 	this->enemyAdded = false;
 	this->gameOver = Sprite::create("/Game Over/0.png");
 	gameOver->setAnchorPoint(Vec2(0, 0));
@@ -111,8 +111,8 @@ void MainGame::setupTouchHandling() {
 
 bool MainGame::onTouchBegan(Touch* touch, Event* event)
 {
-	if (this->isGameOver && !ending) {
-		ending = true;
+	if (this->isGameOver && canRetry) {
+		canRetry = false;
 		this->runAction(Sequence::create(DelayTime::create(1), CallFunc::create([=]() {this->delAll(); }), nullptr));
 	}
 
@@ -305,6 +305,7 @@ void MainGame::update(float elapsed)
 			this->gameOver->setPosition(Vec2(where2Put,0));
 			this->gameOver->runAction(FadeIn::create(3.0f));
 			this->isGameOver = true;
+			this->runAction(Sequence::create(DelayTime::create(2), CallFunc::create([=]() {this->canRetry=true; }), nullptr));
 		}
 
 		}
@@ -327,7 +328,7 @@ void MainGame::spawnPlayer()
 
 void MainGame::checkAttackRange(Enemy * eee, int index)
 {
-	if ((index != 8 || boss1)||(index!=17 || boss2)) {
+	if ((index != 8 || boss1)||(index!=17 || boss2)&&!ppp->isDead) {
 		auto itemWidth = eee->getContentSize().width*eee->getScale();
 		auto howfarX = ppp->getPosition().x - (eee->getPosition().x + itemWidth / 2);
 		auto howfarY = ppp->getPosition().y - eee->getPosition().y;
@@ -344,11 +345,11 @@ void MainGame::checkAttackRange(Enemy * eee, int index)
 				eee->canDamage = false;
 			}
 		}
-		if (eee->isCaster && !eee->canDamage && std::fabsf(eee->spell->getPosition().x - ppp->getPosition().x) < 22) {
+		if (eee->isCaster && !ppp->isRolling && !eee->canDamage && std::fabsf(eee->spell->getPosition().x - ppp->getPosition().x) < 22) {
 			eee->spell->setPosition(999, 999);
 			eee->attackLandedEffect();
 		}
-		if (eee->isCaster && eee->canDamage && !ppp->isRolling && std::fabsf(eee->spellLanded->getPosition().x-ppp->getPosition().x)<5) {
+		if (eee->isCaster && eee->canDamage && !ppp->isRolling && std::fabsf(eee->spellLanded->getPosition().x-ppp->getPosition().x)<9) {
 			ppp->getHit(eee->skillDamage, eee->getPosition().x);
 			eee->canDamage = false;
 		}
@@ -531,7 +532,7 @@ void MainGame::allEnemyInit()
 		wave->skillSpeed = 0.1f;
 		wave->skillCD = 4;
 		wave->skillRange = 400;
-		wave->setHP(100);
+		wave->setHP(175);
 		wave->initOption();
 		wave->line1X = line1["x"].asFloat() * 2;
 		wave->line2X = line2["x"].asFloat() * 2;
@@ -691,8 +692,6 @@ void MainGame::delAll() {
 	}
 	if(ppp->slash)
 	this->addChild(ppp->slash, 9);
-	this->setPosition(Vec2(0, 0));
-
 
 	pppPositionHelper = Sprite::create("CloseNormal.png");
 	pppPositionHelper->setOpacity(0);
@@ -711,8 +710,8 @@ void MainGame::delAll() {
 	if(startGame)
 	this->addChild(startGame, 100);
 	this->isGameStart = false;
-	ending = false;
 
 	this->addChild(ppp->skill1, 3);
+	this->updatePlayerPosition();
 	this->scheduleUpdate();
 }
