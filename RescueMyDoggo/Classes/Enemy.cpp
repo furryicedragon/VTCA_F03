@@ -375,7 +375,7 @@ void Enemy::dead() {
 		//this->stopAllActions();
 		this->forbidAllAction();
 		if(this->checkFrame("Dead"))
-		this->runAction(Sequence::create(animation("Dead", 0.12f), CallFunc::create([=]() {this->setVisible(true); }), nullptr));
+		this->runAction(Sequence::create(animation("Dead", 0.12f), CallFunc::create([=]() {this->setVisible(false); }), nullptr));
 
 		this->autoRespawn();
 
