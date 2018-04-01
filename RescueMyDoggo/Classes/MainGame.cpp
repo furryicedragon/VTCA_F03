@@ -53,6 +53,9 @@ bool MainGame::init()
 	ppp->setFlippedX(true);
 	if(ppp!=nullptr)
 	this->addChild(ppp, 2);
+
+
+
 	this->ppp->statPlus = Label::create();
 	if (ppp->statPlus) {
 		this->ppp->addChild(ppp->statPlus);
@@ -154,6 +157,7 @@ bool MainGame::keyPressed(EventKeyboard::KeyCode keyCode, Event* event) {
 		this->gameOver->runAction(FadeOut::create(0.1f));
 	}
 
+ 	if (keyCode == EventKeyboard::KeyCode::KEY_SPACE) ppp->useSkill("Dash/Dash Attack", "Dash Stab", (int)((float)ppp->damageCurrent / 100 * 169));
 	return true;
 }
 bool MainGame::keyReleased(EventKeyboard::KeyCode keyCode, Event* event) {
@@ -265,24 +269,27 @@ Point MainGame::tileCoordForPosition(Point position) {
 	return Point(x, y);
 }
 void MainGame::updatePlayerPosition() {
-	auto pppPos = this->ppp->getPosition();
-	auto movePos = this->pppPositionHelper->getPosition();
-	movePos.x = MathUtil::lerp(movePos.x, pppPos.x, 0.8f);
-	movePos.y = MathUtil::lerp(movePos.y, pppPos.y + 168, 0.8f);
-	auto theLineRight = map1->getContentSize().width - map1->getContentSize().width / 4;
-	auto theLineLeft = map1->getContentSize().width / 4;
-	auto theLineDown = map1->getContentSize().height / 8;
-		auto followPlayer = Follow::create(pppPositionHelper,Rect::ZERO);
-		followPlayer->setTag(99);
-		if ((pppPos.y < 145*map1->getScale() &&!ppp->isRolling) || ((pppPos.y < 145*map1->getScale()+33)&&ppp->isRolling)) 
-			movePos.y = visibleSize.height/2;
+	//if (ppp->isSpawn) {
+		auto pppPos = this->ppp->getPosition();
+		auto movePos = this->pppPositionHelper->getPosition();
+		movePos.x = MathUtil::lerp(movePos.x, pppPos.x, 0.8f);
+		movePos.y = MathUtil::lerp(movePos.y, pppPos.y + 168, 0.8f);
+		auto theLineRight = map1->getContentSize().width / 4*3;
+		auto theLineLeft = map1->getContentSize().width / 4;
+		auto theLineDown = map1->getContentSize().height / 8;
+			auto followPlayer = Follow::create(pppPositionHelper,Rect::ZERO);
+			followPlayer->setTag(99);
+			if ((pppPos.y < 145*map1->getScale() &&!ppp->isRolling) || ((pppPos.y < 145*map1->getScale()+33)&&ppp->isRolling)) 
+				movePos.y = visibleSize.height/2;
 		
-		if (pppPos.x < theLineLeft) 
-			movePos.x = theLineLeft;
-		else if (pppPos.x > theLineRight) movePos.x = theLineRight;
+			if (pppPos.x < theLineLeft) 
+				movePos.x = theLineLeft;
+			else if (pppPos.x > theLineRight) movePos.x = theLineRight;
 
-		this->runAction(followPlayer);
-		this->pppPositionHelper->setPosition(movePos);
+			this->runAction(followPlayer);
+			this->pppPositionHelper->setPosition(movePos);
+	//}
+
 }
 
 void MainGame::update(float elapsed)
@@ -326,13 +333,18 @@ void MainGame::update(float elapsed)
 		}
 
 		if (ppp->isDead && !this->isGameOver) {
+			ppp->isSpawn = false;
 			auto where2Put = pppPositionHelper->getPosition().x - visibleSize.width / 2;
 			if (where2Put < 0) where2Put = 0;
 			this->gameOver->setPosition(Vec2(where2Put,0));
 			this->gameOver->runAction(FadeIn::create(2.0f));
 			this->isGameOver = true;
+<<<<<<< HEAD
 			hud_layer->setVisible(false);
 			this->runAction(Sequence::create(DelayTime::create(1), CallFunc::create([=]() {this->canRetry=true; }), nullptr));
+=======
+			this->runAction(Sequence::create(DelayTime::create(1), CallFunc::create([=]() {this->canRetry=true;}), nullptr));
+>>>>>>> 21ac7288fc239ad07075c63c607d9fca93516387
 		}
 
 		}
@@ -364,6 +376,10 @@ void MainGame::checkAttackRange(Enemy * eee, int index)
 		if (howfarX < itemWidth + 69 && howfarY < 33) {
 			if (ppp->isAttacking && !ppp->doneDamage[index]) {
 				eee->getHit(ppp->damageCurrent);
+				ppp->doneDamage[index] = true;
+			}
+			if (ppp->usingSkill && !ppp->doneDamage[index]) {
+				eee->getHit(ppp->skillDamage);
 				ppp->doneDamage[index] = true;
 			}
 
@@ -673,6 +689,8 @@ void MainGame::delAll()
 
 	this->allEnemy.clear();
 	this->removeAllChildren();
+	this->stopActionByTag(99); 
+	this->setPosition(Vec2(0, 0));
 	this->enemyAdded = false;
 	this->gameOver = Sprite::create("/Game Over/0.png");
 	gameOver->setAnchorPoint(Vec2(0, 0));
@@ -695,7 +713,7 @@ void MainGame::delAll()
 	visibleSize = Director::getInstance()->getVisibleSize();
 		map1 = TMXTiledMap::create("map1.tmx");
 	auto theTest = map1->getContentSize();
-	map1->setScale(2);
+	map1->setScale(1.6);
 	map1->setContentSize(map1->getContentSize() *map1->getScale()); //do nothing but helping *2 that's all
 	if(map1)
 	this->addChild(map1, 0, 33);
@@ -752,6 +770,10 @@ void MainGame::delAll()
 
 	this->addChild(ppp->skill1, 3);
 	this->updatePlayerPosition();
+<<<<<<< HEAD
 	hud_layer->setupStick();
 	this->scheduleUpdate();
+=======
+	//this->scheduleUpdate();
+>>>>>>> 21ac7288fc239ad07075c63c607d9fca93516387
 }

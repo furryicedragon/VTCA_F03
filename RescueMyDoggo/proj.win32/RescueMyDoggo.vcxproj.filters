@@ -33,12 +33,15 @@
     <ClCompile Include="..\Classes\Projectile.cpp">
       <Filter>src</Filter>
     </ClCompile>
+<<<<<<< HEAD
     <ClCompile Include="..\Classes\Joystick.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\JoystickBase.cpp">
       <Filter>src</Filter>
     </ClCompile>
+=======
+>>>>>>> 21ac7288fc239ad07075c63c607d9fca93516387
     <ClCompile Include="..\Classes\HUDLayer.cpp">
       <Filter>src</Filter>
     </ClCompile>
@@ -65,12 +68,15 @@
     <ClInclude Include="..\Classes\Projectile.h">
       <Filter>src</Filter>
     </ClInclude>
+<<<<<<< HEAD
     <ClInclude Include="..\Classes\Joystick.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\JoystickBase.h">
       <Filter>src</Filter>
     </ClInclude>
+=======
+>>>>>>> 21ac7288fc239ad07075c63c607d9fca93516387
     <ClInclude Include="..\Classes\HUDLayer.h">
       <Filter>src</Filter>
     </ClInclude>

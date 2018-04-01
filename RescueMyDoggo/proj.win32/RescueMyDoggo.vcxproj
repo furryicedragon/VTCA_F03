@@ -151,8 +151,11 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClCompile Include="..\Classes\AppDelegate.cpp" />
     <ClCompile Include="..\Classes\Enemy.cpp" />
     <ClCompile Include="..\Classes\HUDLayer.cpp" />
+<<<<<<< HEAD
     <ClCompile Include="..\Classes\Joystick.cpp" />
     <ClCompile Include="..\Classes\JoystickBase.cpp" />
+=======
+>>>>>>> 21ac7288fc239ad07075c63c607d9fca93516387
     <ClCompile Include="..\Classes\MainGame.cpp" />
     <ClCompile Include="..\Classes\MainScene.cpp" />
     <ClCompile Include="..\Classes\Player.cpp" />
@@ -163,8 +166,11 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClInclude Include="..\Classes\AppDelegate.h" />
     <ClInclude Include="..\Classes\Enemy.h" />
     <ClInclude Include="..\Classes\HUDLayer.h" />
+<<<<<<< HEAD
     <ClInclude Include="..\Classes\Joystick.h" />
     <ClInclude Include="..\Classes\JoystickBase.h" />
+=======
+>>>>>>> 21ac7288fc239ad07075c63c607d9fca93516387
     <ClInclude Include="..\Classes\MainGame.h" />
     <ClInclude Include="..\Classes\MainScene.h" />
     <ClInclude Include="..\Classes\Player.h" />
