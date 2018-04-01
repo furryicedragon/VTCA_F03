@@ -480,8 +480,9 @@ void Player::update(float elapsed)
 void Player::useSkill(std::string actionName, std::string skillName, int damage)
 {
 	if (this->isSpawn && !this->isAttacking && !this->isRolling && !this->isDead && !this->skill1CD) {
+		this->isHit = false;
 		this->skillDamage = damage;
-		int range = 300;
+		int range = 269;
 		if (this->getPosition().x < range + 44 + 32 * mapScale && this->isFlippedX())
 			range = this->getPosition().x - (44 + 32 * mapScale);
 		if (map1Size.width - this->getPosition().x < 259 + 44 + 32 * mapScale && !this->isFlippedX())
@@ -492,8 +493,8 @@ void Player::useSkill(std::string actionName, std::string skillName, int damage)
 			this->skillHelper->setFlippedX(false); 
 		}
 		else this->skillHelper->setFlippedX(true);
-		this->usingSkill = true;
 		this->stopAllActions();
+		this->usingSkill = true;
 		float frames;
 		Vector<SpriteFrame *> runningFrames;
 		for (int i = 1; i < 99; i++) {
@@ -517,7 +518,7 @@ void Player::useSkill(std::string actionName, std::string skillName, int damage)
 		this->skillHelper->runAction(Sequence::create(DelayTime::create(attackSpeed * 3), CallFunc::create([=]() {this->skillHelper->setVisible(true); this->setDoneDamageTo(false); }),
 			anim, CallFunc::create([=]() {this->skillHelper->setVisible(false); }), nullptr));
 
-		this->skillHelper->runAction(Sequence::create(DelayTime::create(6), CallFunc::create([=]() {this->skill1CD = false; this->setDoneDamageTo(true); }), nullptr));
+		this->skillHelper->runAction(Sequence::create(DelayTime::create(1), CallFunc::create([=]() {this->skill1CD = false; this->setDoneDamageTo(true); }), nullptr));
 		
 	}
 }
