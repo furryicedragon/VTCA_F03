@@ -481,6 +481,11 @@ void Player::useSkill(std::string actionName, std::string skillName, int damage)
 	if (this->isSpawn && !this->isAttacking && !this->isRolling && !this->isDead && !this->skill1CD) {
 		this->skillDamage = damage;
 		int range = 420;
+		if (this->getPosition().x < range + 44 + 32 * mapScale && this->isFlippedX())
+			range = this->getPosition().x - (44 + 32 * mapScale);
+		if (map1Size.width - this->getPosition().x < 259 + 44 + 32 * mapScale && !this->isFlippedX())
+			range = map1Size.width - this->getPosition().x - (44 + 32 * mapScale);
+
 		if (this->isFlippedX()) { 
 			range *= -1;
 			this->skillHelper->setFlippedX(false); 
