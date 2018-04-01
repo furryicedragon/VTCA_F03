@@ -481,7 +481,7 @@ void Player::useSkill(std::string actionName, std::string skillName, int damage)
 {
 	if (this->isSpawn && !this->isAttacking && !this->isRolling && !this->isDead && !this->skill1CD) {
 		this->skillDamage = damage;
-		int range = 420;
+		int range = 300;
 		if (this->getPosition().x < range + 44 + 32 * mapScale && this->isFlippedX())
 			range = this->getPosition().x - (44 + 32 * mapScale);
 		if (map1Size.width - this->getPosition().x < 259 + 44 + 32 * mapScale && !this->isFlippedX())
@@ -507,7 +507,7 @@ void Player::useSkill(std::string actionName, std::string skillName, int damage)
 			auto frame = SpriteFrame::create(frameName, Rect(0, 0, theSize.width, theSize.height));
 			runningFrames.pushBack(frame);
 		}
-		Animation* runningAnimation = Animation::createWithSpriteFrames(runningFrames, attackSpeed / frames * 5);
+		Animation* runningAnimation = Animation::createWithSpriteFrames(runningFrames, attackSpeed*2/frames);
 		Animate* anim = Animate::create(runningAnimation);
 		this->runAction(Sequence::create(animation(actionName, attackSpeed), CallFunc::create([=]() {this->usingSkill = false; this->idleStatus(); }), nullptr));
 		this->runAction(Sequence::create(DelayTime::create(attackSpeed * 3), MoveBy::create(attackSpeed*2, Vec2(range, 0)),nullptr));
@@ -517,7 +517,7 @@ void Player::useSkill(std::string actionName, std::string skillName, int damage)
 		this->skillHelper->runAction(Sequence::create(DelayTime::create(attackSpeed * 3), CallFunc::create([=]() {this->skillHelper->setVisible(true); this->setDoneDamageTo(false); }),
 			anim, CallFunc::create([=]() {this->skillHelper->setVisible(false); }), nullptr));
 
-		this->skillHelper->runAction(Sequence::create(DelayTime::create(11.5), CallFunc::create([=]() {this->skill1CD = false; this->setDoneDamageTo(true); }), nullptr));
+		this->skillHelper->runAction(Sequence::create(DelayTime::create(6), CallFunc::create([=]() {this->skill1CD = false; this->setDoneDamageTo(true); }), nullptr));
 		
 	}
 }
