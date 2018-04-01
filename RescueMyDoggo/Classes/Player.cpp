@@ -39,9 +39,18 @@ void Player::initOption()
 	slash = Sprite::create("/MainChar/Effects/Slash/1.png");
 	slash->setVisible(false);
 	slash->setScale(1.9f);
+
 	attackHelper = Sprite::create();
 	if(attackHelper)
 	this->addChild(attackHelper);
+
+	skillHelper = Sprite::create();
+	skillHelper->setVisible(false);
+	skillHelper->setScale(3);
+	if (skillHelper)
+		this->addChild(skillHelper, 3);
+	this->skillHelper->setPosition(this->getContentSize().width / 1.8, this->getPosition().y + this->getContentSize().height / 2);
+
 	movementHelper = Sprite::create();
 	if(movementHelper)
 	this->addChild(movementHelper);
@@ -103,7 +112,8 @@ void Player::idleStatus() {
 		&& !this->isRolling 
 		&& !this->isDead 
 		&& !this->isHit 
-		&& this->isSpawn) 
+		&& this->isSpawn
+		&& !this->usingSkill) 
 	{
 		this->isAttacking = false;
 		this->isMoving = false;
@@ -117,7 +127,8 @@ void Player::idleStatus() {
 
 void Player::moving() {
 
-	if (this->isSpawn 
+	if (this->isSpawn
+		&& !this->usingSkill
 		&& !this->isHit 
 		&& !this->isRolling 
 		&& !this->isAttacking 
@@ -226,7 +237,7 @@ void Player::launchSkill1()
 }
 
 void Player::attack() {
-	if (this->isSpawn && !this->isAttacking && !this->isRolling && !this->isDead && !this->isHit) {
+	if (this->isSpawn && !this->isAttacking && !this->isRolling && !this->isDead && !this->isHit && !this->usingSkill) {
 		this->isAttacking = true;
 		this->slashEffect();                 //thuc hien animation cua slash
 		this->stopAllActions();				//stop all hanh dong de attack
@@ -340,6 +351,7 @@ void Player::getHit(int damage, float eeePosX) {
 		this->stopAllActions();
 		this->isAttacking = false;
 		this->isMoving = false;
+		this->usingSkill = false;
 		//int x = -16;
 		//if (this->getPosition().x < eeePosX)
 		//{
@@ -364,7 +376,7 @@ void Player::getHit(int damage, float eeePosX) {
 }
 
 void Player::roll() {
-	if (!this->isRolling && !this->isDead && !this->isAttacking && !this->isHit &&this->isSpawn) {
+	if (!this->isRolling && !this->isDead && !this->isAttacking && !this->isHit &&this->isSpawn && !this->usingSkill) {
 		this->stopAllActions();
 		isRolling = true;
 		int theX = 259;
@@ -448,6 +460,7 @@ void Player::levelUp() {
 	level->setString(std::to_string(lvl+1));
 }
 
+
 void Player::spawnEffect(){
 	if (this->isSpawning)
 		this->isSpawning = false;
@@ -460,5 +473,52 @@ void Player::update(float elapsed)
 	if (this->currentEXP > this->baseEXP) {
 		this->currentEXP = 0 + baseEXP-currentEXP;
 		this->levelUp();
+	}
+}
+
+
+void Player::useSkill(std::string actionName, std::string skillName, int damage)
+{
+	if (this->isSpawn && !this->isAttacking && !this->isRolling && !this->isDead && !this->skill1CD) {
+		this->isHit = false;
+		this->skillDamage = damage;
+		int range = 269;
+		if (this->getPosition().x < range + 44 + 32 * mapScale && this->isFlippedX())
+			range = this->getPosition().x - (44 + 32 * mapScale);
+		if (map1Size.width - this->getPosition().x < 259 + 44 + 32 * mapScale && !this->isFlippedX())
+			range = map1Size.width - this->getPosition().x - (44 + 32 * mapScale);
+
+		if (this->isFlippedX()) { 
+			range *= -1;
+			this->skillHelper->setFlippedX(false); 
+		}
+		else this->skillHelper->setFlippedX(true);
+		this->stopAllActions();
+		this->usingSkill = true;
+		float frames;
+		Vector<SpriteFrame *> runningFrames;
+		for (int i = 1; i < 99; i++) {
+			auto frameName = "/MainChar/Effects/" + skillName + "/(" + to_string(i) + ").png";
+			Sprite* getSize = Sprite::create(frameName);
+			frames = i;
+			if (!getSize)
+				break;
+
+			Size theSize = getSize->getContentSize();
+			auto frame = SpriteFrame::create(frameName, Rect(0, 0, theSize.width, theSize.height));
+			runningFrames.pushBack(frame);
+		}
+		Animation* runningAnimation = Animation::createWithSpriteFrames(runningFrames, attackSpeed*2/frames);
+		Animate* anim = Animate::create(runningAnimation);
+		this->runAction(Sequence::create(animation(actionName, attackSpeed), CallFunc::create([=]() {this->usingSkill = false; this->idleStatus(); }), nullptr));
+		this->runAction(Sequence::create(DelayTime::create(attackSpeed * 3), MoveBy::create(attackSpeed*2, Vec2(range, 0)),nullptr));
+
+		this->skill1CD = true;
+		int lastDmg = this->damageCurrent;
+		this->skillHelper->runAction(Sequence::create(DelayTime::create(attackSpeed * 3), CallFunc::create([=]() {this->skillHelper->setVisible(true); this->setDoneDamageTo(false); }),
+			anim, CallFunc::create([=]() {this->skillHelper->setVisible(false); }), nullptr));
+
+		this->skillHelper->runAction(Sequence::create(DelayTime::create(6), CallFunc::create([=]() {this->skill1CD = false; this->setDoneDamageTo(true); }), nullptr));
+		
 	}
 }
