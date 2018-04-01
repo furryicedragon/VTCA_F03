@@ -351,6 +351,7 @@ void Player::getHit(int damage, float eeePosX) {
 		this->stopAllActions();
 		this->isAttacking = false;
 		this->isMoving = false;
+		this->usingSkill = false;
 		//int x = -16;
 		//if (this->getPosition().x < eeePosX)
 		//{
