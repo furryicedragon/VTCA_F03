@@ -16,6 +16,7 @@ public:
 	std::string weaponKind;
 	std::string lastDirection;
 	std::string secondLastDirection;
+	Sprite* skillHelper;
 	Sprite* attackHelper;
 	Sprite* slash;
 	Sprite* movementHelper;
@@ -39,6 +40,9 @@ public:
 	int previousDirectionInNumber;
 	int checkDirectionInNumber(std::string direction);
 	int damageCurrent;
+	int skillDamage;
+	bool usingSkill;
+	bool skill1CD;
 	bool isSpawning;
 	bool isSpawn;
 	bool isHit;
@@ -64,7 +68,7 @@ public:
 	void statUp();
 	void spawnEffect();
 	void levelUp();
-
+	void useSkill(std::string actionName,std::string skillName, int damage);
 	Projectile* skill1;
 	float cd_reduction;
 	void launchSkill1();

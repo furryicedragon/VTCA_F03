@@ -52,6 +52,9 @@ bool MainGame::init()
 	ppp->setFlippedX(true);
 	if(ppp!=nullptr)
 	this->addChild(ppp, 2);
+
+
+
 	this->ppp->statPlus = Label::create();
 	if (ppp->statPlus) {
 		this->ppp->addChild(ppp->statPlus);
@@ -149,6 +152,7 @@ bool MainGame::keyPressed(EventKeyboard::KeyCode keyCode, Event* event) {
 		this->gameOver->runAction(FadeOut::create(0.1f));
 	}
 
+ 	if (keyCode == EventKeyboard::KeyCode::KEY_SPACE) ppp->useSkill("Dash/Dash Attack", "Dash Stab", (int)((float)ppp->damageCurrent / 100 * 169));
 	return true;
 }
 bool MainGame::keyReleased(EventKeyboard::KeyCode keyCode, Event* event) {
@@ -339,6 +343,10 @@ void MainGame::checkAttackRange(Enemy * eee, int index)
 		if (howfarX < itemWidth + 69 && howfarY < 33) {
 			if (ppp->isAttacking && !ppp->doneDamage[index]) {
 				eee->getHit(ppp->damageCurrent);
+				ppp->doneDamage[index] = true;
+			}
+			if (ppp->usingSkill && !ppp->doneDamage[index]) {
+				eee->getHit(ppp->skillDamage);
 				ppp->doneDamage[index] = true;
 			}
 
