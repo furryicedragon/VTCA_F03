@@ -352,6 +352,8 @@ void Player::getHit(int damage, float eeePosX) {
 		this->isAttacking = false;
 		this->isMoving = false;
 		this->usingSkill = false;
+		if (this->usingSkill) this->skillHelper->stopAllActions();
+		this->setDoneDamageTo(true);
 		//int x = -16;
 		//if (this->getPosition().x < eeePosX)
 		//{
@@ -508,7 +510,7 @@ void Player::useSkill(std::string actionName, std::string skillName, int damage)
 			auto frame = SpriteFrame::create(frameName, Rect(0, 0, theSize.width, theSize.height));
 			runningFrames.pushBack(frame);
 		}
-		Animation* runningAnimation = Animation::createWithSpriteFrames(runningFrames, attackSpeed*2/frames);
+		Animation* runningAnimation = Animation::createWithSpriteFrames(runningFrames, attackSpeed*2/frames*1.2);
 		Animate* anim = Animate::create(runningAnimation);
 		this->runAction(Sequence::create(animation(actionName, attackSpeed), CallFunc::create([=]() {this->usingSkill = false; this->idleStatus(); }), nullptr));
 		this->runAction(Sequence::create(DelayTime::create(attackSpeed * 3), MoveBy::create(attackSpeed*2, Vec2(range, 0)),nullptr));

@@ -34,6 +34,7 @@
       <Filter>src</Filter>
     </ClCompile>
 <<<<<<< HEAD
+<<<<<<< HEAD
     <ClCompile Include="..\Classes\Joystick.cpp">
       <Filter>src</Filter>
     </ClCompile>
@@ -45,6 +46,8 @@
     <ClCompile Include="..\Classes\HUDLayer.cpp">
       <Filter>src</Filter>
     </ClCompile>
+=======
+>>>>>>> 9685643309dc77e50a073012770fd065767088c2
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -69,6 +72,7 @@
       <Filter>src</Filter>
     </ClInclude>
 <<<<<<< HEAD
+<<<<<<< HEAD
     <ClInclude Include="..\Classes\Joystick.h">
       <Filter>src</Filter>
     </ClInclude>
@@ -80,6 +84,8 @@
     <ClInclude Include="..\Classes\HUDLayer.h">
       <Filter>src</Filter>
     </ClInclude>
+=======
+>>>>>>> 9685643309dc77e50a073012770fd065767088c2
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="game.rc">
