@@ -307,15 +307,24 @@ void MainGame::update(float elapsed)
 		{
 			if (hud_layer->movementStick->getVelocity().x > 0)
 			{
-				log("Right");
+				whatYouWant(EventKeyboard::KeyCode::KEY_D, 2);
+				this->canIdle = true;
+				ppp->isHoldingKey = true;
 			}
 			if (hud_layer->movementStick->getVelocity().x < 0)
 			{
-				log("Left");
+				this->canIdle = true;
+				whatYouWant(EventKeyboard::KeyCode::KEY_A, 2);
+				ppp->isHoldingKey = true;
 			}
 			if (hud_layer->movementStick->getVelocity().x == 0)
 			{
-				log("nothing");
+				if (canIdle) {
+					canIdle = false;
+					ppp->isHoldingKey = false;
+					whatYouWant(EventKeyboard::KeyCode::KEY_YEN, 1);
+				}
+
 			}
 		}
 
@@ -682,10 +691,10 @@ Animate * MainGame::animation(std::string actionName,float timeEachFrame)
 
 void MainGame::delAll() 
 {
-	auto hud_layer = static_cast<HUDLayer*> (Director::getInstance()->getRunningScene()->getChildByTag(9999));
-
 	this->allEnemy.clear();
 	this->removeAllChildren();
+	auto hud_layer = static_cast<HUDLayer*> (Director::getInstance()->getRunningScene()->getChildByTag(9999));
+
 	this->stopActionByTag(99); 
 	this->setPosition(Vec2(0, 0));
 	this->enemyAdded = false;

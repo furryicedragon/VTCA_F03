@@ -52,6 +52,7 @@ public:
 	bool isGameOver;
 	bool enemyAdded;
 	bool isGameStart;
+	bool canIdle;
 	int currentWave;
 	int currentMap;
 	int currentBoss;
