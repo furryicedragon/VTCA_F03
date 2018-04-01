@@ -348,7 +348,7 @@ void Enemy::getHit(int damage) {
 		else
 		this->hp->setString(std::to_string(healthP));
 		if(!this->isDead)
-		this->runAction(Sequence::create(DelayTime::create(0.3f), CallFunc::create([=]() { this->idleStatus(); }), DelayTime::create(0.4), CallFunc::create([=]() {this->isMoving=false;}), nullptr));
+		this->runAction(Sequence::create(DelayTime::create(0.3f), CallFunc::create([=]() { this->idleStatus(); }), DelayTime::create(0.4f), CallFunc::create([=]() {this->isMoving=false;}), nullptr));
 	}
 
 }

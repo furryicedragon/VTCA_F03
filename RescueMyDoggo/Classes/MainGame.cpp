@@ -34,7 +34,7 @@ bool MainGame::init()
 	while(map1==nullptr)
 	map1 = TMXTiledMap::create("map1.tmx");
 	auto theTest = map1->getContentSize();
-	map1->setScale(1.6);
+	map1->setScale(1.6f);
 	map1->setContentSize(map1->getContentSize()*map1->getScale()); //do nothing but helping *2 that's all
 	if(map1)
 	this->addChild(map1, 0, 33);
@@ -339,12 +339,9 @@ void MainGame::update(float elapsed)
 			this->gameOver->setPosition(Vec2(where2Put,0));
 			this->gameOver->runAction(FadeIn::create(2.0f));
 			this->isGameOver = true;
-<<<<<<< HEAD
 			hud_layer->setVisible(false);
 			this->runAction(Sequence::create(DelayTime::create(1), CallFunc::create([=]() {this->canRetry=true; }), nullptr));
-=======
 			this->runAction(Sequence::create(DelayTime::create(1), CallFunc::create([=]() {this->canRetry=true;}), nullptr));
->>>>>>> 21ac7288fc239ad07075c63c607d9fca93516387
 		}
 
 		}
@@ -713,7 +710,7 @@ void MainGame::delAll()
 	visibleSize = Director::getInstance()->getVisibleSize();
 		map1 = TMXTiledMap::create("map1.tmx");
 	auto theTest = map1->getContentSize();
-	map1->setScale(1.6);
+	map1->setScale(1.6f);
 	map1->setContentSize(map1->getContentSize() *map1->getScale()); //do nothing but helping *2 that's all
 	if(map1)
 	this->addChild(map1, 0, 33);
@@ -770,10 +767,7 @@ void MainGame::delAll()
 
 	this->addChild(ppp->skill1, 3);
 	this->updatePlayerPosition();
-<<<<<<< HEAD
 	hud_layer->setupStick();
 	this->scheduleUpdate();
-=======
 	//this->scheduleUpdate();
->>>>>>> 21ac7288fc239ad07075c63c607d9fca93516387
 }
