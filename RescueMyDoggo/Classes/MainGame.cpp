@@ -3,6 +3,7 @@
 USING_NS_CC;
 
 
+
 bool MainGame::init()
 {
 	if (!Node::init()) 
@@ -96,6 +97,7 @@ bool MainGame::init()
 
 	this->setupPressedKeyHandling();
 	this->setupTouchHandling();
+	
 	this->scheduleUpdate();
 	
 	this->addChild(ppp->skill1, 3);
@@ -112,6 +114,8 @@ void MainGame::setupTouchHandling() {
 
 bool MainGame::onTouchBegan(Touch* touch, Event* event)
 {
+	auto hud_layer = static_cast<HUDLayer*> (Director::getInstance()->getRunningScene()->getChildByTag(9999));
+
 	if (this->isGameOver && canRetry) {
 		canRetry = false;
 		this->runAction(Sequence::create(DelayTime::create(1), CallFunc::create([=]() {this->delAll(); }), nullptr));
@@ -121,6 +125,7 @@ bool MainGame::onTouchBegan(Touch* touch, Event* event)
 		isGameStart = true;
 		this->startGame->runAction(FadeOut::create(0.9f));
 		this->spawnPlayer();
+		hud_layer->toggleVisiblity();
 	}
 	ppp->attack();
 	return true;
@@ -253,6 +258,7 @@ void MainGame::check4Directions(Point posDirection, int directionClock) {
 	if (tileGID == 0 && !ppp->canMoveDirections[directionClock])
 		ppp->canMoveDirections[directionClock] = true;
 }
+
 Point MainGame::tileCoordForPosition(Point position) {
 	int x = position.x/2 / map1->getTileSize().width;
 	int y = ((map1->getMapSize().height * map1->getTileSize().height) - (position.y/2)) / map1->getTileSize().height;
@@ -281,11 +287,29 @@ void MainGame::updatePlayerPosition() {
 
 void MainGame::update(float elapsed)
 {
+	auto hud_layer = static_cast<HUDLayer*> (Director::getInstance()->getRunningScene()->getChildByTag(9999));
+
 	if(this->isGameStart)
 	{
 		if (ppp->isSpawn && !this->enemyAdded) {
 			this->enemyAdded = true;
 			this->allEnemyInit();
+		}
+
+		if (ppp->isSpawn && !ppp->isDead)
+		{
+			if (hud_layer->movementStick->getVelocity().x > 0)
+			{
+				log("Right");
+			}
+			if (hud_layer->movementStick->getVelocity().x < 0)
+			{
+				log("Left");
+			}
+			if (hud_layer->movementStick->getVelocity().x == 0)
+			{
+				log("nothing");
+			}
 		}
 
 		if (this->enemyAdded) {
@@ -307,6 +331,7 @@ void MainGame::update(float elapsed)
 			this->gameOver->setPosition(Vec2(where2Put,0));
 			this->gameOver->runAction(FadeIn::create(2.0f));
 			this->isGameOver = true;
+			hud_layer->setVisible(false);
 			this->runAction(Sequence::create(DelayTime::create(1), CallFunc::create([=]() {this->canRetry=true; }), nullptr));
 		}
 
@@ -642,7 +667,10 @@ Animate * MainGame::animation(std::string actionName,float timeEachFrame)
 	return anim;
 }
 
-void MainGame::delAll() {
+void MainGame::delAll() 
+{
+	auto hud_layer = static_cast<HUDLayer*> (Director::getInstance()->getRunningScene()->getChildByTag(9999));
+
 	this->allEnemy.clear();
 	this->removeAllChildren();
 	this->enemyAdded = false;
@@ -724,5 +752,6 @@ void MainGame::delAll() {
 
 	this->addChild(ppp->skill1, 3);
 	this->updatePlayerPosition();
+	hud_layer->setupStick();
 	this->scheduleUpdate();
 }

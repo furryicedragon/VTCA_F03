@@ -9,7 +9,12 @@ Scene* MainScene::createScene()
 
 bool MainScene::init()
 {
-	Node * mainGame = MainGame::create();
-	this->addChild(mainGame,1);
+	HUDLayer* hud = HUDLayer::create();
+	this->addChild(hud, 10, 9999);
+
+	MainGame* mainGame = MainGame::create();
+	this->addChild(mainGame, 1);
+
+	
 	return true;
 }

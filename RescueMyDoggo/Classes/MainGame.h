@@ -7,6 +7,8 @@
 #include<Player.h>
 #include<Enemy.h>
 #include<Projectile.h>
+#include<HUDLayer.h>
+
 USING_NS_CC;
 
 class MainGame : public cocos2d::Node
@@ -30,6 +32,8 @@ public:
 	
 	EventKeyboard::KeyCode lastKeyPressed;
 	EventKeyboard::KeyCode anotherKeyPressed;
+
+	
 	TMXLayer* meta;
 	TMXTiledMap* map1;
 	Vec2 lastMovePos; //for retrieving last y
