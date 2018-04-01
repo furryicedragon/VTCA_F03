@@ -518,7 +518,7 @@ void Player::useSkill(std::string actionName, std::string skillName, int damage)
 		this->skillHelper->runAction(Sequence::create(DelayTime::create(attackSpeed * 3), CallFunc::create([=]() {this->skillHelper->setVisible(true); this->setDoneDamageTo(false); }),
 			anim, CallFunc::create([=]() {this->skillHelper->setVisible(false); }), nullptr));
 
-		this->skillHelper->runAction(Sequence::create(DelayTime::create(1), CallFunc::create([=]() {this->skill1CD = false; this->setDoneDamageTo(true); }), nullptr));
+		this->skillHelper->runAction(Sequence::create(DelayTime::create(6), CallFunc::create([=]() {this->skill1CD = false; this->setDoneDamageTo(true); }), nullptr));
 		
 	}
 }
