@@ -510,17 +510,17 @@ void Player::useSkill(std::string actionName, std::string skillName, int damage)
 			auto frame = SpriteFrame::create(frameName, Rect(0, 0, theSize.width, theSize.height));
 			runningFrames.pushBack(frame);
 		}
-		Animation* runningAnimation = Animation::createWithSpriteFrames(runningFrames, attackSpeed*2/frames*1.2);
+		Animation* runningAnimation = Animation::createWithSpriteFrames(runningFrames, attackSpeed*4/frames);
 		Animate* anim = Animate::create(runningAnimation);
 		this->runAction(Sequence::create(animation(actionName, attackSpeed), CallFunc::create([=]() {this->usingSkill = false; this->idleStatus(); }), nullptr));
-		this->runAction(Sequence::create(DelayTime::create(attackSpeed * 3), MoveBy::create(attackSpeed*2, Vec2(range, 0)),nullptr));
+		this->runAction(Sequence::create(DelayTime::create(attackSpeed * 2), MoveBy::create(attackSpeed*2, Vec2(range, 0)),nullptr));
 
 		this->skill1CD = true;
 		int lastDmg = this->damageCurrent;
 		this->skillHelper->runAction(Sequence::create(DelayTime::create(attackSpeed * 3), CallFunc::create([=]() {this->skillHelper->setVisible(true); this->setDoneDamageTo(false); }),
-			anim, CallFunc::create([=]() {this->skillHelper->setVisible(false); }), nullptr));
+			anim, CallFunc::create([=]() {this->skillHelper->setVisible(false); this->setDoneDamageTo(true); }), nullptr));
 
-		this->skillHelper->runAction(Sequence::create(DelayTime::create(6), CallFunc::create([=]() {this->skill1CD = false; this->setDoneDamageTo(true); }), nullptr));
+		this->skillHelper->runAction(Sequence::create(DelayTime::create(5), CallFunc::create([=]() {this->skill1CD = false; }), nullptr));
 		
 	}
 }
