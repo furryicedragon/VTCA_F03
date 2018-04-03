@@ -200,7 +200,7 @@ int Player::checkDirectionInNumber(std::string direction) {
 
 void Player::launchSkill1()
 {
-	if (skill1->launching || skill1->onCD)	return;
+	if (skill1->launching)	return;
 
 	Vector<SpriteFrame *> runningFrames;
 	for (int i = 0; i < 3; i++) {
@@ -246,8 +246,6 @@ void Player::attack() {
 		this->runAction(Sequence::create(animation(name, attackSpeed), 
 			CallFunc::create([=]() 
 			{
-				launchSkill1(); //test launch projectile
-
 				this->isAttacking = false; 
 				this->idleStatus(); 
 		}),	nullptr));
@@ -481,7 +479,7 @@ void Player::update(float elapsed)
 
 void Player::useSkill(std::string actionName, std::string skillName, int damage)
 {
-	if (this->isSpawn && !this->isAttacking && !this->isRolling && !this->isDead && !this->skill1CD) {
+	if (this->isSpawn && !this->isAttacking && !this->isRolling && !this->isDead && !this->skill2CD) {
 		this->isHit = false;
 		this->skillDamage = damage;
 		int range = 269;
@@ -515,12 +513,12 @@ void Player::useSkill(std::string actionName, std::string skillName, int damage)
 		this->runAction(Sequence::create(animation(actionName, attackSpeed), CallFunc::create([=]() {this->usingSkill = false; this->idleStatus(); }), nullptr));
 		this->runAction(Sequence::create(DelayTime::create(attackSpeed * 2), MoveBy::create(attackSpeed*2, Vec2(range, 0)),nullptr));
 
-		this->skill1CD = true;
+		this->skill2CD = true;
 		int lastDmg = this->damageCurrent;
 		this->skillHelper->runAction(Sequence::create(DelayTime::create(attackSpeed * 3), CallFunc::create([=]() {this->skillHelper->setVisible(true); this->setDoneDamageTo(false); }),
 			anim, CallFunc::create([=]() {this->skillHelper->setVisible(false); this->setDoneDamageTo(true); }), nullptr));
 
-		this->skillHelper->runAction(Sequence::create(DelayTime::create(5), CallFunc::create([=]() {this->skill1CD = false; }), nullptr));
+		this->skillHelper->runAction(Sequence::create(DelayTime::create(5), CallFunc::create([=]() {this->skill2CD = false; }), nullptr));
 		
 	}
 }

@@ -40,9 +40,11 @@ public:
 	int previousDirectionInNumber;
 	int checkDirectionInNumber(std::string direction);
 	int damageCurrent;
+
 	int skillDamage;
 	bool usingSkill;
-	bool skill1CD;
+	bool skill2CD;
+
 	bool isSpawning;
 	bool isSpawn;
 	bool isHit;

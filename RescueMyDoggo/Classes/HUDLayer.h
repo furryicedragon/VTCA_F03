@@ -4,6 +4,8 @@
 
 #include<cocos2d.h>
 #include<JoystickBase.h>
+#include<Button.h>
+#include<ButtonBase.h>
 USING_NS_CC;
 
 class HUDLayer : public Layer
@@ -15,6 +17,14 @@ public:
 
 	Joystick *movementStick;
 	void setupStick();
+
+	Button *attackBtn;
+	Button *rollBtn;
+	Button *skill1Btn;
+	Button *skill2Btn;
+	void setupButtons();
+
+	void displayCD(Button* button, float cooldown);
 
 	void toggleVisiblity();
 };

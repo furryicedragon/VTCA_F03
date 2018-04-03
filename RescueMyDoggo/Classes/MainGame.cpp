@@ -130,7 +130,6 @@ bool MainGame::onTouchBegan(Touch* touch, Event* event)
 		this->spawnPlayer();
 		hud_layer->toggleVisiblity();
 	}
-	ppp->attack();
 	return true;
 }
 
@@ -305,6 +304,7 @@ void MainGame::update(float elapsed)
 
 		if (ppp->isSpawn && !ppp->isDead)
 		{
+			// joystick
 			if (hud_layer->movementStick->getVelocity().x > 0)
 			{
 				whatYouWant(EventKeyboard::KeyCode::KEY_D, 2);
@@ -325,6 +325,24 @@ void MainGame::update(float elapsed)
 					whatYouWant(EventKeyboard::KeyCode::KEY_YEN, 1);
 				}
 
+			}
+			
+			//HUD buttons
+			if (hud_layer->attackBtn->getValue())
+			{
+				ppp->attack();
+			}
+			if (hud_layer->rollBtn->getValue())
+			{
+				ppp->roll();
+			}
+			if (hud_layer->skill1Btn->getValue() && !ppp->skill1->onCD)
+			{
+				ppp->launchSkill1();
+			}
+			if (hud_layer->skill2Btn->getValue())
+			{
+				ppp->useSkill("Dash/Dash Attack", "Dash Stab", (int)((float)ppp->damageCurrent / 100 * 169));
 			}
 		}
 
