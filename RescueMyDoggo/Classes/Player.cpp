@@ -66,7 +66,7 @@ void Player::initOption()
 	this->idleStatus();
 
 	// projectile
-	this->skill1 = Projectile::create();
+	this->skill1 = Skill::create();
 	this->skill1->setScale(3.0f);
 
 	this->cd_reduction = 1.0f;
