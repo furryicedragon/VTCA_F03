@@ -156,7 +156,7 @@ bool MainGame::keyPressed(EventKeyboard::KeyCode keyCode, Event* event) {
 		this->gameOver->runAction(FadeOut::create(0.1f));
 	}
 
- 	if (keyCode == EventKeyboard::KeyCode::KEY_SPACE) ppp->useSkill();
+ 	if (keyCode == EventKeyboard::KeyCode::KEY_SPACE) ppp->useSkill(1);
 	return true;
 }
 bool MainGame::keyReleased(EventKeyboard::KeyCode keyCode, Event* event) {
@@ -336,13 +336,13 @@ void MainGame::update(float elapsed)
 			{
 				ppp->roll();
 			}
-			if (hud_layer->skill1Btn->getValue() && !ppp->skill1->onCD)
+			if (hud_layer->skill1Btn->getValue())
 			{
-				ppp->launchSkill1();
+				//ppp->useSkill(2);
 			}
 			if (hud_layer->skill2Btn->getValue())
 			{
-				ppp->useSkill();
+				ppp->useSkill(1);
 			}
 		}
 
@@ -696,6 +696,9 @@ void MainGame::allEnemyInit()
 		ppp->listSkill.at(0)->setVisible(false);
 		ppp->listSkill.at(0)->setScale(3);
 
+
+
+
 	}
 	ppp->listSkill.at(0)->canDamage.resize(allEnemy.size(), true);
 }
@@ -803,7 +806,7 @@ void MainGame::delAll()
 	this->addChild(startGame, 100);
 	this->isGameStart = false;
 
-	this->addChild(ppp->skill1, 3);
+	//this->addChild(ppp->skill1, 3);
 	this->updatePlayerPosition();
 	hud_layer->setupStick();
 	this->scheduleUpdate();

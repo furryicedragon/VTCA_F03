@@ -72,7 +72,7 @@ public:
 	void statUp();
 	void spawnEffect();
 	void levelUp();
-	void useSkill();
+	void useSkill(int skillID);
 	Skill* skill1;
 	float cd_reduction;
 	void launchSkill1();

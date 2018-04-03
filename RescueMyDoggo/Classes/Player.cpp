@@ -496,11 +496,11 @@ void Player::update(float elapsed)
 }
 
 
-void Player::useSkill()
+void Player::useSkill(int skillID)
 {
 	if (this->isSpawn && !this->isAttacking && !this->isRolling && !this->isDead && !this->skill2CD) {
 		this->isHit = false;
-		this->skillDamage = listSkill.at(0)->skillDamage;
+		this->skillDamage = listSkill.at(skillID)->skillDamage;
 		int range = 269;
 		if (this->getPosition().x < range + 44 + 32 * mapScale && this->isFlippedX())
 			range = this->getPosition().x - (44 + 32 * mapScale);
@@ -509,29 +509,29 @@ void Player::useSkill()
 
 		if (this->isFlippedX()) { 
 			range *= -1;
-			this->listSkill.at(0)->setFlippedX(false); 
+			this->listSkill.at(skillID)->setFlippedX(false); 
 		}
-		else this->listSkill.at(0)->setFlippedX(true);
+		else this->listSkill.at(skillID)->setFlippedX(true);
 		this->stopAllActions();
 		this->usingSkill = true;
 
 
-		this->runAction(Sequence::create(animation(listSkill.at(0)->castAName,attackSpeed), CallFunc::create([=]() {this->usingSkill = false; this->idleStatus(); }), nullptr));
-		this->runAction(Sequence::create(DelayTime::create(listSkill.at(0)->mobilityDelayTime*attackSpeed), MoveBy::create(listSkill.at(0)->mobilityTime*attackSpeed, Vec2(range, 0)),nullptr));
+		this->runAction(Sequence::create(animation(listSkill.at(skillID)->castAName,attackSpeed), CallFunc::create([=]() {this->usingSkill = false; this->idleStatus(); }), nullptr));
+		this->runAction(Sequence::create(DelayTime::create(listSkill.at(skillID)->mobilityDelayTime*attackSpeed), MoveBy::create(listSkill.at(skillID)->mobilityTime*attackSpeed, Vec2(range, skillID)),nullptr));
 
 		this->skill2CD = true;
-		listSkill.at(0)->setPosition(listSkill.at(0)->skillPosition);
+		listSkill.at(skillID)->setPosition(listSkill.at(skillID)->skillPosition);
 
-		this->listSkill.at(0)->runAction(Sequence::create(DelayTime::create(listSkill.at(0)->skillAppearTime*attackSpeed), 
+		this->listSkill.at(skillID)->runAction(Sequence::create(DelayTime::create(listSkill.at(skillID)->skillAppearTime*attackSpeed), 
 			CallFunc::create([=]() 
-			{ this->listSkill.at(0)->setVisible(true); 
-			std::fill(listSkill.at(0)->canDamage.begin(), listSkill.at(0)->canDamage.end(), true); 
+			{ this->listSkill.at(skillID)->setVisible(true); 
+			std::fill(listSkill.at(skillID)->canDamage.begin(), listSkill.at(skillID)->canDamage.end(), true); 
 			}),
-			allAnimation(listSkill.at(0)->skillAName,listSkill.at(0)->skillDisappearTime*attackSpeed/listSkill.at(0)->frames), 
-				CallFunc::create([=]() {this->listSkill.at(0)->setVisible(false);
-			std::fill(listSkill.at(0)->canDamage.begin(), listSkill.at(0)->canDamage.end(), false); }), nullptr));
+			allAnimation(listSkill.at(skillID)->skillAName,listSkill.at(skillID)->skillDisappearTime*attackSpeed/listSkill.at(skillID)->frames), 
+				CallFunc::create([=]() {this->listSkill.at(skillID)->setVisible(false);
+			std::fill(listSkill.at(skillID)->canDamage.begin(), listSkill.at(skillID)->canDamage.end(), false); }), nullptr));
 
-		this->listSkill.at(0)->runAction(Sequence::create(DelayTime::create(listSkill.at(0)->coolDownTime), CallFunc::create([=]() {this->skill2CD = false; }), nullptr));
+		this->listSkill.at(skillID)->runAction(Sequence::create(DelayTime::create(listSkill.at(skillID)->coolDownTime), CallFunc::create([=]() {this->skill2CD = false; }), nullptr));
 		
 	}
 }
