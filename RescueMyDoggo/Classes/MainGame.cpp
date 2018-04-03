@@ -156,7 +156,7 @@ bool MainGame::keyPressed(EventKeyboard::KeyCode keyCode, Event* event) {
 		this->gameOver->runAction(FadeOut::create(0.1f));
 	}
 
- 	if (keyCode == EventKeyboard::KeyCode::KEY_SPACE) ppp->useSkill(1);
+ 	if (keyCode == EventKeyboard::KeyCode::KEY_SPACE) ppp->useSkill(0);
 	return true;
 }
 bool MainGame::keyReleased(EventKeyboard::KeyCode keyCode, Event* event) {
@@ -342,7 +342,7 @@ void MainGame::update(float elapsed)
 			}
 			if (hud_layer->skill2Btn->getValue())
 			{
-				ppp->useSkill(1);
+				ppp->useSkill(0);
 			}
 		}
 
