@@ -159,7 +159,7 @@ void HUDLayer::setupButtons()
 
 void HUDLayer::displayCD(Button* button, float cooldown)
 {
-
+	auto mainGameLayer = static_cast<MainGame*> (Director::getInstance()->getRunningScene()->getChildByTag(8888));
 }
 
 void HUDLayer::toggleVisiblity()

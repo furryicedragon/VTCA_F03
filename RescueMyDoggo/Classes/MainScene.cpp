@@ -13,7 +13,7 @@ bool MainScene::init()
 	this->addChild(hud, 10, 9999);
 
 	MainGame* mainGame = MainGame::create();
-	this->addChild(mainGame, 1);
+	this->addChild(mainGame, 1, 8888);
 
 	
 	return true;

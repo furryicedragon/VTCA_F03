@@ -6,6 +6,7 @@
 #include<JoystickBase.h>
 #include<Button.h>
 #include<ButtonBase.h>
+#include <MainGame.h>
 USING_NS_CC;
 
 class HUDLayer : public Layer

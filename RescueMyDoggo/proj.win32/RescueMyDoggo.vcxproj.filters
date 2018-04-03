@@ -9,7 +9,6 @@
     <ClCompile Include="..\Classes\MainGame.cpp" />
     <ClCompile Include="..\Classes\MainScene.cpp" />
     <ClCompile Include="..\Classes\Player.cpp" />
-    <ClCompile Include="..\Classes\Projectile.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="..\Classes\Button.cpp" />
     <ClCompile Include="..\Classes\ButtonBase.cpp" />
@@ -23,7 +22,6 @@
     <ClInclude Include="..\Classes\MainGame.h" />
     <ClInclude Include="..\Classes\MainScene.h" />
     <ClInclude Include="..\Classes\Player.h" />
-    <ClInclude Include="..\Classes\Projectile.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="..\Classes\Button.h" />
     <ClInclude Include="..\Classes\ButtonBase.h" />
