@@ -17,7 +17,7 @@ public:
 	Player* ppp;
 	Animate* idleAnim;
 	std::string combination;
-	int skillDamage;
+	float skillDamage;
 	int mapNumber;
 	int waveNumber;
 	int bossNumber;

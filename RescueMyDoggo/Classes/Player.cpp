@@ -16,6 +16,7 @@ Player* Player::create()
 
 void Player::initOption()
 {
+
 	this->isSpawning = true;
 	this->setOpacity(255);
 	this->runAction(FadeOut::create(0));
@@ -44,12 +45,12 @@ void Player::initOption()
 	if(attackHelper)
 	this->addChild(attackHelper);
 
-	skillHelper = Sprite::create();
-	skillHelper->setVisible(false);
-	skillHelper->setScale(3);
-	if (skillHelper)
-		this->addChild(skillHelper, 3);
-	this->skillHelper->setPosition(this->getContentSize().width / 1.8, this->getPosition().y + this->getContentSize().height / 2);
+	//skillHelper = Sprite::create();
+	//skillHelper->setVisible(false);
+	//skillHelper->setScale(3);
+	//if (skillHelper)
+	//	this->addChild(skillHelper, 3);
+	//this->skillHelper->setPosition(this->getContentSize().width / 1.8, this->getPosition().y + this->getContentSize().height / 2);
 
 	movementHelper = Sprite::create();
 	if(movementHelper)
@@ -66,8 +67,8 @@ void Player::initOption()
 	this->idleStatus();
 
 	// projectile
-	this->skill1 = Skill::create();
-	this->skill1->setScale(3.0f);
+	//this->skill1 = Skill::create();
+	//this->skill1->setScale(3.0f);
 
 	this->cd_reduction = 1.0f;
 
@@ -103,6 +104,24 @@ Animate * Player::animation(std::string actionName, float timeEachFrame) {
 	Animation* runningAnimation = Animation::createWithSpriteFrames(runningFrames, timeEachFrame);
 	Animate* anim = Animate::create(runningAnimation);
 	return anim;
+}
+
+Animate * Player::allAnimation(std::string actionName, float timeEachFrame)
+{
+	Vector<SpriteFrame *> runningFrames;
+	for (int i = 1; i < 99; i++) {
+		auto frameName = "/" + actionName + "/(" + to_string(i) + ").png";
+		Sprite* getSize = Sprite::create(frameName);
+		if (!getSize)
+			break;
+
+		Size theSize = getSize->getContentSize();
+		auto frame = SpriteFrame::create(frameName, Rect(0, 0, theSize.width, theSize.height));
+		runningFrames.pushBack(frame);
+	}
+	Animation* runningAnimation = Animation::createWithSpriteFrames(runningFrames, timeEachFrame);
+	Animate* animAll = Animate::create(runningAnimation);
+	return animAll;
 }
 
 
@@ -200,39 +219,39 @@ int Player::checkDirectionInNumber(std::string direction) {
 
 void Player::launchSkill1()
 {
-	if (skill1->launching)	return;
+	//if (skill1->launching)	return;
 
-	Vector<SpriteFrame *> runningFrames;
-	for (int i = 0; i < 3; i++) {
-		auto frameName = "/Enemies/Map 2/Wave 1/Spell/" + std::to_string(i) + ".png";
-		Sprite* getSize = Sprite::create(frameName);
-		if (!getSize)
-			break;
+	//Vector<SpriteFrame *> runningFrames;
+	//for (int i = 0; i < 3; i++) {
+	//	auto frameName = "/Enemies/Map 2/Wave 1/Spell/" + std::to_string(i) + ".png";
+	//	Sprite* getSize = Sprite::create(frameName);
+	//	if (!getSize)
+	//		break;
 
-		Size theSize = getSize->getContentSize();
-		auto frame = SpriteFrame::create(frameName, Rect(0, 0, theSize.width, theSize.height));
-		runningFrames.pushBack(frame);
-	}
-	Animation* runningAnimation = Animation::createWithSpriteFrames(runningFrames, 0.1f);
-	Animate* anim = Animate::create(runningAnimation);
+	//	Size theSize = getSize->getContentSize();
+	//	auto frame = SpriteFrame::create(frameName, Rect(0, 0, theSize.width, theSize.height));
+	//	runningFrames.pushBack(frame);
+	//}
+	//Animation* runningAnimation = Animation::createWithSpriteFrames(runningFrames, 0.1f);
+	//Animate* anim = Animate::create(runningAnimation);
 
-	float side;
+	//float side;
 
-	if (!this->isFlippedX())
-	{
-		skill1->setFlippedX(false);
-		side = 500;
-	}
-	else
-	{
-		skill1->setFlippedX(true);
-		side = -500;
-	}
+	//if (!this->isFlippedX())
+	//{
+	//	skill1->setFlippedX(false);
+	//	side = 500;
+	//}
+	//else
+	//{
+	//	skill1->setFlippedX(true);
+	//	side = -500;
+	//}
 
-	skill1->setPosition(this->getPositionX() + 50, this->getPositionY() + 100);
-	skill1->setVisible(true);
+	//skill1->setPosition(this->getPositionX() + 50, this->getPositionY() + 100);
+	//skill1->setVisible(true);
 
-	skill1->launch(anim, side, 3.0f * cd_reduction);
+	//skill1->launch(anim, side, 3.0f * cd_reduction);
 
 }
 
@@ -349,8 +368,8 @@ void Player::getHit(int damage, float eeePosX) {
 		this->stopAllActions();
 		this->isAttacking = false;
 		this->isMoving = false;
-		this->usingSkill = false;
 		if (this->usingSkill) this->skillHelper->stopAllActions();
+		this->usingSkill = false;
 		this->setDoneDamageTo(true);
 		//int x = -16;
 		//if (this->getPosition().x < eeePosX)
@@ -477,11 +496,11 @@ void Player::update(float elapsed)
 }
 
 
-void Player::useSkill(std::string actionName, std::string skillName, int damage)
+void Player::useSkill()
 {
 	if (this->isSpawn && !this->isAttacking && !this->isRolling && !this->isDead && !this->skill2CD) {
 		this->isHit = false;
-		this->skillDamage = damage;
+		this->skillDamage = listSkill.at(0)->skillDamage;
 		int range = 269;
 		if (this->getPosition().x < range + 44 + 32 * mapScale && this->isFlippedX())
 			range = this->getPosition().x - (44 + 32 * mapScale);
@@ -490,35 +509,29 @@ void Player::useSkill(std::string actionName, std::string skillName, int damage)
 
 		if (this->isFlippedX()) { 
 			range *= -1;
-			this->skillHelper->setFlippedX(false); 
+			this->listSkill.at(0)->setFlippedX(false); 
 		}
-		else this->skillHelper->setFlippedX(true);
+		else this->listSkill.at(0)->setFlippedX(true);
 		this->stopAllActions();
 		this->usingSkill = true;
-		float frames;
-		Vector<SpriteFrame *> runningFrames;
-		for (int i = 1; i < 99; i++) {
-			auto frameName = "/MainChar/Effects/" + skillName + "/(" + to_string(i) + ").png";
-			Sprite* getSize = Sprite::create(frameName);
-			frames = i;
-			if (!getSize)
-				break;
 
-			Size theSize = getSize->getContentSize();
-			auto frame = SpriteFrame::create(frameName, Rect(0, 0, theSize.width, theSize.height));
-			runningFrames.pushBack(frame);
-		}
-		Animation* runningAnimation = Animation::createWithSpriteFrames(runningFrames, attackSpeed*4/frames);
-		Animate* anim = Animate::create(runningAnimation);
-		this->runAction(Sequence::create(animation(actionName, attackSpeed), CallFunc::create([=]() {this->usingSkill = false; this->idleStatus(); }), nullptr));
-		this->runAction(Sequence::create(DelayTime::create(attackSpeed * 2), MoveBy::create(attackSpeed*2, Vec2(range, 0)),nullptr));
+
+		this->runAction(Sequence::create(animation(listSkill.at(0)->castAName,attackSpeed), CallFunc::create([=]() {this->usingSkill = false; this->idleStatus(); }), nullptr));
+		this->runAction(Sequence::create(DelayTime::create(listSkill.at(0)->mobilityDelayTime*attackSpeed), MoveBy::create(listSkill.at(0)->mobilityTime*attackSpeed, Vec2(range, 0)),nullptr));
 
 		this->skill2CD = true;
-		int lastDmg = this->damageCurrent;
-		this->skillHelper->runAction(Sequence::create(DelayTime::create(attackSpeed * 3), CallFunc::create([=]() {this->skillHelper->setVisible(true); this->setDoneDamageTo(false); }),
-			anim, CallFunc::create([=]() {this->skillHelper->setVisible(false); this->setDoneDamageTo(true); }), nullptr));
+		listSkill.at(0)->setPosition(listSkill.at(0)->skillPosition);
 
-		this->skillHelper->runAction(Sequence::create(DelayTime::create(5), CallFunc::create([=]() {this->skill2CD = false; }), nullptr));
+		this->listSkill.at(0)->runAction(Sequence::create(DelayTime::create(listSkill.at(0)->skillAppearTime*attackSpeed), 
+			CallFunc::create([=]() 
+			{ this->listSkill.at(0)->setVisible(true); 
+			std::fill(listSkill.at(0)->canDamage.begin(), listSkill.at(0)->canDamage.end(), true); 
+			}),
+			allAnimation(listSkill.at(0)->skillAName,listSkill.at(0)->skillDisappearTime*attackSpeed/listSkill.at(0)->frames), 
+				CallFunc::create([=]() {this->listSkill.at(0)->setVisible(false);
+			std::fill(listSkill.at(0)->canDamage.begin(), listSkill.at(0)->canDamage.end(), false); }), nullptr));
+
+		this->listSkill.at(0)->runAction(Sequence::create(DelayTime::create(listSkill.at(0)->coolDownTime), CallFunc::create([=]() {this->skill2CD = false; }), nullptr));
 		
 	}
 }

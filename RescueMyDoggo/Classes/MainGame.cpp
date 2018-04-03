@@ -103,7 +103,7 @@ bool MainGame::init()
 	
 	this->scheduleUpdate();
 	
-	this->addChild(ppp->skill1, 3);
+	//this->addChild(ppp->skill1, 3);
 
 	return true;
 }
@@ -156,7 +156,7 @@ bool MainGame::keyPressed(EventKeyboard::KeyCode keyCode, Event* event) {
 		this->gameOver->runAction(FadeOut::create(0.1f));
 	}
 
- 	if (keyCode == EventKeyboard::KeyCode::KEY_SPACE) ppp->useSkill("Dash/Dash Attack", "Dash Stab", (int)((float)ppp->damageCurrent / 100 * 169));
+ 	if (keyCode == EventKeyboard::KeyCode::KEY_SPACE) ppp->useSkill();
 	return true;
 }
 bool MainGame::keyReleased(EventKeyboard::KeyCode keyCode, Event* event) {
@@ -342,7 +342,7 @@ void MainGame::update(float elapsed)
 			}
 			if (hud_layer->skill2Btn->getValue())
 			{
-				ppp->useSkill("Dash/Dash Attack", "Dash Stab", (int)((float)ppp->damageCurrent / 100 * 169));
+				ppp->useSkill();
 			}
 		}
 
@@ -402,9 +402,9 @@ void MainGame::checkAttackRange(Enemy * eee, int index)
 				eee->getHit(ppp->damageCurrent);
 				ppp->doneDamage[index] = true;
 			}
-			if (ppp->usingSkill && !ppp->doneDamage[index]) {
-				eee->getHit(ppp->skillDamage);
-				ppp->doneDamage[index] = true;
+			if (ppp->usingSkill && ppp->listSkill.at(0)->canDamage[index]) {
+				eee->getHit(ppp->damageCurrent/100* ppp->listSkill.at(0)->skillDamage);
+				ppp->listSkill.at(0)->canDamage[index] = false;
 			}
 
 			if (eee->canDamage && !ppp->isRolling && !eee->isCaster) {
@@ -423,16 +423,16 @@ void MainGame::checkAttackRange(Enemy * eee, int index)
 			eee->canDamage = false;
 		}
 
-		if (ppp->skill1->launching)
-		{
-			//check projectile collision
-			if (ppp->skill1->getBoundingBox().intersectsRect(eee->getBoundingBox()) && ppp->skill1->canDamage[index])
-			{
-				ppp->skill1->canDamage[index] = false;
+		//if (ppp->skill1->launching)
+		//{
+		//	//check projectile collision
+		//	if (ppp->skill1->getBoundingBox().intersectsRect(eee->getBoundingBox()) && ppp->skill1->canDamage[index])
+		//	{
+		//		ppp->skill1->canDamage[index] = false;
 
-				eee->getHit(ppp->damageCurrent);
-			}
-		}
+		//		eee->getHit(ppp->damageCurrent);
+		//	}
+		//}
 	}
 
 }
@@ -686,7 +686,18 @@ void MainGame::allEnemyInit()
 	}
 
 	ppp->doneDamage.resize(allEnemy.size(),true);
-	ppp->skill1->canDamage.resize(allEnemy.size(), true);
+
+
+	if (this->ppp->listSkill.size() < 1) {
+
+		Point testPos = Point(this->ppp->getContentSize().width / 1.8, this->ppp->getContentSize().height / 2);
+		ppp->listSkill.insert(0, Skill::create(169, 3, 3, 4 , 2, 2, testPos, "MainChar/Effects/Dash Stab","Dash/Dash Attack"));
+		this->ppp->addChild(ppp->listSkill.at(0), 3);
+		ppp->listSkill.at(0)->setVisible(false);
+		ppp->listSkill.at(0)->setScale(3);
+
+	}
+	ppp->listSkill.at(0)->canDamage.resize(allEnemy.size(), true);
 }
 
 Animate * MainGame::animation(std::string actionName,float timeEachFrame)

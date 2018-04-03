@@ -8,6 +8,7 @@ USING_NS_CC;
 class Player :public cocos2d::Sprite {
 public:
 	static Player* create();
+	cocos2d::Vector<Skill*> listSkill;
 	std::vector<EventKeyboard::KeyCode> inputKeys;
 	std::vector<int> attackFrameNumber;
 	std::vector<bool> canMoveDirections;
@@ -29,9 +30,10 @@ public:
 	float lastX;
 	float lastY;
 	float attackSpeed;
+	float damageCurrent;
+	float baseHP;
 	int currentEXP;
 	int baseEXP;
-	int baseHP;
 	int w1kills;
 	int w2kills;
 	int count;
@@ -39,7 +41,6 @@ public:
 	int presentDirectionInNumber;
 	int previousDirectionInNumber;
 	int checkDirectionInNumber(std::string direction);
-	int damageCurrent;
 
 	int skillDamage;
 	bool usingSkill;
@@ -66,11 +67,12 @@ public:
 	void setHP(int HP);
 	void dead();
 	Animate* animation(std::string actionName, float timeEachFrame);
+	Animate* allAnimation(std::string actionName, float timeEachFrame);
 	void forbidAllAction();
 	void statUp();
 	void spawnEffect();
 	void levelUp();
-	void useSkill(std::string actionName,std::string skillName, int damage);
+	void useSkill();
 	Skill* skill1;
 	float cd_reduction;
 	void launchSkill1();
