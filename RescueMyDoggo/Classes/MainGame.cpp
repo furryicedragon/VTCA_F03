@@ -388,13 +388,13 @@ void MainGame::update(float elapsed)
 					ppp->runAction(this->animation("MainChar/Win Boss", ppp->attackSpeed));
 					congratulation = Sprite::create();
 					congratulation->setAnchorPoint(Vec2(0, 0));
-					if (congratulation)
-						this->addChild(congratulation, 99);
-					this->congratulation->runAction(FadeOut::create(0));
-					this->congratulation->setPosition(Vec2(ppp->getPosition().x-this->visibleSize.width/1.2,0));
-					auto itsOverMan = RepeatForever::create(animation("Win", 0.1f));
+					auto itsOverMan = RepeatForever::create(animation("Win", 0.3f));
 					this->congratulation->runAction(itsOverMan);
-					this->congratulation->runAction(FadeIn::create(1));
+					if (congratulation)
+						this->addChild(congratulation, 99999);
+					this->congratulation->runAction(FadeOut::create(0));
+					this->congratulation->setPosition(Vec2(this->getPosition().x*-1,0));
+					this->congratulation->runAction(FadeIn::create(3.0f));
 				}
 			}
 		}
