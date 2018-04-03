@@ -1,8 +1,8 @@
-#include "Projectile.h"
+#include "Skill.h"
 
-Projectile* Projectile::create()
+Skill* Skill::create()
 {
-	Projectile* pointerSprite = new Projectile();
+	Skill* pointerSprite = new Skill();
 	if (pointerSprite && pointerSprite->initWithFile("/Enemies/Map 2/Wave 1/Spell/0.png"))
 	{
 		pointerSprite->autorelease();
@@ -16,7 +16,7 @@ Projectile* Projectile::create()
 	return nullptr;
 }
 
-void Projectile::initOptions()
+void Skill::initOptions()
 {
 	canDamage.resize(8);
 	std::fill(canDamage.begin(), canDamage.end(), true);
@@ -26,7 +26,7 @@ void Projectile::initOptions()
 	this->onCD = false;
 }
 
-void Projectile::launch(Animate* anim, float range, float cooldown)
+void Skill::launch(Animate* anim, float range, float cooldown)
 {
 	launching = true;
 	onCD = true;

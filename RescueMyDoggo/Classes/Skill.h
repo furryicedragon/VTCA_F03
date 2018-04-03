@@ -1,14 +1,14 @@
 #pragma once
-#ifndef Projectile_hpp
-#define Projectile_hpp
+#ifndef Skill_hpp
+#define Skill_hpp
 
 #include"cocos2d.h"
 USING_NS_CC;
 
-class Projectile : public Sprite
+class Skill : public Sprite
 {
 public:
-	static Projectile* create();
+	static Skill* create();
 
 	void initOptions();
 
@@ -19,4 +19,4 @@ public:
 	void launch(Animate* anim, float range, float cooldown);
 };
 
-#endif // !Projectile_hpp
+#endif // !Skill_hpp
