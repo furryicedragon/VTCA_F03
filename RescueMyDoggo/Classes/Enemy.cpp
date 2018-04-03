@@ -25,6 +25,7 @@ Enemy* Enemy::create(int xMapNumber, int xWaveNumber, int xBossNumber)
 
 void Enemy::initOption()
 {
+	this->canRespawn = true;
 	this->getHitTime = 0;
 	this->inviTime = 1.8;
 	if (this->bossNumber == 1) inviTime = 6;
@@ -355,15 +356,18 @@ void Enemy::getHit(int damage) {
 
 void Enemy::autoRespawn()
 {
-	this->runAction(
-		Sequence::create(DelayTime::create(RandomHelper::random_int(10,20)), 
-			CallFunc::create([=]()
-			{
-				this->setVisible(true);
-				this->isDead = false;
-				this->setHP(100);
-				this->isSpawned = true;
-	}), nullptr));
+	if (this->canRespawn) {
+		this->runAction(
+			Sequence::create(DelayTime::create(RandomHelper::random_int(10,20)), 
+				CallFunc::create([=]()
+				{
+					this->setVisible(true);
+					this->isDead = false;
+					this->setHP(100);
+					this->isSpawned = true;
+		}), nullptr));
+	}
+
 }
 
 void Enemy::dead() {

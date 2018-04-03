@@ -49,7 +49,6 @@ public:
 	int skillDamage;
 	bool usingSkill;
 	bool skill2CD;
-
 	bool isSpawning;
 	bool isSpawn;
 	bool isHit;

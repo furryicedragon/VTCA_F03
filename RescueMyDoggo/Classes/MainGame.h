@@ -29,6 +29,10 @@ public:
 	Sprite* dashHelper;
 	Sprite* gameOver;
 	Sprite* startGame;
+	Sprite* congratulation;
+	Sprite* finishPortal;
+
+	ValueMap finishPoint;
 	
 	EventKeyboard::KeyCode lastKeyPressed;
 	EventKeyboard::KeyCode anotherKeyPressed;
@@ -40,6 +44,7 @@ public:
 	Point tileCoordForPosition(Point position);
 	std::vector<EventKeyboard::KeyCode> repeatedKeys;
 	std::vector<Enemy*> allEnemy;
+	bool congratz;
 	bool canRetry;
 	bool boss1;
 	bool boss2;

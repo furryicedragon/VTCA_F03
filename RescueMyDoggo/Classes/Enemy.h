@@ -42,6 +42,7 @@ public:
 	float line4X;
 	float randomX;
 	float randomY;
+	bool canRespawn;
 	bool interuptable;
 	bool invulnerable;
 	bool breakTime;

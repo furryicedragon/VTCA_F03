@@ -42,7 +42,7 @@ bool MainGame::init()
 	auto sPoint = oj->getObject("SpawnPoint");
 	float sPx = sPoint["x"].asFloat();
 	float sPy = sPoint["y"].asFloat();
-	auto fPoint = oj->getObject("FinishPoint");
+	finishPoint = oj->getObject("FinishPoint");
 	meta = map1->getLayer("meta");
 	while (ppp==nullptr) ppp = Player::create();
 	ppp->map1Size = map1->getContentSize();
@@ -104,6 +104,14 @@ bool MainGame::init()
 	this->scheduleUpdate();
 	
 	//this->addChild(ppp->skill1, 3);
+
+
+
+
+
+
+
+
 
 	return true;
 }
@@ -356,7 +364,39 @@ void MainGame::update(float elapsed)
 			checkCollision(ppp);
 			if(currentWave!=0)
 			this->waveXMapXInit();
-			//this->waveSpawn();
+			if (allEnemy[17]->isDead && allEnemy[8]->isDead && !congratz) {
+				for each (auto item in allEnemy)
+				{
+					congratz = true;
+					item->canRespawn = false;
+					item->setHP(0);
+					item->dead();
+					this->finishPortal = Sprite::create();
+					this->addChild(finishPortal, 99);
+					finishPortal->setVisible(true);
+					finishPortal->setAnchorPoint(Vec2(0, 0));
+					finishPortal->runAction(RepeatForever::create(animation("Enemies/Effect/Gate", 0.06)));
+					finishPortal->setPosition(Vec2(finishPoint["x"].asFloat()*this->map1->getScale(), ppp->getPosition().y));
+					//finishPortal->setOpacity(222);
+					finishPortal->setScale(2.7);
+				}
+			}
+			if (congratz && ppp->isSpawn) {
+				if (std::fabsf(ppp->getPosition().x - finishPortal->getPosition().x) < 10) {
+					ppp->isSpawn = false;
+					ppp->forbidAllAction();
+					ppp->runAction(this->animation("MainChar/Win Boss", ppp->attackSpeed));
+					congratulation = Sprite::create();
+					congratulation->setAnchorPoint(Vec2(0, 0));
+					if (congratulation)
+						this->addChild(congratulation, 99);
+					this->congratulation->runAction(FadeOut::create(0));
+					this->congratulation->setPosition(Vec2(ppp->getPosition().x-this->visibleSize.width/1.2,0));
+					auto itsOverMan = RepeatForever::create(animation("Win", 0.1f));
+					this->congratulation->runAction(itsOverMan);
+					this->congratulation->runAction(FadeIn::create(1));
+				}
+			}
 		}
 
 		if (ppp->isDead && !this->isGameOver) {
@@ -414,7 +454,8 @@ void MainGame::checkAttackRange(Enemy * eee, int index)
 		int i = 0;
 		for each  (auto item in ppp->listSkill)
 		{
-			if (ppp->usingSkill && item->canDamage[index] && (std::fabsf(ppp->listSkill.at(1)->getPosition().x - eee->getPosition().x)>40 || (howfarX<itemWidth + 69 && i!=1)))
+			if (ppp->usingSkill && item->canDamage[index] 
+				&& (std::fabsf(ppp->listSkill.at(1)->getPosition().x - eee->getPosition().x)>40 || (howfarX<itemWidth + 69 && i!=1)))
 			{
 					eee->getHit(ppp->damageCurrent / 100 * item->skillDamage);
 					item->canDamage[index] = false;
@@ -454,11 +495,11 @@ void MainGame::waveXMapXInit() {
 			this->checkAttackRange(item, i);
 			i++;
 		}
-		if (ppp->w1kills > 20 && !boss1) {
+		if (ppp->w1kills > 7 && !boss1) {
 			this->spawnEffect(allEnemy[8], 1);
 			boss1 = true;
 		}
-		if (ppp->w2kills > 20 && !boss2) { 
+		if (ppp->w2kills > 7 && !boss2) { 
 			this->spawnEffect(allEnemy[17], 1);
 			boss2 = true; 
 		}
