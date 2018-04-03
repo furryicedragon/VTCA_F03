@@ -12,6 +12,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="..\Classes\Button.cpp" />
     <ClCompile Include="..\Classes\ButtonBase.cpp" />
+    <ClCompile Include="..\Classes\Skill.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Classes\AppDelegate.h" />
@@ -25,6 +26,7 @@
     <ClInclude Include="main.h" />
     <ClInclude Include="..\Classes\Button.h" />
     <ClInclude Include="..\Classes\ButtonBase.h" />
+    <ClInclude Include="..\Classes\Skill.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="game.rc" />
