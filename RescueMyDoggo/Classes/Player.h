@@ -4,6 +4,10 @@
 
 #include<cocos2d.h>
 #include<Skill.h>
+#include <string>
+#include <iomanip>
+#include "Button.h"
+#include "ButtonBase.h"
 USING_NS_CC;
 class Player :public cocos2d::Sprite {
 public:
@@ -72,7 +76,7 @@ public:
 	void statUp();
 	void spawnEffect();
 	void levelUp();
-	void useSkill(int skillID);
+	void useSkill(int skillID, Button* button);
 	Skill* skill1;
 	float cd_reduction;
 	void launchSkill1();

@@ -156,7 +156,7 @@ bool MainGame::keyPressed(EventKeyboard::KeyCode keyCode, Event* event) {
 		this->gameOver->runAction(FadeOut::create(0.1f));
 	}
 
- 	if (keyCode == EventKeyboard::KeyCode::KEY_SPACE) ppp->useSkill(0);
+ 	//if (keyCode == EventKeyboard::KeyCode::KEY_SPACE) ppp->useSkill(0);
 	return true;
 }
 bool MainGame::keyReleased(EventKeyboard::KeyCode keyCode, Event* event) {
@@ -338,11 +338,11 @@ void MainGame::update(float elapsed)
 			}
 			if (hud_layer->skill1Btn->getValue())
 			{
-				ppp->useSkill(1);
+				ppp->useSkill(1, hud_layer->skill1Btn);
 			}
 			if (hud_layer->skill2Btn->getValue())
 			{
-				ppp->useSkill(0);
+				ppp->useSkill(0, hud_layer->skill2Btn);
 			}
 		}
 
@@ -398,13 +398,11 @@ void MainGame::checkAttackRange(Enemy * eee, int index)
 		if (howfarX < 0) howfarX *= -1;
 		if (howfarY < 0) howfarY *= -1;
 		if (howfarX < itemWidth + 69 && howfarY < 33) {
+
+
 			if (ppp->isAttacking && !ppp->doneDamage[index]) {
 				eee->getHit(ppp->damageCurrent);
 				ppp->doneDamage[index] = true;
-			}
-			if (ppp->usingSkill && ppp->listSkill.at(0)->canDamage[index]) {
-				eee->getHit(ppp->damageCurrent/100* ppp->listSkill.at(0)->skillDamage);
-				ppp->listSkill.at(0)->canDamage[index] = false;
 			}
 
 			if (eee->canDamage && !ppp->isRolling && !eee->isCaster) {
@@ -412,6 +410,19 @@ void MainGame::checkAttackRange(Enemy * eee, int index)
 				eee->canDamage = false;
 			}
 		}
+
+		int i = 0;
+		for each  (auto item in ppp->listSkill)
+		{
+			if (ppp->usingSkill && item->canDamage[index] && ((std::fabsf(ppp->listSkill.at(1)->getPosition().x - eee->getPosition().x && i == 1) || howfarX<itemWidth+69)))
+			{
+				eee->getHit(ppp->damageCurrent / 100 * item->skillDamage);
+				item->canDamage[index] = false;
+				i++;
+			}
+		}
+
+
 		if (eee->isCaster && !ppp->isRolling && !eee->canDamage && std::fabsf(eee->spell->getPosition().x - ppp->getPosition().x) < 22 && eee->mapNumber==2) {
 			eee->spell->setPosition(0, 0);
 			eee->spell->setVisible(false);
@@ -699,10 +710,13 @@ void MainGame::allEnemyInit()
 		ppp->listSkill.insert(1, Skill::create(129, 3, 3, 4, 2, 2, testPos, "MainChar/Effects/Skill 2", "Cast Spell/Cast Spell"));
 		this->ppp->addChild(ppp->listSkill.at(1), 3);
 		ppp->listSkill.at(1)->setVisible(false);
-		ppp->listSkill.at(1)->setScale(3);
+		ppp->listSkill.at(1)->setScale(2);
 
 	}
-	ppp->listSkill.at(0)->canDamage.resize(allEnemy.size(), true);
+	for each (auto item in ppp->listSkill)
+	{
+		item->canDamage.resize(allEnemy.size(), true);
+	}
 }
 
 Animate * MainGame::animation(std::string actionName,float timeEachFrame)

@@ -3,6 +3,10 @@
 #define Skill_hpp
 
 #include"cocos2d.h"
+#include <string>
+#include <iomanip>
+#include "Button.h"
+#include "ButtonBase.h"
 USING_NS_CC;
 
 class Skill : public Sprite
@@ -26,9 +30,19 @@ public:
 	std::string skillAName;
 	std::string castAName;
 
-	void launch(Animate* anim, float range, float cooldown);
+
+	Button* HUD_button;
+	Label* cd_displayer;
+	float timer;
+
+	void setupCD(Button* button);
+
 	void useSkill();
 	void playerSkill();
+
+	void updateLabel();
+
+	void updateTimer(float delta);
 };
 
 #endif // !Skill_hpp

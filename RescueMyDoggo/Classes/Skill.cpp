@@ -29,7 +29,8 @@ void Skill::initOptions()
 {
 	Vector<SpriteFrame *> runningFrames;
 
-	for (int i = 1; i < 99; i++) {
+	for (int i = 1; i < 99; i++) 
+	{
 		auto frameName = "/"+skillAName + "/(" + std::to_string(i) + ").png";
 		Sprite* getSize = Sprite::create(frameName);
 		if (!getSize)
@@ -46,31 +47,45 @@ void Skill::initOptions()
 	this->onCD = false;
 }
 
-void Skill::launch(Animate* anim, float range, float cooldown)
+void Skill::setupCD(Button * button)
 {
-	launching = true;
-	onCD = true;
+	this->HUD_button = button;
 
-	this->runAction(
-		Sequence::create(
-			Spawn::create(Repeat::create(anim, 2), MoveBy::create(0.5f, Vec2(range, 0)), nullptr),
-			CallFunc::create([=]()
-			{
-				this->setVisible(false);
-				this->launching = false;
-				
-				std::fill(canDamage.begin(), canDamage.end(), true);
-			}), DelayTime::create(cooldown),
-				CallFunc::create([=]()
-				{
-					onCD = false;
-				}),
-		nullptr));
+	timer = this->coolDownTime;
+
+	this->cd_displayer = static_cast<Label*> (this->HUD_button->getChildByTag(100));
+
+	this->updateLabel();
+	cd_displayer->setVisible(true);
+
+	this->getScheduler()->schedule(schedule_selector(Skill::updateTimer), this, 0.1f, false);
 }
 
 void Skill::useSkill()
 {
 	this->setPosition(skillPosition);
+}
+
+void Skill::updateLabel()
+{
+	std::stringstream ss;
+	ss << std::fixed << std::setprecision(1) << timer;
+	cd_displayer->setString(ss.str());
+}
+
+void Skill::updateTimer(float delta)
+{
+	timer -= delta;
+
+	updateLabel();
+
+	if (timer <= 0)
+	{
+		this->getScheduler()->unschedule(schedule_selector(Skill::updateTimer), this);
+		cd_displayer->setVisible(false);
+		this->onCD = false;
+	}
+
 }
 
 void Skill::playerSkill()

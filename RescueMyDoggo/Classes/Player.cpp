@@ -368,7 +368,7 @@ void Player::getHit(int damage, float eeePosX) {
 		this->stopAllActions();
 		this->isAttacking = false;
 		this->isMoving = false;
-		if (this->usingSkill) this->skillHelper->stopAllActions();
+		//if (this->usingSkill) this->skillHelper->stopAllActions();
 		this->usingSkill = false;
 		this->setDoneDamageTo(true);
 		//int x = -16;
@@ -433,7 +433,13 @@ void Player::statUp()
 	this->damageCurrent += 10;
 	this->attackSpeed = 0.08 - (0.08 / 20);
 	baseHP += 80;
-	this->hp->setString(std::to_string(baseHP));
+
+	std::stringstream sstream;
+	sstream << std::fixed << std::setprecision(0) << baseHP;
+
+	this->hp->setString(sstream.str());
+	
+	
 	statPlus->setScale(3);
 	statPlus->setAnchorPoint(Vec2(0.5, 0));
 	statPlus->setPosition(this->getContentSize().width / 2, this->getPosition().y + this->getContentSize().height);
@@ -496,9 +502,14 @@ void Player::update(float elapsed)
 }
 
 
-void Player::useSkill(int skillID)
+void Player::useSkill(int skillID, Button* button)
 {
-	if (this->isSpawn && !this->isAttacking && !this->isRolling && !this->isDead && !this->skill2CD) {
+	if (this->isSpawn && !this->isAttacking && !this->isRolling && !this->isDead && !this->listSkill.at(skillID)->onCD) 
+	{
+		listSkill.at(skillID)->setupCD(button);
+
+		this->listSkill.at(skillID)->onCD = true;
+
 		this->isHit = false;
 		this->skillDamage = listSkill.at(skillID)->skillDamage;
 		int range = 269;
@@ -517,11 +528,17 @@ void Player::useSkill(int skillID)
 		this->usingSkill = true;
 
 
-		this->runAction(Sequence::create(animation(listSkill.at(skillID)->castAName,attackSpeed), CallFunc::create([=]() {this->usingSkill = false; this->idleStatus(); }), nullptr));
-		this->runAction(Sequence::create(DelayTime::create(listSkill.at(skillID)->mobilityDelayTime*attackSpeed), MoveBy::create(listSkill.at(skillID)->mobilityTime*attackSpeed, Vec2(range, skillID)),nullptr));
+		this->runAction(Sequence::create(animation(listSkill.at(skillID)->castAName,attackSpeed), 
+			CallFunc::create([=]() 
+			{this->usingSkill = false; this->idleStatus(); }), nullptr));
 
-		this->skill2CD = true;
+		this->runAction(Sequence::create(
+			DelayTime::create(listSkill.at(skillID)->mobilityDelayTime*attackSpeed), 
+			MoveBy::create(listSkill.at(skillID)->mobilityTime*attackSpeed, Vec2(range, skillID)),nullptr));
+
+
 		listSkill.at(skillID)->setPosition(listSkill.at(skillID)->skillPosition);
+
 
 		this->listSkill.at(skillID)->runAction(Sequence::create(DelayTime::create(listSkill.at(skillID)->skillAppearTime*attackSpeed), 
 			CallFunc::create([=]() 
@@ -534,7 +551,8 @@ void Player::useSkill(int skillID)
 
 		this->listSkill.at(skillID)->runAction(Sequence::create(DelayTime::create(listSkill.at(skillID)->coolDownTime), CallFunc::create([=]() {this->skill2CD = false; }), nullptr));
 		
-		if (skillID == 1) {
+		if (skillID == 1) 
+		{
 			listSkill.at(skillID)->runAction(MoveBy::create(0.5, Vec2(300, 0)));
 		}
 	}
