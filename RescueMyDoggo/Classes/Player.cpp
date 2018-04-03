@@ -502,6 +502,7 @@ void Player::useSkill(int skillID)
 		this->isHit = false;
 		this->skillDamage = listSkill.at(skillID)->skillDamage;
 		int range = 269;
+		if (skillID != 0) range = 0;
 		if (this->getPosition().x < range + 44 + 32 * mapScale && this->isFlippedX())
 			range = this->getPosition().x - (44 + 32 * mapScale);
 		if (map1Size.width - this->getPosition().x < 259 + 44 + 32 * mapScale && !this->isFlippedX())
@@ -533,5 +534,8 @@ void Player::useSkill(int skillID)
 
 		this->listSkill.at(skillID)->runAction(Sequence::create(DelayTime::create(listSkill.at(skillID)->coolDownTime), CallFunc::create([=]() {this->skill2CD = false; }), nullptr));
 		
+		if (skillID == 1) {
+			listSkill.at(skillID)->runAction(MoveBy::create(0.5, Vec2(300, 0)));
+		}
 	}
 }

@@ -338,7 +338,7 @@ void MainGame::update(float elapsed)
 			}
 			if (hud_layer->skill1Btn->getValue())
 			{
-				//ppp->useSkill(2);
+				ppp->useSkill(1);
 			}
 			if (hud_layer->skill2Btn->getValue())
 			{
@@ -696,8 +696,10 @@ void MainGame::allEnemyInit()
 		ppp->listSkill.at(0)->setVisible(false);
 		ppp->listSkill.at(0)->setScale(3);
 
-
-
+		ppp->listSkill.insert(1, Skill::create(129, 3, 3, 4, 2, 2, testPos, "MainChar/Effects/Skill 2", "Cast Spell/Cast Spell"));
+		this->ppp->addChild(ppp->listSkill.at(1), 3);
+		ppp->listSkill.at(1)->setVisible(false);
+		ppp->listSkill.at(1)->setScale(3);
 
 	}
 	ppp->listSkill.at(0)->canDamage.resize(allEnemy.size(), true);
