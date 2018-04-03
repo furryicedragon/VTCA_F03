@@ -6,7 +6,7 @@
 #include<cocos2d.h>
 #include<Player.h>
 #include<Enemy.h>
-#include<Projectile.h>
+#include<Skill.h>
 #include<HUDLayer.h>
 
 USING_NS_CC;

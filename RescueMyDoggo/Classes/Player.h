@@ -3,7 +3,7 @@
 #define Player_hpp
 
 #include<cocos2d.h>
-#include<Projectile.h>
+#include<Skill.h>
 USING_NS_CC;
 class Player :public cocos2d::Sprite {
 public:
