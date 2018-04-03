@@ -17,6 +17,7 @@ public:
 	bool onCD;
 
 	void launch(Animate* anim, float range, float cooldown);
+	void useSkill();
 };
 
 #endif // !Skill_hpp

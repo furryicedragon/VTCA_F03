@@ -71,7 +71,7 @@ public:
 	void spawnEffect();
 	void levelUp();
 	void useSkill(std::string actionName,std::string skillName, int damage);
-	Projectile* skill1;
+	Skill* skill1;
 	float cd_reduction;
 	void launchSkill1();
 	
