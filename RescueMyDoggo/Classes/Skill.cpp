@@ -39,8 +39,6 @@ void Skill::initOptions()
 		Size theSize = getSize->getContentSize();
 		auto frame = SpriteFrame::create(frameName, Rect(0, 0, theSize.width, theSize.height));
 	}
-	canDamage.resize(8);
-	std::fill(canDamage.begin(), canDamage.end(), true);
 
 	this->setVisible(false);
 	this->launching = false;

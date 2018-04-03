@@ -553,7 +553,9 @@ void Player::useSkill(int skillID, Button* button)
 		
 		if (skillID == 1) 
 		{
-			listSkill.at(skillID)->runAction(MoveBy::create(0.5, Vec2(300, 0)));
+			int moveRange = 333;
+			if (this->isFlippedX()) moveRange *= -1;
+			listSkill.at(skillID)->runAction(MoveBy::create(0.5, Vec2(moveRange, 0)));
 		}
 	}
 }

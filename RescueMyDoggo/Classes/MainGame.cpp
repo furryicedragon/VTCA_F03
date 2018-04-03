@@ -414,11 +414,11 @@ void MainGame::checkAttackRange(Enemy * eee, int index)
 		int i = 0;
 		for each  (auto item in ppp->listSkill)
 		{
-			if (ppp->usingSkill && item->canDamage[index] && ((std::fabsf(ppp->listSkill.at(1)->getPosition().x - eee->getPosition().x && i == 1) || howfarX<itemWidth+69)))
+			if (ppp->usingSkill && item->canDamage[index] && (std::fabsf(ppp->listSkill.at(1)->getPosition().x - eee->getPosition().x)>40 || (howfarX<itemWidth + 69 && i!=1)))
 			{
-				eee->getHit(ppp->damageCurrent / 100 * item->skillDamage);
-				item->canDamage[index] = false;
-				i++;
+					eee->getHit(ppp->damageCurrent / 100 * item->skillDamage);
+					item->canDamage[index] = false;
+					i++;
 			}
 		}
 
@@ -715,7 +715,7 @@ void MainGame::allEnemyInit()
 	}
 	for each (auto item in ppp->listSkill)
 	{
-		item->canDamage.resize(allEnemy.size(), true);
+		item->canDamage.resize(allEnemy.size(), false);
 	}
 }
 
