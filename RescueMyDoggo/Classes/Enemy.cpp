@@ -292,6 +292,7 @@ void Enemy::casterSpell()
 void Enemy::mobilitySS()
 {
 	this->invulnerable = true;
+	this->movementHelper->stopActionByTag(123);
 	float howFar = ppp->getPosition().x - (this->getPosition().x + this->getContentSize().width / 2);
 	if (howFar < 0) howFar *= -1;
 	if (howFar < skillRange) {
@@ -329,7 +330,9 @@ void Enemy::getHit(int damage) {
 		if (getHitTime == 3) {
 			getHitTime = 0;
 			this->invulnerable = true;
-			this->movementHelper->runAction(Sequence::create(DelayTime::create(inviTime),CallFunc::create([=]() {this->invulnerable = false; }), nullptr));
+			auto doIt = Sequence::create(DelayTime::create(inviTime), CallFunc::create([=]() {this->invulnerable = false; }), nullptr);
+			doIt->setTag(123);
+			this->movementHelper->runAction(doIt);
 		}
 
 		SpriteFrame * hit = SpriteFrame::create(combination + "/Get Hit/0.png", Rect(0, 0, this->getHitFrameSize.width,this->getHitFrameSize.height));
