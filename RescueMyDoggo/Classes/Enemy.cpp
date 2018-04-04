@@ -321,7 +321,7 @@ void Enemy::getHit(int damage) {
 
 		this->isIdle = false;
 		this->isAttacking = false;
-		this->isMoving = false;
+		//this->isMoving = false;
 		this->canMove = true;
 		this->breakTime = false;
 		this->getHitTime++;
