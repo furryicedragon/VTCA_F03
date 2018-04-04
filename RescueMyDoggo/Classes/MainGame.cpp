@@ -888,7 +888,9 @@ void MainGame::delAll()
 
 	//this->addChild(ppp->skill1, 3);
 	this->updatePlayerPosition();
-	hud_layer->setupStick();
+	//hud_layer->setupStick();
+	hud_layer->skill1Btn->getChildByTag(100)->setVisible(false);
+	hud_layer->skill2Btn->getChildByTag(100)->setVisible(false);
 	this->scheduleUpdate();
 	//this->scheduleUpdate();
 }
