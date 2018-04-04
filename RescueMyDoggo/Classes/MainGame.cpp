@@ -10,6 +10,17 @@ bool MainGame::init()
 	{
 		return false;
 	}
+
+
+	congratulation = Sprite::create();
+	congratulation->setAnchorPoint(Vec2(0, 0));
+	auto itsOKMan = RepeatForever::create(animation("Gratz", 1));
+	this->congratulation->runAction(itsOKMan);
+	if (congratulation)
+		this->addChild(congratulation, 99999);
+	this->congratulation->runAction(FadeOut::create(0));
+
+
 	this->canRetry = false;
 	this->enemyAdded = false;
 	this->gameOver = Sprite::create("/Game Over/0.png");
@@ -386,15 +397,9 @@ void MainGame::update(float elapsed)
 					ppp->isSpawn = false;
 					ppp->forbidAllAction();
 					ppp->runAction(this->animation("MainChar/Win Boss", ppp->attackSpeed));
-					congratulation = Sprite::create();
-					congratulation->setAnchorPoint(Vec2(0, 0));
-					auto itsOverMan = RepeatForever::create(animation("Win", 0.3f));
-					this->congratulation->runAction(itsOverMan);
-					if (congratulation)
-						this->addChild(congratulation, 99999);
-					this->congratulation->runAction(FadeOut::create(0));
 					this->congratulation->setPosition(Vec2(this->getPosition().x*-1,0));
-					this->congratulation->runAction(FadeIn::create(3.0f));
+					this->congratulation->runAction(FadeIn::create(1.6f));
+					hud_layer->setVisible(false);
 				}
 			}
 		}
@@ -433,13 +438,12 @@ void MainGame::checkAttackRange(Enemy * eee, int index)
 {
 	if ((index != 8 || boss1)||(index!=17 || boss2)&&!ppp->isDead) {
 		auto itemWidth = eee->getContentSize().width*eee->getScale();
-		auto howfarX = ppp->getPosition().x - (eee->getPosition().x + itemWidth / 2);
-		auto howfarY = ppp->getPosition().y - eee->getPosition().y;
-		if (howfarX < 0) howfarX *= -1;
-		if (howfarY < 0) howfarY *= -1;
-		if (howfarX < itemWidth + 69 && howfarY < 33) {
-
-
+		auto howfarX = ppp->getPosition().x - (eee->getPosition().x+itemWidth/2);
+		if (howfarX < 0) {
+			howfarX *= -1;
+			howfarX += 69;
+		}
+		if (howfarX < itemWidth/2 + 180) {
 			if (ppp->isAttacking && !ppp->doneDamage[index]) {
 				eee->getHit(ppp->damageCurrent);
 				ppp->doneDamage[index] = true;
@@ -455,7 +459,7 @@ void MainGame::checkAttackRange(Enemy * eee, int index)
 		for each  (auto item in ppp->listSkill)
 		{
 			if (ppp->usingSkill && item->canDamage[index] 
-				&& (std::fabsf(ppp->listSkill.at(1)->getPosition().x - eee->getPosition().x)>40 || (howfarX<itemWidth + 69 && i!=1)))
+				&& (std::fabsf(ppp->listSkill.at(1)->getPosition().x - eee->getPosition().x)<40 || (howfarX< 69 && i!=1)))
 			{
 					eee->getHit(ppp->damageCurrent / 100 * item->skillDamage);
 					item->canDamage[index] = false;
@@ -495,11 +499,11 @@ void MainGame::waveXMapXInit() {
 			this->checkAttackRange(item, i);
 			i++;
 		}
-		if (ppp->w1kills > 7 && !boss1) {
+		if (ppp->w1kills > 12 && !boss1) {
 			this->spawnEffect(allEnemy[8], 1);
 			boss1 = true;
 		}
-		if (ppp->w2kills > 7 && !boss2) { 
+		if (ppp->w2kills > 12 && !boss2) { 
 			this->spawnEffect(allEnemy[17], 1);
 			boss2 = true; 
 		}
@@ -624,7 +628,7 @@ void MainGame::allEnemyInit()
 		boss1m1->skillRange = 400;
 		boss1m1->mobilitySSAt = 3;
 		boss1m1->mobilitySpeed = 4;
-		boss1m1->setHP(400);
+		boss1m1->setHP(300);
 		boss1m1->initOption();
 		auto boss1Pos = oj->getObject("Boss1");
 		boss1m1->setPosition(Vec2(boss1Pos["x"].asFloat() *map1->getScale(), boss1Pos["y"].asFloat() *map1->getScale()));
@@ -679,16 +683,16 @@ void MainGame::allEnemyInit()
 	{	//boss2
 		this->boss2m1 = Enemy::create(1, 0, 2);
 		boss2m1->setScale(1.6f);
-		boss2m1->skillDamage = 222;
+		boss2m1->skillDamage = 200;
 		boss2m1->visionRange = 450;
-		boss2m1->moveSpeed = 500;
+		boss2m1->moveSpeed = 420;
 		boss2m1->isSSMobility = true;
 		boss2m1->castSpeed = 0.041f;
 		boss2m1->skillCD = 2;
 		boss2m1->skillRange = 420;
-		boss2m1->mobilitySSAt = 2;
+		boss2m1->mobilitySSAt = 4;
 		boss2m1->mobilitySpeed = 2;
-		boss2m1->setHP(420);
+		boss2m1->setHP(200);
 		boss2m1->initOption();
 		auto boss2Pos = oj->getObject("Boss2");
 		boss2m1->setPosition(Vec2(boss2Pos["x"].asFloat() *map1->getScale(), boss2Pos["y"].asFloat() *map1->getScale()));
@@ -782,6 +786,16 @@ void MainGame::delAll()
 {
 	this->allEnemy.clear();
 	this->removeAllChildren();
+
+
+	congratulation = Sprite::create();
+	congratulation->setAnchorPoint(Vec2(0, 0));
+	auto itsOKMan = RepeatForever::create(animation("Gratz", 0.69f));
+	this->congratulation->runAction(itsOKMan);
+	if (congratulation)
+		this->addChild(congratulation, 99999);
+	this->congratulation->runAction(FadeOut::create(0));
+
 	auto hud_layer = static_cast<HUDLayer*> (Director::getInstance()->getRunningScene()->getChildByTag(9999));
 
 	this->stopActionByTag(99); 
