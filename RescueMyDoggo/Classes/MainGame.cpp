@@ -456,7 +456,8 @@ void MainGame::checkAttackRange(Enemy * eee, int index)
 		}
 
 		int i = 0;
-		Rect skillRect = Rect(ppp->listSkill.at(1)->getPosition().x, ppp->listSkill.at(1)->getPosition().y, 333, 200);
+		Rect skillRect = Rect(ppp->listSkill.at(1)->getPosition().x, ppp->listSkill.at(1)->getPosition().y, 333, 400);
+		Rect eeeRect = eee->getBoundingBox();
 		for each  (auto item in ppp->listSkill)
 		{
 			if (ppp->usingSkill && item->canDamage[index]
@@ -500,11 +501,11 @@ void MainGame::waveXMapXInit() {
 			this->checkAttackRange(item, i);
 			i++;
 		}
-		if (ppp->w1kills > 12 && !boss1) {
+		if (ppp->w1kills ==8 && !boss1) {
 			this->spawnEffect(allEnemy[8], 1);
 			boss1 = true;
 		}
-		if (ppp->w2kills > 12 && !boss2) { 
+		if (ppp->w2kills == 8 && !boss2) { 
 			this->spawnEffect(allEnemy[17], 1);
 			boss2 = true; 
 		}
@@ -753,11 +754,11 @@ void MainGame::allEnemyInit()
 		ppp->listSkill.at(0)->setVisible(false);
 		ppp->listSkill.at(0)->setScale(3);
 
-		Point skillPos = Point(this->ppp->getContentSize().width/2, ppp->getContentSize().height/2*ppp->getScale());
+		Point skillPos = Point(ppp->getPosition().x,ppp->getPosition().y);
 		ppp->listSkill.insert(1, Skill::create(129, 3, 3, 4, 2, 2, skillPos, "MainChar/Effects/Skill 2", "Cast Spell/Cast Spell"));
-		this->ppp->addChild(ppp->listSkill.at(1), 3);
+		this->addChild(ppp->listSkill.at(1), 6);
 		ppp->listSkill.at(1)->setVisible(false);
-		ppp->listSkill.at(1)->setScale(1.6);
+		ppp->listSkill.at(1)->setScale(1.6*0.6);
 		ppp->listSkill.at(1)->setAnchorPoint(Vec2(0.5, 0));
 
 	}
@@ -879,6 +880,9 @@ void MainGame::delAll()
 	if(startGame)
 	this->addChild(startGame, 100);
 	this->isGameStart = false;
+
+	ppp->w1kills = 0;
+	ppp->w2kills = 0;
 
 	//this->addChild(ppp->skill1, 3);
 	this->updatePlayerPosition();

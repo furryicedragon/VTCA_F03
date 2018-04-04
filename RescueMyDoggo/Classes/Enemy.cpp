@@ -229,6 +229,7 @@ void Enemy::moving() {
 
 
 void Enemy::attack() {
+	if (this->isSpawned) {
 		float howFar = ppp->getPosition().x - (this->getPosition().x + this->getContentSize().width / 2);
 		if (howFar < 0) this->setFlippedX(true);
 		else this->setFlippedX(false);
@@ -251,11 +252,13 @@ void Enemy::attack() {
 			this->mobilitySS();
 		}
 		if (!this->isCaster && !this->isSSMobility) {
-			this->runAction(Sequence::create(DelayTime::create(castSpeed*norAtkDmgAfterF), CallFunc::create([=]() {this->canDamage=true; }),
+			this->runAction(Sequence::create(DelayTime::create(castSpeed*norAtkDmgAfterF), CallFunc::create([=]() {this->canDamage = true; }),
 				DelayTime::create(castSpeed*doneAtkAfterF), CallFunc::create([=]() {this->canDamage = false; }), nullptr));
 		}
 
 		this->attackHelper->runAction(Sequence::create(DelayTime::create(0.12*useSkillLastFN*skillCD), CallFunc::create([=]() {this->isOnCD = false; }), nullptr));
+	}
+
 }
 void Enemy::casterSpell()
 	{
