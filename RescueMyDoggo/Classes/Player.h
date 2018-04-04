@@ -36,6 +36,7 @@ public:
 	float attackSpeed;
 	float damageCurrent;
 	float baseHP;
+	int currentSkillID;
 	int attackRange;
 	int currentEXP;
 	int baseEXP;

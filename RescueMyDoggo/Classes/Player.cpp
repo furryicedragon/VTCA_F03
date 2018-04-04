@@ -369,7 +369,7 @@ void Player::getHit(int damage, float eeePosX) {
 		this->stopAllActions();
 		this->isAttacking = false;
 		this->isMoving = false;
-		//if (this->usingSkill) this->skillHelper->stopAllActions();
+		if (this->usingSkill) this->listSkill.at(currentSkillID)->stopAllActions();
 		this->usingSkill = false;
 		this->setDoneDamageTo(true);
 		//int x = -16;
@@ -507,6 +507,7 @@ void Player::useSkill(int skillID, Button* button)
 {
 	if (this->isSpawn && !this->isAttacking && !this->isRolling && !this->isDead && !this->listSkill.at(skillID)->onCD) 
 	{
+		currentSkillID = skillID;
 		Skill* skill = listSkill.at(skillID);
 		skill->setupCD(button);
 
