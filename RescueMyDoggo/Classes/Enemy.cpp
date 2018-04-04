@@ -294,10 +294,10 @@ void Enemy::mobilitySS()
 	if (howFar < skillRange) {
 		if (this->bossNumber == 1 && this->mapNumber == 1)
 			this->runAction(Sequence::create(DelayTime::create(castSpeed*(mobilitySSAt + 1)),
-				JumpTo::create(castSpeed*mobilitySpeed, Vec2(ppp->getPosition().x - this->getContentSize().width / 2, ppp->getPosition().y), 44, 1), CallFunc::create([=]() {this->canDamage = true; this->invulnerable = false; }), nullptr));
+				JumpTo::create(castSpeed*mobilitySpeed, Vec2(ppp->getPosition().x - this->getContentSize().width / 2, this->getPosition().y), 44, 1), CallFunc::create([=]() {this->canDamage = true; this->invulnerable = false; }), nullptr));
 		else
 		this->runAction(Sequence::create(DelayTime::create(castSpeed*(mobilitySSAt + 1)),
-			MoveTo::create(castSpeed*mobilitySpeed, Vec2(ppp->getPosition().x - this->getContentSize().width / 2, ppp->getPosition().y)), CallFunc::create([=]() {this->canDamage = true; this->invulnerable = false; }), nullptr));
+			MoveTo::create(castSpeed*mobilitySpeed, Vec2(ppp->getPosition().x - this->getContentSize().width / 2, this->getPosition().y)), CallFunc::create([=]() {this->canDamage = true; this->invulnerable = false; }), nullptr));
 	}
 			
 }
@@ -356,7 +356,7 @@ void Enemy::getHit(int damage) {
 
 void Enemy::autoRespawn()
 {
-	if (this->canRespawn) {
+	if (this->canRespawn && this->bossNumber==0) {
 		this->runAction(
 			Sequence::create(DelayTime::create(RandomHelper::random_int(10,20)), 
 				CallFunc::create([=]()

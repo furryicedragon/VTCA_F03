@@ -456,15 +456,16 @@ void MainGame::checkAttackRange(Enemy * eee, int index)
 		}
 
 		int i = 0;
+		Rect skillRect = Rect(ppp->listSkill.at(1)->getPosition().x, ppp->listSkill.at(1)->getPosition().y, 333, 200);
 		for each  (auto item in ppp->listSkill)
 		{
-			if (ppp->usingSkill && item->canDamage[index] 
-				&& (std::fabsf(ppp->listSkill.at(1)->getPosition().x - eee->getPosition().x)<40 || (howfarX< 69 && i!=1)))
+			if (ppp->usingSkill && item->canDamage[index]
+				&& (skillRect.intersectsRect(eee->getBoundingBox()) || (howfarX < 69 && i != 1)))
 			{
 					eee->getHit(ppp->damageCurrent / 100 * item->skillDamage);
 					item->canDamage[index] = false;
-					i++;
 			}
+			i++;
 		}
 
 
@@ -752,10 +753,12 @@ void MainGame::allEnemyInit()
 		ppp->listSkill.at(0)->setVisible(false);
 		ppp->listSkill.at(0)->setScale(3);
 
-		ppp->listSkill.insert(1, Skill::create(129, 3, 3, 4, 2, 2, testPos, "MainChar/Effects/Skill 2", "Cast Spell/Cast Spell"));
+		Point skillPos = Point(this->ppp->getContentSize().width/2, ppp->getContentSize().height/2*ppp->getScale());
+		ppp->listSkill.insert(1, Skill::create(129, 3, 3, 4, 2, 2, skillPos, "MainChar/Effects/Skill 2", "Cast Spell/Cast Spell"));
 		this->ppp->addChild(ppp->listSkill.at(1), 3);
 		ppp->listSkill.at(1)->setVisible(false);
-		ppp->listSkill.at(1)->setScale(2);
+		ppp->listSkill.at(1)->setScale(1.6);
+		ppp->listSkill.at(1)->setAnchorPoint(Vec2(0.5, 0));
 
 	}
 	for each (auto item in ppp->listSkill)
