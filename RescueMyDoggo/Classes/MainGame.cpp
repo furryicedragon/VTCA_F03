@@ -347,19 +347,19 @@ void MainGame::update(float elapsed)
 			}
 			
 			//HUD buttons
-			if (hud_layer->attackBtn->getValue())
+			if (hud_layer->attackBtn->getValue() && !ppp->usingSkill)
 			{
 				ppp->attack();
 			}
-			if (hud_layer->rollBtn->getValue())
+			if (hud_layer->rollBtn->getValue() && !ppp->usingSkill)
 			{
 				ppp->roll();
 			}
-			if (hud_layer->skill1Btn->getValue())
+			if (hud_layer->skill1Btn->getValue() && !ppp->usingSkill)
 			{
 				ppp->useSkill(1, hud_layer->skill1Btn);
 			}
-			if (hud_layer->skill2Btn->getValue())
+			if (hud_layer->skill2Btn->getValue() && !ppp->usingSkill)
 			{
 				ppp->useSkill(0, hud_layer->skill2Btn);
 			}
