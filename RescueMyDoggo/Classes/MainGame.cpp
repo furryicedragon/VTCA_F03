@@ -464,7 +464,7 @@ void MainGame::checkAttackRange(Enemy * eee, int index)
 		float rectPos = ppp->listSkill.at(1)->getPosition().x;
 		if (!ppp->listSkill.at(1)->isFlippedX()) 
 			rectPos -= ppp->listSkill.at(1)->getContentSize().width/2;
-		Rect skillRect = Rect(rectPos, ppp->listSkill.at(1)->getPosition().y, 300, 400);
+		Rect skillRect = Rect(rectPos, ppp->listSkill.at(1)->getPosition().y, 300, 500);
 		Rect eeeRect = eee->getBoundingBox();
 		for each  (auto item in ppp->listSkill)
 		{
