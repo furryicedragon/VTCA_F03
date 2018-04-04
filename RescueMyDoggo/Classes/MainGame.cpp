@@ -883,6 +883,8 @@ void MainGame::delAll()
 
 	ppp->w1kills = 0;
 	ppp->w2kills = 0;
+	boss1 = false;
+	boss2 = false;
 
 	//this->addChild(ppp->skill1, 3);
 	this->updatePlayerPosition();
