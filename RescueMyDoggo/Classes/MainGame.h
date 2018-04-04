@@ -52,8 +52,7 @@ public:
 	bool keyPressed(EventKeyboard::KeyCode keyCode , Event* event);
 	bool keyReleased(EventKeyboard::KeyCode keyCode, Event* event);
 	bool isRepeated;
-	bool checkDeath(std::vector<Enemy*> what2Check);
-	bool checkSpawn(std::vector<Enemy*> what2Check);
+	bool checkRange(Enemy* enemy2Check);
 	bool isGameOver;
 	bool enemyAdded;
 	bool isGameStart;

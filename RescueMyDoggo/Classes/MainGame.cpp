@@ -434,12 +434,21 @@ void MainGame::spawnPlayer()
 }
 
 
+bool MainGame::checkRange(Enemy* enemy2Check) {
+
+	auto itemWidth = enemy2Check->getContentSize().width*enemy2Check->getScale();
+	auto howfarX = (enemy2Check->getPosition().x + itemWidth / 2) - ppp->getPosition().x;
+		if ((howfarX < 69 && ppp->isFlippedX() && howfarX>-itemWidth / 2 - 100)
+			|| (howfarX < itemWidth / 2 + 100 && howfarX>-69 && !ppp->isFlippedX()))
+			return true;
+		else
+			return false;
+}
 void MainGame::checkAttackRange(Enemy * eee, int index)
 {
 	if ((index != 8 || boss1)||(index!=17 || boss2)&&!ppp->isDead) {
-		auto itemWidth = eee->getContentSize().width*eee->getScale();
-		auto howfarX = (eee->getPosition().x + itemWidth / 2) - ppp->getPosition().x;
-		if (howfarX < itemWidth/2 + 100 && howfarX>-69) {
+		if (checkRange(eee)) 
+		{
 			if (ppp->isAttacking && !ppp->doneDamage[index]) {
 				eee->getHit(ppp->damageCurrent);
 				ppp->doneDamage[index] = true;
@@ -457,7 +466,7 @@ void MainGame::checkAttackRange(Enemy * eee, int index)
 		for each  (auto item in ppp->listSkill)
 		{
 			if (ppp->usingSkill && item->canDamage[index]
-				&& (skillRect.intersectsRect(eee->getBoundingBox()) || (howfarX < 69 && i != 1)))
+				&& (skillRect.intersectsRect(eee->getBoundingBox()) || (checkRange(eee) && i != 1)))
 			{
 					eee->getHit(ppp->damageCurrent / 100 * item->skillDamage);
 					item->canDamage[index] = false;
@@ -547,30 +556,6 @@ void MainGame::spawnEffect(Enemy* enemy2Spawn,int index)
 	this->addChild(spawnGate, 4);
 
 	spawnGate->runAction(Sequence::create(DelayTime::create((index+1)/4),animB,animLoop, CallFunc::create([=]() {enemy2Spawn->setVisible(true); }), animF, CallFunc::create([=]() {this->removeChild(spawnGate); enemy2Spawn->isSpawned = true; }), nullptr));
-
-}
-
-bool MainGame::checkDeath(std::vector<Enemy*> what2Check) {
-	int i = 0;
-	for each (auto item in what2Check)
-	{
-		if (item->isDead) i++;
-	}
-	if (i == what2Check.size()) return true;
-	else return false;
-}
-bool MainGame::checkSpawn(std::vector<Enemy*> what2Check)
-{
-	if (what2Check.size() > 0) {
-		int i = 0;
-		for each (auto item in what2Check)
-		{
-			if (item->canSpawn) i++;
-		}
-		if (i == what2Check.size()) return true;
-		else return false;
-	}
-	else return false;
 
 }
 
