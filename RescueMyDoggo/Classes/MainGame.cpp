@@ -461,7 +461,10 @@ void MainGame::checkAttackRange(Enemy * eee, int index)
 		}
 
 		int i = 0;
-		Rect skillRect = Rect(ppp->listSkill.at(1)->getPosition().x, ppp->listSkill.at(1)->getPosition().y, 333, 400);
+		float rectPos = ppp->listSkill.at(1)->getPosition().x;
+		if (!ppp->listSkill.at(1)->isFlippedX()) 
+			rectPos -= ppp->listSkill.at(1)->getContentSize().width/2;
+		Rect skillRect = Rect(rectPos, ppp->listSkill.at(1)->getPosition().y, 300, 400);
 		Rect eeeRect = eee->getBoundingBox();
 		for each  (auto item in ppp->listSkill)
 		{
@@ -736,12 +739,11 @@ void MainGame::allEnemyInit()
 		ppp->listSkill.at(0)->setVisible(false);
 		ppp->listSkill.at(0)->setScale(3);
 
-		Point skillPos = Point(ppp->getPosition().x,ppp->getPosition().y);
-		ppp->listSkill.insert(1, Skill::create(333,129, 3, 3, 4, 2, 2, skillPos, "MainChar/Effects/Skill 2", "Cast Spell/Cast Spell"));
+		//Point skillPos = Point(ppp->getPosition().x,ppp->getPosition().y);
+		ppp->listSkill.insert(1, Skill::create(333,129, 3, 3, 4, 2, 2, testPos, "MainChar/Effects/Skill 2", "Cast Spell/Cast Spell"));
+		ppp->listSkill.at(1)->setAnchorPoint(Vec2(0.5, 0));
 		this->addChild(ppp->listSkill.at(1), 6);
 		ppp->listSkill.at(1)->setVisible(false);
-		ppp->listSkill.at(1)->setScale(1.6f*0.6f);
-		ppp->listSkill.at(1)->setAnchorPoint(Vec2(0.5, 0));
 
 	}
 	for each (auto item in ppp->listSkill)

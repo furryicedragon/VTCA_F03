@@ -542,16 +542,13 @@ void Player::useSkill(int skillID, Button* button)
 			CallFunc::create([=]() 
 			{this->usingSkill = false; this->idleStatus(); }), nullptr));
 
+		if(skillID!=1)
 		this->runAction(Sequence::create(
 			DelayTime::create(skill->mobilityDelayTime*attackSpeed), 
-			MoveBy::create(skill->mobilityTime*attackSpeed, Vec2(range, skillID)),nullptr));
+			MoveBy::create(skill->mobilityTime*attackSpeed, Vec2(range, 0)),nullptr));
 
 		if(skillID!=1)
 		skill->setPosition(skill->skillPosition);
-		else
-		{
-			skill->setPosition(this->getPosition().x, this->getPosition().y);
-		}
 
 
 		skill->runAction(Sequence::create(DelayTime::create(skill->skillAppearTime*attackSpeed), 
@@ -565,12 +562,13 @@ void Player::useSkill(int skillID, Button* button)
 			std::fill(skill->canDamage.begin(), skill->canDamage.end(), false); }), nullptr));
 
 		skill->runAction(Sequence::create(DelayTime::create(skill->coolDownTime), CallFunc::create([=]() {this->skill2CD = false; }), nullptr));
-		
-		if (skillID == 1) 
+
+		if (skillID == 1)
 		{
+			//listSkill.at(skillID)->setPosition;
 			int moveRange = skill->skillRange;
-			if (this->isFlippedX())  moveRange =skill->skillRange * -1;
-			skill->runAction(MoveBy::create(0.5, Vec2(moveRange, 0)));
+			if (this->isFlippedX())  moveRange = skill->skillRange * -1;
+			listSkill.at(skillID)->runAction(Sequence::create(DelayTime::create(skill->skillAppearTime*attackSpeed),MoveTo::create(0,Vec2(this->getPosition().x, this->getPosition().y)),MoveBy::create(0.5, Vec2(moveRange, 0)),nullptr));
 		}
 	}
 }
