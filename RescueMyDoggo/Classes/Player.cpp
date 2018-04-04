@@ -369,7 +369,14 @@ void Player::getHit(int damage, float eeePosX) {
 		this->stopAllActions();
 		this->isAttacking = false;
 		this->isMoving = false;
-		if (this->usingSkill) this->listSkill.at(currentSkillID)->stopAllActions();
+		if (this->usingSkill) {
+			this->listSkill.at(currentSkillID)->stopAllActions();
+			if (currentSkillID == 1) {
+				std::fill(listSkill.at(currentSkillID)->canDamage.begin(), listSkill.at(currentSkillID)->canDamage.end(), false);
+				listSkill.at(currentSkillID)->setVisible(false);
+				listSkill.at(currentSkillID)->setPosition(0, 0);
+			}
+		}
 		this->usingSkill = false;
 		this->setDoneDamageTo(true);
 		//int x = -16;
