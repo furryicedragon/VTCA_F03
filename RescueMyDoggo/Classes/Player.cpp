@@ -560,7 +560,7 @@ void Player::useSkill(int skillID, Button* button)
 		
 		if (skillID == 1) 
 		{
-			int moveRange;
+			int moveRange = skill->skillRange;
 			if (this->isFlippedX())  moveRange =skill->skillRange * -1;
 			skill->runAction(MoveBy::create(0.5, Vec2(moveRange, 0)));
 		}
