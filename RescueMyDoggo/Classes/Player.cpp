@@ -432,7 +432,7 @@ void Player::forbidAllAction()
 void Player::statUp()
 {
 	this->damageCurrent += 10;
-	this->attackSpeed = 0.08 - (0.08 / 20);
+	this->attackSpeed = 0.08f - (0.08f / 20);
 	baseHP += 80;
 
 	std::stringstream sstream;

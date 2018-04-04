@@ -386,10 +386,10 @@ void MainGame::update(float elapsed)
 					this->addChild(finishPortal, 99);
 					finishPortal->setVisible(true);
 					finishPortal->setAnchorPoint(Vec2(0, 0));
-					finishPortal->runAction(RepeatForever::create(animation("Enemies/Effect/Gate", 0.06)));
+					finishPortal->runAction(RepeatForever::create(animation("Enemies/Effect/Gate", 0.06f)));
 					finishPortal->setPosition(Vec2(finishPoint["x"].asFloat()*this->map1->getScale(), ppp->getPosition().y));
 					//finishPortal->setOpacity(222);
-					finishPortal->setScale(2.7);
+					finishPortal->setScale(2.7f);
 				}
 			}
 			if (congratz && ppp->isSpawn) {
@@ -740,7 +740,7 @@ void MainGame::allEnemyInit()
 		ppp->listSkill.insert(1, Skill::create(333,129, 3, 3, 4, 2, 2, skillPos, "MainChar/Effects/Skill 2", "Cast Spell/Cast Spell"));
 		this->addChild(ppp->listSkill.at(1), 6);
 		ppp->listSkill.at(1)->setVisible(false);
-		ppp->listSkill.at(1)->setScale(1.6*0.6);
+		ppp->listSkill.at(1)->setScale(1.6f*0.6f);
 		ppp->listSkill.at(1)->setAnchorPoint(Vec2(0.5, 0));
 
 	}

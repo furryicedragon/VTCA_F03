@@ -12,7 +12,7 @@ USING_NS_CC;
 class Skill : public Sprite
 {
 public:
-	static Skill* create(int range, float damage, float coolDown, float appearTime,float disappearTime , float MobilityTime,float MobilityDelayTime, Point skillPos, std::string skillName, std::string castActionName);
+	static Skill* create(int range, float damage, float coolDown, float appearTime, float disappearTime, float MobilityTime, float MobilityDelayTime, Point skillPos, std::string skillName, std::string castActionName);
 
 	void initOptions();
 

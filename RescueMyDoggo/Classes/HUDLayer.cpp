@@ -75,10 +75,6 @@ void HUDLayer::setupButtons()
 		attackBtn = buttonBase->getHUDbutton();
 		attackBtn->retain();
 
-		Label* cooldown = Label::create("", "Calibri", 35.0f, Size::ZERO, TextHAlignment::CENTER, TextVAlignment::CENTER);
-		cooldown->setVisible(false);
-		attackBtn->addChild(cooldown, 1, 100);
-
 		this->addChild(buttonBase);
 	}
 	
@@ -105,10 +101,6 @@ void HUDLayer::setupButtons()
 
 		rollBtn = buttonBase->getHUDbutton();
 		rollBtn->retain();
-
-		Label* cooldown = Label::create("", "Calibri", 35.0f, Size::ZERO, TextHAlignment::CENTER, TextVAlignment::CENTER);
-		cooldown->setVisible(false);
-		rollBtn->addChild(cooldown, 1, 100);
 
 		this->addChild(buttonBase);
 	}
@@ -138,7 +130,7 @@ void HUDLayer::setupButtons()
 		skill1Btn->retain();
 		
 
-		Label* cooldown = Label::create("", "Calibri", 35.0f, Size::ZERO, TextHAlignment::CENTER, TextVAlignment::CENTER);
+		Label* cooldown = Label::createWithSystemFont("", "Calibri", 35.0f, Size::ZERO, TextHAlignment::CENTER, TextVAlignment::CENTER);
 		cooldown->setVisible(false);
 		skill1Btn->addChild(cooldown, 1, 100);
 
@@ -169,7 +161,7 @@ void HUDLayer::setupButtons()
 		skill2Btn = buttonBase->getHUDbutton();
 		skill2Btn->retain();
 
-		Label* cooldown = Label::create("", "Calibri", 35.0f, Size::ZERO, TextHAlignment::CENTER, TextVAlignment::CENTER);
+		Label* cooldown = Label::createWithSystemFont("", "Calibri", 35.0f, Size::ZERO, TextHAlignment::CENTER, TextVAlignment::CENTER);
 		cooldown->setVisible(false);
 		skill2Btn->addChild(cooldown, 1, 100);
 
