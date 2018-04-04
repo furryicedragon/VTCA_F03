@@ -438,12 +438,8 @@ void MainGame::checkAttackRange(Enemy * eee, int index)
 {
 	if ((index != 8 || boss1)||(index!=17 || boss2)&&!ppp->isDead) {
 		auto itemWidth = eee->getContentSize().width*eee->getScale();
-		auto howfarX = ppp->getPosition().x - (eee->getPosition().x+itemWidth/2);
-		if (howfarX < 0) {
-			howfarX *= -1;
-			howfarX += 69;
-		}
-		if (howfarX < itemWidth/2 + 180) {
+		auto howfarX = (eee->getPosition().x + itemWidth / 2) - ppp->getPosition().x;
+		if (howfarX < itemWidth/2 + 100 && howfarX>-69) {
 			if (ppp->isAttacking && !ppp->doneDamage[index]) {
 				eee->getHit(ppp->damageCurrent);
 				ppp->doneDamage[index] = true;

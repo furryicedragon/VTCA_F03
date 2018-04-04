@@ -265,8 +265,9 @@ void Player::attack() {
 		this->runAction(Sequence::create(animation(name, attackSpeed), 
 			CallFunc::create([=]() 
 			{
-				this->isAttacking = false; 
-				this->idleStatus(); 
+				this->isAttacking = false;
+				this->setDoneDamageTo(true);
+				this->idleStatus();  
 		}),	nullptr));
 		this->attackCount(); //dung de tang them 1 don vi moi khi attack (**)
 	}
@@ -350,7 +351,7 @@ void Player::slashEffect() {
 		this->slash->setFlippedY(flippedY);
 		this->slash->runAction(Sequence::create(DelayTime::create(delayTime2),
 			CallFunc::create([=]() { slash->setVisible(true); this->setDoneDamageTo(false); }), anim,
-			CallFunc::create([=]() { slash->setVisible(false); this->setDoneDamageTo(true); }), nullptr));
+			CallFunc::create([=]() { slash->setVisible(false); }), nullptr));
 		//setDoneDamage dung de gay dame khi dang tan cong, (false) co nghia la co the gay dame, true la het thoi gian gay dame(thoi gian slash)
 		//ket hop voi "void MainGame::checkAttackRange(Enemy * eee, int index)"
 }
