@@ -36,6 +36,7 @@ public:
 	float attackSpeed;
 	float damageCurrent;
 	float baseHP;
+	int attackRange;
 	int currentEXP;
 	int baseEXP;
 	int w1kills;

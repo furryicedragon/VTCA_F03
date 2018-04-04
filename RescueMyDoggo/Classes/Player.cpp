@@ -29,7 +29,7 @@ void Player::initOption()
 	doneDamage.resize(8, false);
 
 
-
+	attackRange = 100;
 	attackSpeed = 0.08f;
 
 
@@ -560,8 +560,8 @@ void Player::useSkill(int skillID, Button* button)
 		
 		if (skillID == 1) 
 		{
-			int moveRange = 333;
-			if (this->isFlippedX()) moveRange *= -1;
+			int moveRange;
+			if (this->isFlippedX())  moveRange =skill->skillRange * -1;
 			skill->runAction(MoveBy::create(0.5, Vec2(moveRange, 0)));
 		}
 	}

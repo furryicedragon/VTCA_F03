@@ -434,12 +434,12 @@ void MainGame::spawnPlayer()
 }
 
 
-bool MainGame::checkRange(Enemy* enemy2Check) {
+bool MainGame::checkRange(Enemy* enemy2Check, int theRange) {
 
 	auto itemWidth = enemy2Check->getContentSize().width*enemy2Check->getScale();
 	auto howfarX = (enemy2Check->getPosition().x + itemWidth / 2) - ppp->getPosition().x;
-		if ((howfarX < 69 && ppp->isFlippedX() && howfarX>-itemWidth / 2 - 100)
-			|| (howfarX < itemWidth / 2 + 100 && howfarX>-69 && !ppp->isFlippedX()))
+		if ((howfarX < 69 && ppp->isFlippedX() && howfarX>-itemWidth / 2 - theRange)
+			|| (howfarX < itemWidth / 2 + theRange && howfarX>-69 && !ppp->isFlippedX()))
 			return true;
 		else
 			return false;
@@ -447,7 +447,7 @@ bool MainGame::checkRange(Enemy* enemy2Check) {
 void MainGame::checkAttackRange(Enemy * eee, int index)
 {
 	if ((index != 8 || boss1)||(index!=17 || boss2)&&!ppp->isDead) {
-		if (checkRange(eee)) 
+		if (checkRange(eee,100)) 
 		{
 			if (ppp->isAttacking && !ppp->doneDamage[index]) {
 				eee->getHit(ppp->damageCurrent);
@@ -466,7 +466,8 @@ void MainGame::checkAttackRange(Enemy * eee, int index)
 		for each  (auto item in ppp->listSkill)
 		{
 			if (ppp->usingSkill && item->canDamage[index]
-				&& (skillRect.intersectsRect(eee->getBoundingBox()) || (checkRange(eee) && i != 1)))
+				&& (skillRect.intersectsRect(eee->getBoundingBox()) 
+					|| (i != 1 && checkRange(eee,item->skillRange))))
 			{
 					eee->getHit(ppp->damageCurrent / 100 * item->skillDamage);
 					item->canDamage[index] = false;
@@ -730,13 +731,13 @@ void MainGame::allEnemyInit()
 	if (this->ppp->listSkill.size() < 1) {
 
 		Point testPos = Point(this->ppp->getContentSize().width / 1.8, this->ppp->getContentSize().height / 2);
-		ppp->listSkill.insert(0, Skill::create(169, 3, 3, 4 , 2, 2, testPos, "MainChar/Effects/Dash Stab","Dash/Dash Attack"));
+		ppp->listSkill.insert(0, Skill::create(300,169, 3, 3, 4 , 2, 2, testPos, "MainChar/Effects/Dash Stab","Dash/Dash Attack"));
 		this->ppp->addChild(ppp->listSkill.at(0), 3);
 		ppp->listSkill.at(0)->setVisible(false);
 		ppp->listSkill.at(0)->setScale(3);
 
 		Point skillPos = Point(ppp->getPosition().x,ppp->getPosition().y);
-		ppp->listSkill.insert(1, Skill::create(129, 3, 3, 4, 2, 2, skillPos, "MainChar/Effects/Skill 2", "Cast Spell/Cast Spell"));
+		ppp->listSkill.insert(1, Skill::create(333,129, 3, 3, 4, 2, 2, skillPos, "MainChar/Effects/Skill 2", "Cast Spell/Cast Spell"));
 		this->addChild(ppp->listSkill.at(1), 6);
 		ppp->listSkill.at(1)->setVisible(false);
 		ppp->listSkill.at(1)->setScale(1.6*0.6);

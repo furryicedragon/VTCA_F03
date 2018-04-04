@@ -52,7 +52,7 @@ public:
 	bool keyPressed(EventKeyboard::KeyCode keyCode , Event* event);
 	bool keyReleased(EventKeyboard::KeyCode keyCode, Event* event);
 	bool isRepeated;
-	bool checkRange(Enemy* enemy2Check);
+	bool checkRange(Enemy* enemy2Check,int theRange);
 	bool isGameOver;
 	bool enemyAdded;
 	bool isGameStart;

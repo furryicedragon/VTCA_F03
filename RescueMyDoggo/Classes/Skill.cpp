@@ -1,6 +1,6 @@
 #include "Skill.h"
 
-Skill* Skill::create(float damage, float coolDown, float appearTime, float disappearTime,float MobilityTime, float MobilityDelayTime , Point skillPos, std::string skillName, std::string castName)
+Skill* Skill::create(int range,float damage, float coolDown, float appearTime, float disappearTime,float MobilityTime, float MobilityDelayTime , Point skillPos, std::string skillName, std::string castName)
 {
 	Skill* pointerSprite = new Skill();
 	if (pointerSprite && pointerSprite->initWithFile("/Enemies/Map 2/Wave 1/Spell/0.png"))
@@ -15,6 +15,7 @@ Skill* Skill::create(float damage, float coolDown, float appearTime, float disap
 		pointerSprite->mobilityTime = MobilityTime;
 		pointerSprite->skillAName = skillName;
 		pointerSprite->castAName = castName;
+		pointerSprite->skillRange = range;
 		pointerSprite->initOptions();
 
 		return pointerSprite;
