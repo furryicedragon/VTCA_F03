@@ -25,6 +25,7 @@ public:
 	Sprite* attackHelper;
 	Sprite* slash;
 	Sprite* movementHelper;
+	SpriteFrameCache* pppFrames;
 	Label* hp;
 	Label* statPlus;
 	Label* level;
@@ -80,7 +81,7 @@ public:
 	void useSkill(int skillID, Button* button);
 	Skill* skill1;
 	float cd_reduction;
-	void launchSkill1();
+	Animate* makeAnimation(std::string actionName, float timeEachFrame);
 	
 private:
 	void initOption();

@@ -25,6 +25,7 @@ Enemy* Enemy::create(int xMapNumber, int xWaveNumber, int xBossNumber)
 
 void Enemy::initOption()
 {
+	this->canChase = true;
 	this->canRespawn = true;
 	this->getHitTime = 0;
 	this->inviTime = 1.8;
@@ -159,22 +160,21 @@ void Enemy::chasing()
 	float howFar = ppp->getPosition().x - (this->getPosition().x + this->getContentSize().width / 2);
 	if (howFar < 0) howFar *= -1;
 
-	if (!this->isMoving && !this->isAttacking &&this->isChasing && howFar>skillRange-69) {
+	if (this->canChase && !this->isMoving && !this->isAttacking &&this->isChasing && howFar>skillRange-69) {
 		float pppX = ppp->getPosition().x;
 		float moveByX = pppX - (this->getPosition().x + this->getContentSize().width / 2);
-		if (moveByX < 0) {
-			moveByX *= -1;
-			this->setFlippedX(true);
-		}
+		if (moveByX < 0)  this->setFlippedX(true);
 		else this->setFlippedX(false);
-
+		this->canChase = false;
 		this->isIdle = false;
 		this->isMoving = true;
 		this->breakTime = false;
 		this->movingAnimation();
-		auto move2 = Sequence::create(MoveTo::create(moveByX/moveSpeed, Vec2(ppp->getPosition().x, this->getPosition().y)),
+		float a = std::fabsf(moveByX) / moveSpeed;
+
+		auto move2 = Sequence::create(MoveTo::create(std::fabsf(moveByX)/moveSpeed, Vec2(ppp->getPosition().x, this->getPosition().y)),
 			CallFunc::create([=]() 
-		{this->isMoving = false; if (ppp->getPosition().x - (this->getPosition().x + this->getContentSize().width / 2) > visionRange + 200) this->isChasing = false; else this->idleStatus(); }), nullptr);
+		{this->canChase = true; this->isMoving = false; if (ppp->getPosition().x - (this->getPosition().x + this->getContentSize().width*this->getScale() / 2) > visionRange + 200) this->isChasing = false; else this->idleStatus(); }), nullptr);
 		//could need some fix?! nah
 		move2->setTag(2);
 		this->runAction(move2);
@@ -319,12 +319,10 @@ void Enemy::getHit(int damage) {
 /*		if(this->mapNumber==1 || this->mapNumber==2) this->stopAllActions();
 		else */
 		this->forbidAllAction();
-
+		this->canChase = true;
 		this->isIdle = false;
 		this->isAttacking = false;
 		//this->isMoving = false;
-		this->canMove = true;
-		this->breakTime = false;
 		this->getHitTime++;
 
 		if (getHitTime == 3) {
@@ -355,7 +353,7 @@ void Enemy::getHit(int damage) {
 		else
 		this->hp->setString(std::to_string(healthP));
 		if(!this->isDead)
-		this->runAction(Sequence::create(DelayTime::create(0.3f), CallFunc::create([=]() { this->idleStatus(); }), DelayTime::create(0.4f), CallFunc::create([=]() {this->isMoving=false;}), nullptr));
+		this->runAction(Sequence::create(DelayTime::create(0.3f), CallFunc::create([=]() { this->idleStatus(); }), DelayTime::create(0.4f), CallFunc::create([=]() {this->isMoving=false; this->canMove = true; this->breakTime = false; }), nullptr));
 	}
 
 }

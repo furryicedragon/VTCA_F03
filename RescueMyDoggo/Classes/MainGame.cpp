@@ -45,7 +45,7 @@ bool MainGame::init()
 	while(map1==nullptr)
 	map1 = TMXTiledMap::create("map1.tmx");
 	auto theTest = map1->getContentSize();
-	map1->setScale(1.6f);
+	//map1->setScale(1.6f);
 	map1->setContentSize(map1->getContentSize()*map1->getScale()); //do nothing but helping *2 that's all
 	if(map1)
 	this->addChild(map1, 0, 33);
@@ -60,7 +60,7 @@ bool MainGame::init()
 	ppp->mapScale = map1->getScale();
 	ppp->setPosition(sPx*map1->getScale(), sPy*map1->getScale());
 	ppp->setAnchorPoint(Vec2(0.5f, 0));
-	ppp->setScale(0.6f);
+	//ppp->setScale(0.6f);
 	ppp->setFlippedX(true);
 	if(ppp!=nullptr)
 	this->addChild(ppp, 2);
@@ -74,7 +74,7 @@ bool MainGame::init()
 	}
 	this->ppp->level = Label::create();
 	if (this->ppp->level) {
-		this->ppp->level->setScale(2.8f);
+		//this->ppp->level->setScale(2.8f);
 		this->ppp->level->setAnchorPoint(Vec2(0.5, 0));
 		this->ppp->level->setString("1");
 		this->ppp->level->setColor(Color3B(255, 255, 255));
@@ -282,23 +282,29 @@ void MainGame::check4Directions(Point posDirection, int directionClock) {
 }
 
 Point MainGame::tileCoordForPosition(Point position) {
-	int x = position.x/2 / map1->getTileSize().width;
-	int y = ((map1->getMapSize().height * map1->getTileSize().height) - (position.y/2)) / map1->getTileSize().height;
+	int x = position.x/map1->getScale() / map1->getTileSize().width;
+	int y = ((map1->getMapSize().height *map1->getScale() * map1->getTileSize().height) - (position.y*map1->getScale())) / (map1->getTileSize().height*map1->getScale());
 	return Point(x, y);
 }
 void MainGame::updatePlayerPosition() {
 	//if (ppp->isSpawn) {
 		auto pppPos = this->ppp->getPosition();
+		auto sth = fabsf(visibleSize.width / 2 - pppPos.y);
 		auto movePos = this->pppPositionHelper->getPosition();
 		movePos.x = MathUtil::lerp(movePos.x, pppPos.x, 0.8f);
-		movePos.y = MathUtil::lerp(movePos.y, pppPos.y + 168, 0.8f);
+		auto posY = visibleSize.height / 2;
+		if (pppPos.y > visibleSize.height / 2) {
+			if(pppPos.y>visibleSize.height)
+			posY = visibleSize.height;
+			else posY = pppPos.y;
+		}
+		movePos.y = MathUtil::lerp(movePos.y, posY, 0.8f);
 		auto theLineRight = map1->getContentSize().width / 4*3;
 		auto theLineLeft = map1->getContentSize().width / 4;
-		auto theLineDown = map1->getContentSize().height / 8;
 			auto followPlayer = Follow::create(pppPositionHelper,Rect::ZERO);
 			followPlayer->setTag(99);
-			if ((pppPos.y < 145*map1->getScale() &&!ppp->isRolling) || ((pppPos.y < 145*map1->getScale()+33)&&ppp->isRolling)) 
-				movePos.y = visibleSize.height/2;
+			//if ((pppPos.y < 145*map1->getScale() &&!ppp->isRolling) || ((pppPos.y < 145*map1->getScale()+33)&&ppp->isRolling)) 
+			//	movePos.y = visibleSize.height/2;
 		
 			if (pppPos.x < theLineLeft) 
 				movePos.x = theLineLeft;
@@ -375,7 +381,7 @@ void MainGame::update(float elapsed)
 			checkCollision(ppp);
 			if(currentWave!=0)
 			this->waveXMapXInit();
-			if (allEnemy[17]->isDead && allEnemy[8]->isDead && !congratz) {
+			if (allEnemy[9]->isDead && allEnemy[4]->isDead && !congratz) {
 				for each (auto item in allEnemy)
 				{
 					congratz = true;
@@ -389,7 +395,7 @@ void MainGame::update(float elapsed)
 					finishPortal->runAction(RepeatForever::create(animation("Enemies/Effect/Gate", 0.06f)));
 					finishPortal->setPosition(Vec2(finishPoint["x"].asFloat()*this->map1->getScale(), ppp->getPosition().y));
 					//finishPortal->setOpacity(222);
-					finishPortal->setScale(2.7f);
+					//finishPortal->setScale(2.7f);
 				}
 			}
 			if (congratz && ppp->isSpawn) {
@@ -428,7 +434,7 @@ void MainGame::spawnPlayer()
 	zap->setPosition(Vec2(ppp->getPosition().x, ppp->getPosition().y + 66));
 	if(zap)
 	this->addChild(zap);
-	zap->setScale(2);
+	//zap->setScale(2);
 	zap->runAction(Sequence::create(DelayTime::create(0.69f), CallFunc::create([=]() {ppp->spawnEffect(); }), animation("Spawn", 0.1f),
 		CallFunc::create([=]() {this->removeChild(zap, true); }), nullptr));
 }
@@ -446,7 +452,7 @@ bool MainGame::checkRange(Enemy* enemy2Check, int theRange) {
 }
 void MainGame::checkAttackRange(Enemy * eee, int index)
 {
-	if ((index != 8 || boss1)||(index!=17 || boss2)&&!ppp->isDead) {
+	if ((index != 4 || boss1)||(index!=9 || boss2)&&!ppp->isDead) {
 		if (checkRange(eee,100)) 
 		{
 			if (ppp->isAttacking && !ppp->doneDamage[index]) {
@@ -511,11 +517,11 @@ void MainGame::waveXMapXInit() {
 			i++;
 		}
 		if (ppp->w1kills ==8 && !boss1) {
-			this->spawnEffect(allEnemy[8], 1);
+			this->spawnEffect(allEnemy[4], 1);
 			boss1 = true;
 		}
 		if (ppp->w2kills == 8 && !boss2) { 
-			this->spawnEffect(allEnemy[17], 1);
+			this->spawnEffect(allEnemy[9], 1);
 			boss2 = true; 
 		}
 }
@@ -570,9 +576,9 @@ void MainGame::allEnemyInit()
 	auto line2 = oj->getObject("Line2");
 	auto line3 = oj->getObject("Line3");
 	auto line4 = oj->getObject("Line4");
-	for (int i = 0; i < 8; i++) {
+	for (int i = 0; i < 4; i++) {
 		Enemy* wave = Enemy::create(2, 1, 0);
-		wave->setScale(1.6f);
+		//wave->setScale(1.6f);
 		wave->skillDamage = 20;
 		wave->visionRange = 310;
 		wave->moveSpeed = 120;
@@ -607,7 +613,7 @@ void MainGame::allEnemyInit()
 		this->boss1m1 = Enemy::create(1, 0, 1);
 		boss1m1->visionRange = 420;
 		boss1m1->skillDamage = 150;
-		boss1m1->setScale(1.6f);
+		//boss1m1->setScale(1.6f);
 		boss1m1->moveSpeed = 333;
 		boss1m1->isSSMobility = true;
 		boss1m1->castSpeed = 0.069f;
@@ -631,14 +637,14 @@ void MainGame::allEnemyInit()
 		boss1m1->setAnchorPoint(Vec2(0, 0));
 		if (boss1m1) {
 			allEnemy.push_back(boss1m1);
-			this->addChild(allEnemy[8], 1);
+			this->addChild(allEnemy[4], 1);
 		}
 	}
 
 
-	for (int i = 0; i < 8; i++) {
+	for (int i = 0; i < 4; i++) {
 		Enemy* wave = Enemy::create(1, 2, 0);
-		wave->setScale(1.6f);
+		//wave->setScale(1.6f);
 		wave->skillDamage = 96;
 		wave->visionRange = 350;
 		wave->moveSpeed = 196;
@@ -661,15 +667,15 @@ void MainGame::allEnemyInit()
 		if (wave->spellLanded != nullptr) this->addChild(wave->spellLanded, 9);
 		wave->setAnchorPoint(Vec2(0, 0));
 		allEnemy.push_back(wave);
-		if (allEnemy[i + 9]) {
-			this->addChild(allEnemy[i + 9], 0);
-			this->spawnEffect(allEnemy[i + 9], i);
+		if (allEnemy[i + 5]) {
+			this->addChild(allEnemy[i + 5], 0);
+			this->spawnEffect(allEnemy[i + 5], i);
 		}
 	}
 
 	{	//boss2
 		this->boss2m1 = Enemy::create(1, 0, 2);
-		boss2m1->setScale(1.6f);
+		//boss2m1->setScale(1.6f);
 		boss2m1->skillDamage = 200;
 		boss2m1->visionRange = 450;
 		boss2m1->moveSpeed = 420;
@@ -695,7 +701,7 @@ void MainGame::allEnemyInit()
 		boss2m1->setAnchorPoint(Vec2(0, 0));
 		if (boss2m1) {
 			allEnemy.push_back(boss2m1);
-			this->addChild(allEnemy[17], 1);
+			this->addChild(allEnemy[9], 1);
 		}
 	}
 
@@ -705,7 +711,7 @@ void MainGame::allEnemyInit()
 		bossfm1->doneAtkAfterF = 4;
 		bossfm1->skillDamage = 169;
 		bossfm1->visionRange = 500;
-		bossfm1->setScale(3);
+		//bossfm1->setScale(3);
 		bossfm1->moveSpeed = 555;
 		bossfm1->castSpeed = 0.08f;
 		bossfm1->skillCD = 2;
@@ -737,7 +743,7 @@ void MainGame::allEnemyInit()
 		ppp->listSkill.insert(0, Skill::create(300,169, 3, 3, 4 , 2, 2, testPos, "MainChar/Effects/Dash Stab","Dash/Dash Attack"));
 		this->ppp->addChild(ppp->listSkill.at(0), 3);
 		ppp->listSkill.at(0)->setVisible(false);
-		ppp->listSkill.at(0)->setScale(3);
+		//ppp->listSkill.at(0)->setScale(3);
 
 		//Point skillPos = Point(ppp->getPosition().x,ppp->getPosition().y);
 		ppp->listSkill.insert(1, Skill::create(333,129, 3, 3, 4, 2, 2, testPos, "MainChar/Effects/Skill 2", "Cast Spell/Cast Spell"));

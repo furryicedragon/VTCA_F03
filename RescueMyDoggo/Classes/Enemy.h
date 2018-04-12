@@ -46,6 +46,7 @@ public:
 	bool interuptable;
 	bool invulnerable;
 	bool breakTime;
+	bool canChase;
 	bool isSpawned;
 	bool canDamage;
 	bool canMove;

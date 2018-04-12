@@ -17,6 +17,8 @@ Player* Player::create()
 void Player::initOption()
 {
 
+	pppFrames = SpriteFrameCache::getInstance();
+	pppFrames->addSpriteFramesWithFile("/MainChar/ppp.plist");
 	this->isSpawning = true;
 	this->setOpacity(255);
 	this->runAction(FadeOut::create(0));
@@ -30,7 +32,7 @@ void Player::initOption()
 
 
 	attackRange = 100;
-	attackSpeed = 0.08f;
+	attackSpeed = 0.14f;
 
 
 	for(int i=0;i<4;i++){
@@ -66,9 +68,7 @@ void Player::initOption()
 	isAttacking = false;
 	this->idleStatus();
 
-	// projectile
-	//this->skill1 = Skill::create();
-	//this->skill1->setScale(3.0f);
+	this->makeAnimation("walk",0.1);
 
 	this->cd_reduction = 1.0f;
 
@@ -78,7 +78,7 @@ void Player::initOption()
 void Player::setHP(int HP)
 {
 	hp = Label::create();
-	hp->setScale(2.8f);
+	//hp->setScale(2.8f);
 	hp->setAnchorPoint(Vec2(0.5, 0));
 	hp->setString(std::to_string(HP));
 	hp->setPosition(this->getContentSize().width/2, this->getPosition().y + this->getContentSize().height);
@@ -137,7 +137,8 @@ void Player::idleStatus() {
 		this->isAttacking = false;
 		this->isMoving = false;
 		this->stopAllActions();
-		auto repeatIdle = RepeatForever::create(animation("Idle", 0.16969f));
+		//auto repeatIdle = RepeatForever::create(animation("Idle", 0.16969f));
+		auto repeatIdle = RepeatForever::create(makeAnimation("idle", 0.16969f));
 		repeatIdle->setTag(1);
 		this->runAction(repeatIdle);
 	}
@@ -172,11 +173,11 @@ void Player::moving() {
 		this->runAction(repeatMove);
 		if (lastDirection == "Left") {
 			this->slash->setFlippedX(false);
-			this->setFlippedX(true);
+			this->setFlippedX(false);
 		}
 		if (lastDirection == "Right") {
 			this->slash->setFlippedX(true);
-			this->setFlippedX(false);
+			this->setFlippedX(true);
 		}
 		//this->runAction(Sequence::create(DelayTime::create(0.1) , CallFunc::create([=]() {this->notCombination = true; }), nullptr));
 		this->isMoving = true;
@@ -204,7 +205,8 @@ void Player::smootherMove() {
 	if(OK) {
 		this->stopAllActionsByTag(2);
 		this->stopAllActionsByTag(4);
-			auto dashIt = RepeatForever::create(animation("Dash/Dash Normal/Dash", 0.14f));
+		//auto dashIt = RepeatForever::create(animation("Dash/Dash Normal/Dash", 0.14f));
+		auto dashIt = RepeatForever::create(makeAnimation("walk",0.14f));
 			dashIt->setTag(4);
 			this->runAction(dashIt);
 	}
@@ -217,52 +219,15 @@ int Player::checkDirectionInNumber(std::string direction) {
 	return directionNumber;
 }
 
-void Player::launchSkill1()
-{
-	//if (skill1->launching)	return;
-
-	//Vector<SpriteFrame *> runningFrames;
-	//for (int i = 0; i < 3; i++) {
-	//	auto frameName = "/Enemies/Map 2/Wave 1/Spell/" + std::to_string(i) + ".png";
-	//	Sprite* getSize = Sprite::create(frameName);
-	//	if (!getSize)
-	//		break;
-
-	//	Size theSize = getSize->getContentSize();
-	//	auto frame = SpriteFrame::create(frameName, Rect(0, 0, theSize.width, theSize.height));
-	//	runningFrames.pushBack(frame);
-	//}
-	//Animation* runningAnimation = Animation::createWithSpriteFrames(runningFrames, 0.1f);
-	//Animate* anim = Animate::create(runningAnimation);
-
-	//float side;
-
-	//if (!this->isFlippedX())
-	//{
-	//	skill1->setFlippedX(false);
-	//	side = 500;
-	//}
-	//else
-	//{
-	//	skill1->setFlippedX(true);
-	//	side = -500;
-	//}
-
-	//skill1->setPosition(this->getPositionX() + 50, this->getPositionY() + 100);
-	//skill1->setVisible(true);
-
-	//skill1->launch(anim, side, 3.0f * cd_reduction);
-
-}
 
 void Player::attack() {
 	if (this->isSpawn && !this->isAttacking && !this->isRolling && !this->isDead && !this->isHit && !this->usingSkill) {
 		this->isAttacking = true;
-		this->slashEffect();                 //thuc hien animation cua slash
+		//this->slashEffect();                 //thuc hien animation cua slash
 		this->stopAllActions();				//stop all hanh dong de attack
-		std::string name = "Attack/Attack Chain/" + std::to_string(this->attackChainNumber); //name = Folder chua Animate cua (attack)
-		int frameNumbers = attackFrameNumber[this->attackChainNumber - 1]; //check xem thu tu don danh tiep theo (1,2,3 combo auto attack)  (**)
-		this->runAction(Sequence::create(animation(name, attackSpeed), 
+		//std::string name = "Attack/Attack Chain/" + std::to_string(this->attackChainNumber); //name = Folder chua Animate cua (attack)
+		//this->runAction(Sequence::create(animation(name, attackSpeed),
+		this->runAction(Sequence::create(makeAnimation("attack"+std::to_string(this->attackChainNumber), attackSpeed),
 			CallFunc::create([=]() 
 			{
 				this->isAttacking = false;
@@ -274,14 +239,14 @@ void Player::attack() {
 }
 void Player::attackCount() {
 		this->attackHelper->stopAllActionsByTag(1); //neu attack lien tiep se stop "helperAction(sau vai giay khong danh thu tu combo se ve 1)"
-	if (attackChainNumber == 3) //(**)
-		attackChainNumber = 1; //sau don danh thu 3 se tu dong quay ve don danh thu nhat (**)
+	if (attackChainNumber == 6) //(**)
+		attackChainNumber = 0; //sau don danh thu 3 se tu dong quay ve don danh thu nhat (**)
 	else {
 		attackChainNumber++; //tang thu tu don danh them 1
-		int frameNumbers = attackFrameNumber[this->attackChainNumber - 1]; //check so luong frame animation trong folder cua Attack dua theo 
+		//int frameNumbers = attackFrameNumber[this->attackChainNumber - 1]; //check so luong frame animation trong folder cua Attack dua theo 
 							//																									attack ChainNumber
-		auto helperAction(Sequence::create(DelayTime::create(0.12*(frameNumbers-1) +0.1), CallFunc::create([=]() {this->attackChainNumber = 1; }), nullptr));
-		helperAction->setTag(1); // check dong 238
+		auto helperAction(Sequence::create(DelayTime::create(0.12/**(frameNumbers-1)*/ +10.1), CallFunc::create([=]() {this->attackChainNumber = 1; }), nullptr));
+		helperAction->setTag(1);
 		this->attackHelper->runAction(helperAction);
 	}
 
@@ -448,7 +413,7 @@ void Player::statUp()
 	this->hp->setString(sstream.str());
 	
 	
-	statPlus->setScale(3);
+	//statPlus->setScale(3);
 	statPlus->setAnchorPoint(Vec2(0.5, 0));
 	statPlus->setPosition(this->getContentSize().width / 2, this->getPosition().y + this->getContentSize().height);
 	statPlus->setSystemFontSize(20);
@@ -571,4 +536,19 @@ void Player::useSkill(int skillID, Button* button)
 			listSkill.at(skillID)->runAction(Sequence::create(DelayTime::create(skill->skillAppearTime*attackSpeed),MoveTo::create(0,Vec2(this->getPosition().x, this->getPosition().y)),MoveBy::create(0.5, Vec2(moveRange, 0)),nullptr));
 		}
 	}
+}
+
+
+Animate* Player::makeAnimation(std::string actionName, float timeEachFrame) {
+	Vector<SpriteFrame *> runningFrames;
+	for (int i = 0; i < 99; i++) {
+		auto frameName = actionName+std::to_string(i)+".png";
+		SpriteFrame* frame = pppFrames->getSpriteFrameByName(frameName);
+		if (!frame)
+			break;
+		runningFrames.pushBack(frame);
+	}
+	Animation* runningAnimation = Animation::createWithSpriteFrames(runningFrames, timeEachFrame);
+	Animate* anim = Animate::create(runningAnimation);
+	return anim;
 }
