@@ -43,7 +43,7 @@ bool MainGame::init()
 	howManyKeyPressed = 0;
 	visibleSize = Director::getInstance()->getVisibleSize();
 	while(map1==nullptr)
-	map1 = TMXTiledMap::create("Map1/map1.tmx");
+	map1 = TMXTiledMap::create("map1.tmx");
 	auto theTest = map1->getContentSize();
 	//map1->setScale(1.6f);
 	map1->setContentSize(map1->getContentSize()*map1->getScale()); //do nothing but helping *2 that's all
@@ -59,7 +59,7 @@ bool MainGame::init()
 	ppp->map1Size = map1->getContentSize();
 	ppp->mapScale = map1->getScale();
 	ppp->setPosition(sPx*map1->getScale(), sPy*map1->getScale());
-	ppp->setAnchorPoint(Vec2(0.5f, 0));
+	ppp->setAnchorPoint(Vec2(0.5,0));
 	//ppp->setScale(0.6f);
 	ppp->setFlippedX(true);
 	if(ppp!=nullptr)
