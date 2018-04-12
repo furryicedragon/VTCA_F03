@@ -16,13 +16,10 @@ Player* Player::create()
 
 void Player::initOption()
 {
-<<<<<<< HEAD
 
 	pppFrames = SpriteFrameCache::getInstance();
 	pppFrames->addSpriteFramesWithFile("/MainChar/ppp.plist");
-=======
 	this->Life = 100;
->>>>>>> a22c45bec212f1ba936c9f3d1e51b79329e339d7
 	this->isSpawning = true;
 	this->setOpacity(255);
 	this->runAction(FadeOut::create(0));

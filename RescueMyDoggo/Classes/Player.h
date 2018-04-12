@@ -1,7 +1,7 @@
 #pragma once
 #ifndef Player_hpp
 #define Player_hpp
-
+ 
 #include<cocos2d.h>
 #include<Skill.h>
 #include <string>
@@ -83,12 +83,9 @@ public:
 	void useSkill(int skillID, Button* button);
 	Skill* skill1;
 	float cd_reduction;
-<<<<<<< HEAD
 	Animate* makeAnimation(std::string actionName, float timeEachFrame);
-=======
 	void launchSkill1();
 	StatPlayer* statPlayer;
->>>>>>> a22c45bec212f1ba936c9f3d1e51b79329e339d7
 	
 private:
 	void initOption();
