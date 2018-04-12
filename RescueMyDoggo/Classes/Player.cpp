@@ -323,7 +323,7 @@ void Player::slashEffect() {
 }
 void Player::setDoneDamageTo(bool whatYouWant) {
 	int i = 0;
-	for each (auto item in doneDamage)
+	for (auto item : doneDamage)
 	{
 		doneDamage[i] = whatYouWant;
 		i++;

@@ -182,7 +182,7 @@ bool MainGame::keyPressed(EventKeyboard::KeyCode keyCode, Event* event) {
 bool MainGame::keyReleased(EventKeyboard::KeyCode keyCode, Event* event) {
 	if (keyCode == EventKeyboard::KeyCode::KEY_A || keyCode == EventKeyboard::KeyCode::KEY_D) {
 		int doTheMath = 0;
-		for each (auto item in ppp->inputKeys)
+		for (auto item : ppp->inputKeys)
 		{
 			if (item == keyCode) {
 				ppp->inputKeys.erase(ppp->inputKeys.begin() + doTheMath);
@@ -391,7 +391,7 @@ void MainGame::update(float elapsed)
 			if(currentWave!=0)
 			this->waveXMapXInit();
 			if (allEnemy[9]->isDead && allEnemy[4]->isDead && !congratz) {
-				for each (auto item in allEnemy)
+				for (auto item : allEnemy)
 				{
 					congratz = true;
 					item->canRespawn = false;
@@ -481,7 +481,7 @@ void MainGame::checkAttackRange(Enemy * eee, int index)
 			rectPos -= ppp->listSkill.at(1)->getContentSize().width/2;
 		Rect skillRect = Rect(rectPos, ppp->listSkill.at(1)->getPosition().y, 300, 500);
 		Rect eeeRect = eee->getBoundingBox();
-		for each  (auto item in ppp->listSkill)
+		for (auto item : ppp->listSkill)
 		{
 			if (ppp->usingSkill && item->canDamage[index]
 				&& (skillRect.intersectsRect(eee->getBoundingBox()) 
@@ -520,7 +520,7 @@ void MainGame::checkAttackRange(Enemy * eee, int index)
 }
 void MainGame::waveXMapXInit() {
 	int i = 0;
-		for each (auto item in allEnemy)
+		for (auto item : allEnemy)
 		{
 			this->checkAttackRange(item, i);
 			i++;
@@ -761,7 +761,7 @@ void MainGame::allEnemyInit()
 		ppp->listSkill.at(1)->setVisible(false);
 
 	}
-	for each (auto item in ppp->listSkill)
+	for (auto item : ppp->listSkill)
 	{
 		item->canDamage.resize(allEnemy.size(), false);
 	}
