@@ -16,7 +16,6 @@ Player* Player::create()
 
 void Player::initOption()
 {
-
 	pppFrames = SpriteFrameCache::getInstance();
 	pppFrames->addSpriteFramesWithFile("/MainChar/ppp.plist");
 	this->lastSeenLife = 100;
@@ -472,8 +471,8 @@ void Player::spawnEffect(){
 
 void Player::update(float elapsed)
 {
-	if (this->currentEXP > this->baseEXP) {
-		this->currentEXP = 0 + baseEXP-currentEXP;
+	if (this->currentEXP > this->baseEXP || this->currentEXP==this->baseEXP) {
+		this->currentEXP = 0 + currentEXP - baseEXP;
 		this->levelUp();
 	}
 }

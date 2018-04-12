@@ -38,11 +38,12 @@ public:
 	float attackSpeed;
 	float damageCurrent;
 	float baseHP;
+	float currentEXP;
+	float baseEXP;
 	float lastSeenLife;
+	int lastSeenExp;
 	int currentSkillID;
 	int attackRange;
-	int currentEXP;
-	int baseEXP;
 	int w1kills;
 	int w2kills;
 	int count;

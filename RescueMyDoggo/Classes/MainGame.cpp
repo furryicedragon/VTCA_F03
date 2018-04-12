@@ -323,6 +323,21 @@ void MainGame::update(float elapsed)
 
 	if(this->isGameStart)
 	{
+		if (ppp->lastSeenLife != std::stoi(ppp->hp->getString()) / ppp->baseHP * 100) {
+			ppp->lastSeenLife = std::stoi(ppp->hp->getString()) / ppp->baseHP * 100;
+			hud_layer->statPlayer->DameHit->runAction(ProgressTo::create(1.0f, ppp->lastSeenLife));
+			hud_layer->statPlayer->DameHit->setPercentage(ppp->lastSeenLife);
+			hud_layer->statPlayer->HPplayer->setPercentage(ppp->lastSeenLife);
+		}
+		if (ppp->lastSeenExp != ppp->currentEXP / ppp->baseEXP * 100) {
+			ppp->lastSeenExp = ppp->currentEXP / ppp->baseEXP * 100;
+			hud_layer->statPlayer->EXPplayer->runAction(ProgressTo::create(0.3f, ppp->lastSeenExp));
+			hud_layer->statPlayer->EXPplayer->setPercentage(ppp->lastSeenExp);
+		}
+		if (ppp->isDead && this->isGameOver) {
+			hud_layer->statPlayer->DameHit->setPercentage(100);
+			hud_layer->statPlayer->HPplayer->setPercentage(100);
+		}
 		if (ppp->isSpawn && !this->enemyAdded) {
 			this->enemyAdded = true;
 			this->allEnemyInit();
@@ -373,16 +388,9 @@ void MainGame::update(float elapsed)
 		}
 
 		if (this->enemyAdded) {
-			if (ppp->lastSeenLife != std::stoi(ppp->hp->getString()) / ppp->baseHP * 100) {
-				ppp->lastSeenLife = std::stoi(ppp->hp->getString()) / ppp->baseHP * 100;
-				hud_layer->statPlayer->HPplayer->setPercentage(ppp->lastSeenLife);
-
-				hud_layer->statPlayer->DameHit->runAction(ProgressTo::create(1.0f, ppp->lastSeenLife));
-				hud_layer->statPlayer->DameHit->setPercentage(ppp->lastSeenLife);
-			}
-
 
 			this->updatePlayerPosition();
+			
 
 			if (ppp->isHoldingKey && !ppp->isAttacking) {
 				ppp->moving();
@@ -430,7 +438,6 @@ void MainGame::update(float elapsed)
 			this->runAction(Sequence::create(DelayTime::create(1), CallFunc::create([=]() {this->canRetry=true; }), nullptr));
 			this->runAction(Sequence::create(DelayTime::create(1), CallFunc::create([=]() {this->canRetry=true;}), nullptr));
 		}
-
 		}
 
 
