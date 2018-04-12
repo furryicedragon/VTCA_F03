@@ -6,7 +6,8 @@
 #include<JoystickBase.h>
 #include<Button.h>
 #include<ButtonBase.h>
-#include <MainGame.h>
+#include<MainGame.h>
+#include<StatPlayer.h>
 USING_NS_CC;
 
 class HUDLayer : public Layer
@@ -28,6 +29,8 @@ public:
 	void displayCD(Button* button, float cooldown);
 
 	void toggleVisiblity();
+	void setupStat();
+	StatPlayer* statPlayer;
 };
 
 #endif // !HUDLAYER_hpp

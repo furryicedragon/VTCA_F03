@@ -16,9 +16,13 @@ Player* Player::create()
 
 void Player::initOption()
 {
+<<<<<<< HEAD
 
 	pppFrames = SpriteFrameCache::getInstance();
 	pppFrames->addSpriteFramesWithFile("/MainChar/ppp.plist");
+=======
+	this->Life = 100;
+>>>>>>> a22c45bec212f1ba936c9f3d1e51b79329e339d7
 	this->isSpawning = true;
 	this->setOpacity(255);
 	this->runAction(FadeOut::create(0));
@@ -354,9 +358,20 @@ void Player::getHit(int damage, float eeePosX) {
 		//this->runAction(MoveBy::create(0.33, Vec2(x, 0)));
 		int healthP = std::stoi(this->hp->getString());
 		healthP -= damage;
+
+		Life -= damage / baseHP * 100;
+		statPlayer->HPplayer->setPercentage(Life);
+
+		statPlayer->DameHit->runAction(ProgressTo::create(1.0f, Life));
+		statPlayer->DameHit->setPercentage(Life);
+
 		if (healthP < 0 || healthP == 0) {
 			this->hp->setString("0");
 			this->dead();
+			Life = 100;
+			statPlayer->DameHit->runAction(ProgressTo::create(1.0f, Life));
+			statPlayer->DameHit->setPercentage(Life);
+			statPlayer->HPplayer->setPercentage(Life);
 		}
 		else
 			this->hp->setString(std::to_string(healthP));
@@ -403,6 +418,8 @@ void Player::forbidAllAction()
 
 void Player::statUp()
 {
+	this->Life = 100;
+	statPlayer->HPplayer->setPercentage(Life);
 	this->damageCurrent += 10;
 	this->attackSpeed = 0.08f - (0.08f / 20);
 	baseHP += 80;
@@ -456,6 +473,7 @@ void Player::levelUp() {
 	int lvl = std::stoi(level->getString());
 	this->baseEXP += 100 * lvl;
 	level->setString(std::to_string(lvl+1));
+	statPlayer->HPplayer->setPercentage(Life);
 }
 
 

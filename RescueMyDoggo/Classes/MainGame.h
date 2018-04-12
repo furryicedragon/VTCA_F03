@@ -8,6 +8,7 @@
 #include<Enemy.h>
 #include<Skill.h>
 #include<HUDLayer.h>
+#include<StatPlayer.h>
 
 USING_NS_CC;
 
