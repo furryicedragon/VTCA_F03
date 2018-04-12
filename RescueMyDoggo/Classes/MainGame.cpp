@@ -43,7 +43,7 @@ bool MainGame::init()
 	howManyKeyPressed = 0;
 	visibleSize = Director::getInstance()->getVisibleSize();
 	while(map1==nullptr)
-	map1 = TMXTiledMap::create("map1.tmx");
+	map1 = TMXTiledMap::create("Map1/map1.tmx");
 	auto theTest = map1->getContentSize();
 	//map1->setScale(1.6f);
 	map1->setContentSize(map1->getContentSize()*map1->getScale()); //do nothing but helping *2 that's all
@@ -373,6 +373,14 @@ void MainGame::update(float elapsed)
 		}
 
 		if (this->enemyAdded) {
+			if (ppp->lastSeenLife != std::stoi(ppp->hp->getString()) / ppp->baseHP * 100) {
+				ppp->lastSeenLife = std::stoi(ppp->hp->getString()) / ppp->baseHP * 100;
+				hud_layer->statPlayer->HPplayer->setPercentage(ppp->lastSeenLife);
+
+				hud_layer->statPlayer->DameHit->runAction(ProgressTo::create(1.0f, ppp->lastSeenLife));
+				hud_layer->statPlayer->DameHit->setPercentage(ppp->lastSeenLife);
+			}
+
 
 			this->updatePlayerPosition();
 
@@ -580,7 +588,7 @@ void MainGame::allEnemyInit()
 	for (int i = 0; i < 4; i++) {
 		Enemy* wave = Enemy::create(2, 1, 0);
 		//wave->setScale(1.6f);
-		wave->skillDamage = 20;
+		wave->skillDamage = 11;
 		wave->visionRange = 310;
 		wave->moveSpeed = 120;
 		wave->isCaster = true;

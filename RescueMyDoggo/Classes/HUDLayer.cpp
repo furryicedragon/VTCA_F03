@@ -188,7 +188,7 @@ void HUDLayer::setupStat()
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
 	Point StatPosition;
-	StatPosition = Vec2(visibleSize.width* 0.3f, visibleSize.height);
+	StatPosition = Vec2(visibleSize.width* 0.3f, visibleSize.height*0.8);
 
 	statPlayer = new StatPlayer();
 	statPlayer->init();
