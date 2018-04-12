@@ -10,6 +10,7 @@ bool HUDLayer::init()
 
 	this->setupStick();
 	this->setupButtons();
+	this->setupStat();
 	this->setVisible(false);
 	return true;
 }
@@ -180,4 +181,18 @@ void HUDLayer::toggleVisiblity()
 		this->setVisible(false);
 	else
 		this->setVisible(true);
+}
+void HUDLayer::setupStat()
+{
+	auto visibleSize = Director::getInstance()->getVisibleSize();
+	Vec2 origin = Director::getInstance()->getVisibleOrigin();
+
+	Point StatPosition;
+	StatPosition = Vec2(visibleSize.width* 0.3f, visibleSize.height);
+
+	statPlayer = new StatPlayer();
+	statPlayer->init();
+	statPlayer->setPosition(StatPosition);
+	statPlayer->autorelease();
+	this->addChild(statPlayer);
 }

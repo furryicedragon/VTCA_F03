@@ -8,6 +8,7 @@
 #include <iomanip>
 #include "Button.h"
 #include "ButtonBase.h"
+#include "StatPlayer.h"
 USING_NS_CC;
 class Player :public cocos2d::Sprite {
 public:
@@ -36,6 +37,7 @@ public:
 	float attackSpeed;
 	float damageCurrent;
 	float baseHP;
+	float Life;
 	int currentSkillID;
 	int attackRange;
 	int currentEXP;
@@ -81,6 +83,7 @@ public:
 	Skill* skill1;
 	float cd_reduction;
 	void launchSkill1();
+	StatPlayer* statPlayer;
 	
 private:
 	void initOption();
