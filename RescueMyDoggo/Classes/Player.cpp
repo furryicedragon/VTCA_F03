@@ -16,6 +16,7 @@ Player* Player::create()
 
 void Player::initOption()
 {
+	this->setFlippedX(false);
 	pppFrames = SpriteFrameCache::getInstance();
 	pppFrames->addSpriteFramesWithFile("/MainChar/ppp.plist");
 	this->lastSeenLife = 100;
@@ -79,9 +80,9 @@ void Player::setHP(int HP)
 {
 	hp = Label::create();
 	//hp->setScale(2.8f);
-	hp->setAnchorPoint(Vec2(0.5, 0));
+	//hp->setAnchorPoint(Vec2(0.5, 0));
 	hp->setString(std::to_string(HP));
-	hp->setPosition(this->getContentSize().width/2, this->getPosition().y + this->getContentSize().height);
+	//hp->setPosition(this->getContentSize().width/2, this->getPosition().y + this->getContentSize().height);
 	hp->setColor(Color3B(255, 0, 0));
 	hp->setSystemFontSize(16);
 	if(hp)
@@ -164,6 +165,17 @@ void Player::moving() {
 			if (lastX < 0) lastX = 0;
 		}
 
+		if (lastDirection == "Left") {
+			this->direction = 0;
+			//this->slash->setFlippedX(false);
+			//this->setFlippedX(false);
+		}
+		if (lastDirection == "Right") {
+			this->direction = 1;
+			//this->slash->setFlippedX(true);
+			//this->setFlippedX(true);
+		}
+
 		smootherMove();
 		secondLastDirection = lastDirection;
 		this->stopAllActionsByTag(3);
@@ -171,14 +183,6 @@ void Player::moving() {
 		auto repeatMove = RepeatForever::create(moveBy);
 		repeatMove->setTag(3);
 		this->runAction(repeatMove);
-		if (lastDirection == "Left") {
-			this->slash->setFlippedX(false);
-			this->setFlippedX(false);
-		}
-		if (lastDirection == "Right") {
-			this->slash->setFlippedX(true);
-			this->setFlippedX(true);
-		}
 		//this->runAction(Sequence::create(DelayTime::create(0.1) , CallFunc::create([=]() {this->notCombination = true; }), nullptr));
 		this->isMoving = true;
 
@@ -417,7 +421,7 @@ void Player::statUp()
 	
 	
 	//statPlus->setScale(3);
-	statPlus->setAnchorPoint(Vec2(0.5, 0));
+	//statPlus->setAnchorPoint(Vec2(0.5, 0));
 	statPlus->setPosition(this->getContentSize().width / 2, this->getPosition().y + this->getContentSize().height);
 	statPlus->setSystemFontSize(20);
 
@@ -465,8 +469,9 @@ void Player::levelUp() {
 void Player::spawnEffect(){
 	if (this->isSpawning)
 		this->isSpawning = false;
-		this->runAction(FadeIn::create(0.8f));
-		this->runAction(Sequence::create(animation("Spawned", 0.1f), CallFunc::create([=]() {  this->isSpawn = true;this->idleStatus(); }), nullptr));
+		//this->runAction(FadeIn::create(0.8f));
+	this->runAction(Sequence::create(FadeIn::create(0.8f), CallFunc::create([=]() {this->isSpawn = true; this->idleStatus(); }), nullptr));
+		//this->runAction(Sequence::create(animation("Spawned", 0.1f), CallFunc::create([=]() {  this->isSpawn = true;this->idleStatus(); }), nullptr));
 }
 
 void Player::update(float elapsed)
@@ -545,7 +550,7 @@ void Player::useSkill(int skillID, Button* button)
 Animate* Player::makeAnimation(std::string actionName, float timeEachFrame) {
 	Vector<SpriteFrame *> runningFrames;
 	for (int i = 0; i < 99; i++) {
-		auto frameName = actionName+std::to_string(i)+".png";
+		auto frameName = std::to_string(this->direction)+actionName+std::to_string(i)+".png";
 		SpriteFrame* frame = pppFrames->getSpriteFrameByName(frameName);
 		if (!frame)
 			break;

@@ -204,12 +204,12 @@ void Enemy::randomMoving() {
 void Enemy::moving() {
 	float howFar = ppp->getPosition().x - (this->getPosition().x+this->getContentSize().width/2);
 	if (howFar < 0) howFar *= -1; 
-	if (howFar < skillRange && !this->isAttacking && !this->isOnCD) {
+	if (howFar < skillRange && !this->isAttacking && !this->isOnCD && std::fabsf(ppp->getPosition().y - this->getPosition().y) < 40) {
 		this->attack();
 		this->isAttacking = true;
 	}
 
-	if (howFar < visionRange && !this->isChasing && !this->isAttacking) {
+	if (howFar < visionRange && !this->isChasing && !this->isAttacking && std::fabsf(ppp->getPosition().y - this->getPosition().y) < 40) {
 		this->isChasing = true;
 	}
 	else {

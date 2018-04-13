@@ -55,13 +55,14 @@ bool MainGame::init()
 	float sPy = sPoint["y"].asFloat();
 	finishPoint = oj->getObject("FinishPoint");
 	meta = map1->getLayer("meta");
+	//Sprite* abc = Sprite::create()
 	while (ppp==nullptr) ppp = Player::create();
 	ppp->map1Size = map1->getContentSize();
 	ppp->mapScale = map1->getScale();
 	ppp->setPosition(sPx*map1->getScale(), sPy*map1->getScale());
-	ppp->setAnchorPoint(Vec2(0.5,0));
+	//ppp->setAnchorPoint(Vec2(0,0));
 	//ppp->setScale(0.6f);
-	ppp->setFlippedX(true);
+	//ppp->setFlippedX(true);
 	if(ppp!=nullptr)
 	this->addChild(ppp, 2);
 
@@ -111,7 +112,8 @@ bool MainGame::init()
 
 	this->setupPressedKeyHandling();
 	this->setupTouchHandling();
-	
+
+	this->updatePlayerPosition();
 	this->scheduleUpdate();
 	
 	//this->addChild(ppp->skill1, 3);
@@ -217,14 +219,14 @@ void MainGame::whatYouWant(EventKeyboard::KeyCode keyCode, int yourStatus) {
 			case cocos2d::EventKeyboard::KeyCode::KEY_A:
 			{
 				ppp->lastDuration = 0.25;
-				ppp->lastX = -110;
+				ppp->lastX = -80;
 				ppp->lastDirection = "Left";
 				break;
 			}
 			case cocos2d::EventKeyboard::KeyCode::KEY_D:
 			{
 				ppp->lastDuration = 0.25;
-				ppp->lastX = 110;
+				ppp->lastX = 80;
 				ppp->lastDirection = "Right";
 				break;
 			}
@@ -290,15 +292,14 @@ Point MainGame::tileCoordForPosition(Point position) {
 void MainGame::updatePlayerPosition() {
 	//if (ppp->isSpawn) {
 		auto pppPos = this->ppp->getPosition();
-		auto sth = fabsf(visibleSize.width / 2 - pppPos.y);
 		auto movePos = this->pppPositionHelper->getPosition();
 		movePos.x = MathUtil::lerp(movePos.x, pppPos.x, 0.8f);
 		auto posY = visibleSize.height / 2;
-		if (pppPos.y > visibleSize.height / 2) {
-			if(pppPos.y>visibleSize.height)
-			posY = visibleSize.height;
-			else posY = pppPos.y;
-		}
+		//if (pppPos.y > visibleSize.height / 2) {
+		//	if(pppPos.y>visibleSize.height)
+		//	posY = visibleSize.height;
+		//	else posY = pppPos.y;
+		//}
 		movePos.y = MathUtil::lerp(movePos.y, posY, 0.8f);
 		auto theLineRight = map1->getContentSize().width / 4*3;
 		auto theLineLeft = map1->getContentSize().width / 4;
@@ -609,7 +610,7 @@ void MainGame::allEnemyInit()
 		wave->line2X = line2["x"].asFloat() *map1->getScale();
 		wave->line3X = line3["x"].asFloat() *map1->getScale();
 		wave->line4X = line4["x"].asFloat() *map1->getScale();
-		wave->setPosition(RandomHelper::random_real(wave->line1X, wave->line2X), this->ppp->getPosition().y);
+		wave->setPosition(RandomHelper::random_real(wave->line1X, wave->line2X), line1["y"].asFloat());
 		wave->ppp = ppp;
 		//wave->isSpawned = true;
 		wave->setVisible(false);
@@ -663,7 +664,7 @@ void MainGame::allEnemyInit()
 		//wave->setScale(1.6f);
 		wave->skillDamage = 96;
 		wave->visionRange = 350;
-		wave->moveSpeed = 196;
+		wave->moveSpeed = 100;
 		wave->isCaster = true;
 		wave->castSpeed = 0.12f;
 		wave->skillSpeed = 0.1f;
@@ -675,7 +676,7 @@ void MainGame::allEnemyInit()
 		wave->line2X = line2["x"].asFloat() *map1->getScale();
 		wave->line3X = line3["x"].asFloat() *map1->getScale();
 		wave->line4X = line4["x"].asFloat() *map1->getScale();
-		wave->setPosition(RandomHelper::random_real(wave->line3X, wave->line4X), ppp->getPosition().y);
+		wave->setPosition(RandomHelper::random_real(wave->line3X, wave->line4X), line3["y"].asFloat());
 		wave->ppp = ppp;
 		wave->setVisible(false);
 		wave->isSpawned = false;
@@ -848,7 +849,7 @@ void MainGame::delAll()
 	ppp->setPosition(sPx *map1->getScale(), sPy *map1->getScale());
 	ppp->setAnchorPoint(Vec2(0.5, 0));
 	ppp->setScale(0.6f);
-	ppp->setFlippedX(true);
+	//ppp->setFlippedX(true);
 	if (ppp != nullptr)
 		this->addChild(ppp, 2);
 	this->ppp->statPlus = Label::create();
