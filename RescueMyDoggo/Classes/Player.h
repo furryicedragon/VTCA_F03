@@ -52,8 +52,8 @@ public:
 	int presentDirectionInNumber;
 	int previousDirectionInNumber;
 	int checkDirectionInNumber(std::string direction);
-
 	int skillDamage;
+
 	bool usingSkill;
 	bool skill2CD;
 	bool isSpawning;
@@ -70,7 +70,6 @@ public:
 	void idleStatus();
 	void attackCount();
 	void smootherMove();
-	void slashEffect();
 	void getHit(int damage, float eeePosX);
 	void roll();
 	void setHP(int HP);
