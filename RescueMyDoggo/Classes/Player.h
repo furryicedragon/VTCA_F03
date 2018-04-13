@@ -71,7 +71,6 @@ public:
 	void attackCount();
 	void smootherMove();
 	void slashEffect();
-	void setDoneDamageTo(bool whatYouWant);
 	void getHit(int damage, float eeePosX);
 	void roll();
 	void setHP(int HP);
