@@ -113,7 +113,7 @@ bool MainGame::init()
 	this->setupPressedKeyHandling();
 	this->setupTouchHandling();
 
-	this->updatePlayerPosition();
+	//this->updatePlayerPosition();
 	this->scheduleUpdate();
 	
 	//this->addChild(ppp->skill1, 3);
