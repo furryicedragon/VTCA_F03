@@ -462,8 +462,8 @@ bool MainGame::checkRange(Enemy* enemy2Check, int theRange) {
 
 	auto itemWidth = enemy2Check->getContentSize().width*enemy2Check->getScale();
 	auto howfarX = (enemy2Check->getPosition().x + itemWidth / 2) - ppp->getPosition().x;
-		if ((howfarX < 69 && ppp->direction==0 && howfarX>-itemWidth / 2 - theRange)
-			|| (howfarX < itemWidth / 2 + theRange && howfarX>-69 && ppp->direction==1))
+		if (((howfarX < 69 && ppp->direction==0 && howfarX>-itemWidth / 2 - theRange)
+			|| (howfarX < itemWidth / 2 + theRange && howfarX>-69 && ppp->direction==1))&& std::fabsf(ppp->getPosition().y - enemy2Check->getPosition().y)<40)
 			return true;
 		else
 			return false;
