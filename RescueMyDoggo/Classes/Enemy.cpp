@@ -140,6 +140,7 @@ void Enemy::idleStatus() {
 		this->runAction(idleState);
 		this->isIdle = true;
 		this->canMove = true;
+		this->canChase = true;
 	}
 }
 

@@ -219,14 +219,14 @@ void MainGame::whatYouWant(EventKeyboard::KeyCode keyCode, int yourStatus) {
 			case cocos2d::EventKeyboard::KeyCode::KEY_A:
 			{
 				ppp->lastDuration = 0.25;
-				ppp->lastX = -80;
+				ppp->lastX = -45;
 				ppp->lastDirection = "Left";
 				break;
 			}
 			case cocos2d::EventKeyboard::KeyCode::KEY_D:
 			{
 				ppp->lastDuration = 0.25;
-				ppp->lastX = 80;
+				ppp->lastX = 45;
 				ppp->lastDirection = "Right";
 				break;
 			}
@@ -758,13 +758,14 @@ void MainGame::allEnemyInit()
 	if (this->ppp->listSkill.size() < 1) {
 
 		Point testPos = Point(this->ppp->getContentSize().width / 1.8, this->ppp->getContentSize().height / 2);
-		ppp->listSkill.insert(0, Skill::create(300,169, 3, 3, 4 , 2, 2, testPos, "MainChar/Effects/Dash Stab","Dash/Dash Attack"));
+		//ppp->listSkill.insert(0, Skill::create(300,169, 3, 3, 4 , 2, 2, testPos, "MainChar/Effects/Dash Stab","Dash/Dash Attack"));
+		ppp->listSkill.insert(0, Skill::create(300,169, 3, 3, 4 , 2, 2, testPos, "MainChar/Effects/Dash Stab","attack0"));
 		this->ppp->addChild(ppp->listSkill.at(0), 3);
 		ppp->listSkill.at(0)->setVisible(false);
 		//ppp->listSkill.at(0)->setScale(3);
 
 		//Point skillPos = Point(ppp->getPosition().x,ppp->getPosition().y);
-		ppp->listSkill.insert(1, Skill::create(333,129, 3, 3, 4, 2, 2, testPos, "MainChar/Effects/Skill 2", "Cast Spell/Cast Spell"));
+		ppp->listSkill.insert(1, Skill::create(333,129, 3, 3, 4, 2, 2, testPos, "MainChar/Effects/Skill 2", "attack5"));
 		ppp->listSkill.at(1)->setAnchorPoint(Vec2(0.5, 0));
 		this->addChild(ppp->listSkill.at(1), 6);
 		ppp->listSkill.at(1)->setVisible(false);

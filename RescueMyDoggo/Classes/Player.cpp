@@ -379,16 +379,17 @@ void Player::roll() {
 	if (!this->isRolling && !this->isDead && !this->isAttacking && !this->isHit &&this->isSpawn && !this->usingSkill) {
 		this->stopAllActions();
 		isRolling = true;
-		int theX = 259;
-		if (this->getPosition().x < 259 + 44 + 32 *mapScale && this->isFlippedX())
+		int theX = 200;
+		if (this->getPosition().x < theX + 44 + 32 *mapScale && this->direction==0)
 			theX = this->getPosition().x - (44 + 32 *mapScale);
-		if (map1Size.width - this->getPosition().x < 259 + 44 + 32 *mapScale && !this->isFlippedX())
+		if (map1Size.width - this->getPosition().x < theX + 44 + 32 *mapScale && this->direction == 1)
 			theX = map1Size.width - this->getPosition().x - (44 + 32 *mapScale); //dung de check xem neu shift evade co gan diem cuoi cung cua map k, "to make sure we can't jump out of the map"
 		//if (this->getPosition().x < 44 + 32*2)
 		//	theX = 0;
-		if (this->isFlippedX()) theX *= -1; // nhan voi -1 de nhay dung' huong'
-		this->runAction(Sequence::create(DelayTime::create(attackSpeed),JumpBy::create(attackSpeed * 6, Vec2(theX, 0),33,1),nullptr));
-		this->runAction(Sequence::create(animation("Roll", attackSpeed), CallFunc::create([=]() {this->isRolling = false; this->idleStatus(); }), nullptr));
+		if (this->direction==0) theX *= -1; // nhan voi -1 de nhay dung' huong'
+		this->runAction(Sequence::create(DelayTime::create(attackSpeed),JumpBy::create(attackSpeed * 2, Vec2(theX, 0),33,1),nullptr));
+		//this->runAction(Sequence::create(animation("Roll", attackSpeed), CallFunc::create([=]() {this->isRolling = false; this->idleStatus(); }), nullptr));
+		this->runAction(Sequence::create(makeAnimation("evade", attackSpeed), CallFunc::create([=]() {this->isRolling = false; this->idleStatus(); }), nullptr));
 	}
 }
 
@@ -399,7 +400,8 @@ void Player::dead()
 	//this->stopAllActions();
 	this->forbidAllAction();
 		//this->runAction(Sequence::create(animation("Death", 0.12), CallFunc::create([=]() {this->runAction(FadeOut::create(1.0)); }), nullptr));
-		this->runAction(animation("Death", 0.12f));
+		//this->runAction(animation("Death", 0.12f));
+	this->setSpriteFrame(pppFrames->getSpriteFrameByName(std::to_string(this->direction)+"dead.png"));
 }
 
 void Player::forbidAllAction()
@@ -498,12 +500,12 @@ void Player::useSkill(int skillID, Button* button)
 		this->skillDamage = skill->skillDamage;
 		int range = 269;
 		if (skillID != 0) range = 0;
-		if (this->getPosition().x < range + 44 + 32 * mapScale && this->isFlippedX())
+		if (this->getPosition().x < range + 44 + 32 * mapScale && this->direction==0)
 			range = this->getPosition().x - (44 + 32 * mapScale);
-		if (map1Size.width - this->getPosition().x < 259 + 44 + 32 * mapScale && !this->isFlippedX())
+		if (map1Size.width - this->getPosition().x < 259 + 44 + 32 * mapScale && this->direction==1)
 			range = map1Size.width - this->getPosition().x - (44 + 32 * mapScale);
 
-		if (this->isFlippedX()) { 
+		if (this->direction == 0) {
 			range *= -1;
 			skill->setFlippedX(false); 
 		}
@@ -512,7 +514,8 @@ void Player::useSkill(int skillID, Button* button)
 		this->usingSkill = true;
 
 
-		this->runAction(Sequence::create(animation(skill->castAName,attackSpeed), 
+		//this->runAction(Sequence::create(animation(skill->castAName,attackSpeed), 
+		this->runAction(Sequence::create(makeAnimation(skill->castAName,attackSpeed), 
 			CallFunc::create([=]() 
 			{this->usingSkill = false; this->idleStatus(); }), nullptr));
 
@@ -541,7 +544,7 @@ void Player::useSkill(int skillID, Button* button)
 		{
 			//listSkill.at(skillID)->setPosition;
 			int moveRange = skill->skillRange;
-			if (this->isFlippedX())  moveRange = skill->skillRange * -1;
+			if (this->direction == 0)  moveRange = skill->skillRange * -1;
 			listSkill.at(skillID)->runAction(Sequence::create(DelayTime::create(skill->skillAppearTime*attackSpeed),MoveTo::create(0,Vec2(this->getPosition().x, this->getPosition().y)),MoveBy::create(0.5, Vec2(moveRange, 0)),nullptr));
 		}
 	}
