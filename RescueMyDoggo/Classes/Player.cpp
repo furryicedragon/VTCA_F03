@@ -30,8 +30,6 @@ void Player::initOption()
 	this->baseEXP = 100;
 	this->damageCurrent = 16;
 
-	doneDamage.resize(8, false);
-
 
 	attackRange = 100;
 	attackSpeed = 0.14f;
@@ -232,11 +230,12 @@ void Player::attack() {
 		this->stopAllActions();				//stop all hanh dong de attack
 		//std::string name = "Attack/Attack Chain/" + std::to_string(this->attackChainNumber); //name = Folder chua Animate cua (attack)
 		//this->runAction(Sequence::create(animation(name, attackSpeed),
+		std::fill(canAADamage.begin(), canAADamage.end(), true);
 		this->runAction(Sequence::create(makeAnimation("attack"+std::to_string(this->attackChainNumber), attackSpeed),
 			CallFunc::create([=]() 
 			{
 				this->isAttacking = false;
-				this->setDoneDamageTo(true);
+				std::fill(canAADamage.begin(), canAADamage.end(),false);
 				this->idleStatus();  
 		}),	nullptr));
 		this->attackCount(); //dung de tang them 1 don vi moi khi attack (**)
@@ -257,81 +256,73 @@ void Player::attackCount() {
 
 }
 void Player::slashEffect() {
-		Vector<SpriteFrame *> runningFrames;
-		for (int i = 1; i < 4; i++) {
-			auto frameName = "/MainChar/Effects/Slash/" + to_string(i) + ".png";
-			auto frame = SpriteFrame::create(frameName, Rect(0, 0, 192, 192));
-			runningFrames.pushBack(frame);
-		}
-		Animation* runningAnimation = Animation::createWithSpriteFrames(runningFrames, attackSpeed * 2 / 3);
-		Animate* anim = Animate::create(runningAnimation);
-//slash frame
-
-	float delayTime1 = 0;
-	float delayTime2 = 0;
-	int xAngle = 0; //goc de xoay hieu ung slash
-	int yAngle = 0;
-	int xPos = 0; //vi tri cua slash cach nhan vat bao nhieu
-	int yPos = 0;
-	bool flippedY = true;
-	switch (this->attackChainNumber)
-	{
-	case 1:
-	{
-		delayTime1 = attackSpeed * 4;
-		xAngle = -18;
-		yAngle = -36;
-		xPos = -63;
-		yPos = 210;
-		break;
-	}
-	case 2:
-	{
-		delayTime1 = attackSpeed * 4;
-		delayTime2 = attackSpeed*2;
-		xAngle = -8;
-		yAngle = 11;
-		xPos = -36;
-		yPos = 99;
-		flippedY = false;
-		break;
-	}
-	case 3:
-	{
-		delayTime1 = attackSpeed * 5;
-		delayTime2 = attackSpeed*3;
-		xAngle = -144;
-		yAngle = -155;
-		xPos = -55;
-		yPos = 88;
-		break;
-	}
-	}
-
-	if (this->slash->isFlippedX()) {
-		xAngle *= -1;
-		yAngle *= -1;
-		xPos *= -1;
-	} //neu dang quay nguoi lai thi xoay hieu ung slash cung phai nguoc lai
-
-
-
-		this->slash->runAction(Sequence::create(RotateBy::create(0, xAngle, yAngle), DelayTime::create(delayTime1), RotateTo::create(0, 0, 0), nullptr));
-		this->slash->setPosition(Vec2(this->getPosition().x + xPos, this->getPosition().y + yPos));
-		this->slash->setFlippedY(flippedY);
-		this->slash->runAction(Sequence::create(DelayTime::create(delayTime2),
-			CallFunc::create([=]() { slash->setVisible(true); this->setDoneDamageTo(false); }), anim,
-			CallFunc::create([=]() { slash->setVisible(false); }), nullptr));
-		//setDoneDamage dung de gay dame khi dang tan cong, (false) co nghia la co the gay dame, true la het thoi gian gay dame(thoi gian slash)
-		//ket hop voi "void MainGame::checkAttackRange(Enemy * eee, int index)"
-}
-void Player::setDoneDamageTo(bool whatYouWant) {
-	int i = 0;
-	for (auto item : doneDamage)
-	{
-		doneDamage[i] = whatYouWant;
-		i++;
-	}
+//		Vector<SpriteFrame *> runningFrames;
+//		for (int i = 1; i < 4; i++) {
+//			auto frameName = "/MainChar/Effects/Slash/" + to_string(i) + ".png";
+//			auto frame = SpriteFrame::create(frameName, Rect(0, 0, 192, 192));
+//			runningFrames.pushBack(frame);
+//		}
+//		Animation* runningAnimation = Animation::createWithSpriteFrames(runningFrames, attackSpeed * 2 / 3);
+//		Animate* anim = Animate::create(runningAnimation);
+////slash frame
+//
+//	float delayTime1 = 0;
+//	float delayTime2 = 0;
+//	int xAngle = 0; //goc de xoay hieu ung slash
+//	int yAngle = 0;
+//	int xPos = 0; //vi tri cua slash cach nhan vat bao nhieu
+//	int yPos = 0;
+//	bool flippedY = true;
+//	switch (this->attackChainNumber)
+//	{
+//	case 1:
+//	{
+//		delayTime1 = attackSpeed * 4;
+//		xAngle = -18;
+//		yAngle = -36;
+//		xPos = -63;
+//		yPos = 210;
+//		break;
+//	}
+//	case 2:
+//	{
+//		delayTime1 = attackSpeed * 4;
+//		delayTime2 = attackSpeed*2;
+//		xAngle = -8;
+//		yAngle = 11;
+//		xPos = -36;
+//		yPos = 99;
+//		flippedY = false;
+//		break;
+//	}
+//	case 3:
+//	{
+//		delayTime1 = attackSpeed * 5;
+//		delayTime2 = attackSpeed*3;
+//		xAngle = -144;
+//		yAngle = -155;
+//		xPos = -55;
+//		yPos = 88;
+//		break;
+//	}
+//	}
+//
+//	if (this->slash->isFlippedX()) {
+//		xAngle *= -1;
+//		yAngle *= -1;
+//		xPos *= -1;
+//	} //neu dang quay nguoi lai thi xoay hieu ung slash cung phai nguoc lai
+//
+//
+//
+//		this->slash->runAction(Sequence::create(RotateBy::create(0, xAngle, yAngle), DelayTime::create(delayTime1), RotateTo::create(0, 0, 0), nullptr));
+//		this->slash->setPosition(Vec2(this->getPosition().x + xPos, this->getPosition().y + yPos));
+//		this->slash->setFlippedY(flippedY);
+//		this->slash->runAction(Sequence::create(DelayTime::create(delayTime2),
+//			CallFunc::create([=]() { slash->setVisible(true); this->setDoneDamageTo(false); }), anim,
+//			CallFunc::create([=]() { slash->setVisible(false); }), nullptr));
+//		//setDoneDamage dung de gay dame khi dang tan cong, (false) co nghia la co the gay dame, true la het thoi gian gay dame(thoi gian slash)
+//		//ket hop voi "void MainGame::checkAttackRange(Enemy * eee, int index)"
 }
 
 void Player::getHit(int damage, float eeePosX) {
@@ -348,7 +339,7 @@ void Player::getHit(int damage, float eeePosX) {
 			listSkill.at(currentSkillID)->setVisible(false);
 		}
 		this->usingSkill = false;
-		this->setDoneDamageTo(true);
+		std::fill(canAADamage.begin(), canAADamage.end(), false);
 		//int x = -16;
 		//if (this->getPosition().x < eeePosX)
 		//{
@@ -498,7 +489,7 @@ void Player::useSkill(int skillID, Button* button)
 
 		this->isHit = false;
 		this->skillDamage = skill->skillDamage;
-		int range = 269;
+		int range = 169;
 		if (skillID != 0) range = 0;
 		if (this->getPosition().x < range + 44 + 32 * mapScale && this->direction==0)
 			range = this->getPosition().x - (44 + 32 * mapScale);

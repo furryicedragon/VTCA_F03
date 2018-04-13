@@ -17,7 +17,7 @@ public:
 	std::vector<EventKeyboard::KeyCode> inputKeys;
 	std::vector<int> attackFrameNumber;
 	std::vector<bool> canMoveDirections;
-	std::vector<bool> doneDamage;
+	std::vector<bool> canAADamage;
 	std::vector<Sprite*> effectStatus;
 	std::string weaponKind;
 	std::string lastDirection;
@@ -73,7 +73,6 @@ public:
 	void slashEffect();
 	void getHit(int damage,float eeePosX);
 	void roll();
-	void setDoneDamageTo(bool whatYouWant);
 	void setHP(int HP);
 	void dead();
 	Animate* animation(std::string actionName, float timeEachFrame);
@@ -86,7 +85,6 @@ public:
 	Skill* skill1;
 	float cd_reduction;
 	Animate* makeAnimation(std::string actionName, float timeEachFrame);
-	void launchSkill1();
 	StatPlayer* statPlayer;
 	
 private:

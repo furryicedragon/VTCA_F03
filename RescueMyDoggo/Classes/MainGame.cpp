@@ -462,8 +462,8 @@ bool MainGame::checkRange(Enemy* enemy2Check, int theRange) {
 
 	auto itemWidth = enemy2Check->getContentSize().width*enemy2Check->getScale();
 	auto howfarX = (enemy2Check->getPosition().x + itemWidth / 2) - ppp->getPosition().x;
-		if ((howfarX < 69 && ppp->isFlippedX() && howfarX>-itemWidth / 2 - theRange)
-			|| (howfarX < itemWidth / 2 + theRange && howfarX>-69 && !ppp->isFlippedX()))
+		if ((howfarX < 69 && ppp->direction==0 && howfarX>-itemWidth / 2 - theRange)
+			|| (howfarX < itemWidth / 2 + theRange && howfarX>-69 && ppp->direction==1))
 			return true;
 		else
 			return false;
@@ -471,11 +471,11 @@ bool MainGame::checkRange(Enemy* enemy2Check, int theRange) {
 void MainGame::checkAttackRange(Enemy * eee, int index)
 {
 	if ((index != 4 || boss1)||(index!=9 || boss2)&&!ppp->isDead) {
-		if (checkRange(eee,100)) 
+		if (checkRange(eee,69)) 
 		{
-			if (ppp->isAttacking && !ppp->doneDamage[index]) {
+			if (ppp->isAttacking && ppp->canAADamage[index]) {
 				eee->getHit(ppp->damageCurrent);
-				ppp->doneDamage[index] = true;
+				ppp->canAADamage[index] = true;
 			}
 
 			if (eee->canDamage && !ppp->isRolling && !eee->isCaster) {
@@ -488,7 +488,7 @@ void MainGame::checkAttackRange(Enemy * eee, int index)
 		float rectPos = ppp->listSkill.at(1)->getPosition().x;
 		if (!ppp->listSkill.at(1)->isFlippedX()) 
 			rectPos -= ppp->listSkill.at(1)->getContentSize().width/2;
-		Rect skillRect = Rect(rectPos, ppp->listSkill.at(1)->getPosition().y, 300, 500);
+		Rect skillRect = Rect(rectPos, ppp->listSkill.at(1)->getPosition().y, 300, 100);
 		Rect eeeRect = eee->getBoundingBox();
 		for (auto item : ppp->listSkill)
 		{
@@ -752,21 +752,22 @@ void MainGame::allEnemyInit()
 		this->addChild(bossfm1, 1);
 	}
 
-	ppp->doneDamage.resize(allEnemy.size(),true);
+	ppp->canAADamage.resize(allEnemy.size(),true);
 
 
 	if (this->ppp->listSkill.size() < 1) {
 
 		Point testPos = Point(this->ppp->getContentSize().width / 1.8, this->ppp->getContentSize().height / 2);
 		//ppp->listSkill.insert(0, Skill::create(300,169, 3, 3, 4 , 2, 2, testPos, "MainChar/Effects/Dash Stab","Dash/Dash Attack"));
-		ppp->listSkill.insert(0, Skill::create(300,169, 3, 3, 4 , 2, 2, testPos, "MainChar/Effects/Dash Stab","attack0"));
+		ppp->listSkill.insert(0, Skill::create(120,169, 3, 1, 2 , 1, 1, testPos, "MainChar/Effects/Dash Stab","attack0"));
 		this->ppp->addChild(ppp->listSkill.at(0), 3);
 		ppp->listSkill.at(0)->setVisible(false);
-		//ppp->listSkill.at(0)->setScale(3);
+		ppp->listSkill.at(0)->setScale(0.5);
 
 		//Point skillPos = Point(ppp->getPosition().x,ppp->getPosition().y);
-		ppp->listSkill.insert(1, Skill::create(333,129, 3, 3, 4, 2, 2, testPos, "MainChar/Effects/Skill 2", "attack5"));
-		ppp->listSkill.at(1)->setAnchorPoint(Vec2(0.5, 0));
+		ppp->listSkill.insert(1, Skill::create(333,129, 3, 3, 4, 2, 2, Point(ppp->getPosition().x, ppp->getPosition().y), "MainChar/Effects/Skill 2", "attack5"));
+		ppp->listSkill.at(1)->setAnchorPoint(Vec2(0.5, 0.5));
+		ppp->listSkill.at(1)->setScale(0.4);
 		this->addChild(ppp->listSkill.at(1), 6);
 		ppp->listSkill.at(1)->setVisible(false);
 
