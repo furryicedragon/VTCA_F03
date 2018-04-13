@@ -76,11 +76,11 @@ bool MainGame::init()
 	this->ppp->level = Label::create();
 	if (this->ppp->level) {
 		//this->ppp->level->setScale(2.8f);
-		this->ppp->level->setAnchorPoint(Vec2(0.5, 0));
+		//this->ppp->level->setAnchorPoint(Vec2(0.5, 0));
 		this->ppp->level->setString("1");
 		this->ppp->level->setColor(Color3B(255, 255, 255));
 		this->ppp->level->setSystemFontSize(16);
-		this->ppp->level->setPosition(this->ppp->getContentSize().width/2.7, ppp->getContentSize().height-69);
+		//this->ppp->level->setPosition(this->ppp->getContentSize().width/2.7, ppp->getContentSize().height-69);
 		this->ppp->addChild(ppp->level);
 	}
 
@@ -293,14 +293,14 @@ void MainGame::updatePlayerPosition() {
 	//if (ppp->isSpawn) {
 		auto pppPos = this->ppp->getPosition();
 		auto movePos = this->pppPositionHelper->getPosition();
-		movePos.x = MathUtil::lerp(movePos.x, pppPos.x, 0.8f);
+		movePos.x = MathUtil::lerp(movePos.x, pppPos.x, 0.69f);
 		auto posY = visibleSize.height / 2;
-		//if (pppPos.y > visibleSize.height / 2) {
-		//	if(pppPos.y>visibleSize.height)
-		//	posY = visibleSize.height;
-		//	else posY = pppPos.y;
-		//}
-		movePos.y = MathUtil::lerp(movePos.y, posY, 0.8f);
+		if (pppPos.y > visibleSize.height / 2) {
+			if(pppPos.y>visibleSize.height)
+			posY = visibleSize.height;
+			else posY = pppPos.y;
+		}
+		movePos.y = MathUtil::lerp(movePos.y, posY, 1.f);
 		auto theLineRight = map1->getContentSize().width / 4*3;
 		auto theLineLeft = map1->getContentSize().width / 4;
 			auto followPlayer = Follow::create(pppPositionHelper,Rect::ZERO);
@@ -373,6 +373,7 @@ void MainGame::update(float elapsed)
 			if (hud_layer->attackBtn->getValue() && !ppp->usingSkill)
 			{
 				ppp->attack();
+				ppp->runAction(JumpBy::create(0.5, Vec2(0, 50), 50, 1));
 			}
 			if (hud_layer->rollBtn->getValue() && !ppp->usingSkill)
 			{
@@ -448,7 +449,7 @@ void MainGame::update(float elapsed)
 void MainGame::spawnPlayer()
 {
 	auto zap = Sprite::create();
-	zap->setPosition(Vec2(ppp->getPosition().x, ppp->getPosition().y + 66));
+	zap->setPosition(Vec2(ppp->getPosition().x, ppp->getPosition().y /*+ 66*/));
 	if(zap)
 	this->addChild(zap);
 	//zap->setScale(2);

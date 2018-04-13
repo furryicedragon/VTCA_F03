@@ -4,8 +4,9 @@ using namespace std;
 Player* Player::create()
 {
 	Player* pSprite = new Player();
-	if (pSprite && pSprite->initWithFile("/MainChar/Idle/onehanded/(1).png"))
+	if (pSprite && pSprite->initWithFile("/MainChar/0idle0.png"))
 	{
+		pSprite->setAnchorPoint(Vec2(0.70930, 0.41095));
 		pSprite->autorelease();
 		pSprite->initOption();
 		return pSprite;
