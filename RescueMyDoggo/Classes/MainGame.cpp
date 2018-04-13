@@ -373,7 +373,7 @@ void MainGame::update(float elapsed)
 			if (hud_layer->attackBtn->getValue() && !ppp->usingSkill)
 			{
 				ppp->attack();
-				ppp->runAction(JumpBy::create(0.5, Vec2(0, 50), 50, 1));
+				//ppp->runAction(JumpBy::create(0.5, Vec2(0, 50), 50, 1));
 			}
 			if (hud_layer->rollBtn->getValue() && !ppp->usingSkill)
 			{
