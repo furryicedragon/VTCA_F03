@@ -71,7 +71,8 @@ public:
 	void attackCount();
 	void smootherMove();
 	void slashEffect();
-	void getHit(int damage,float eeePosX);
+	void setDoneDamageTo(bool whatYouWant);
+	void getHit(int damage, float eeePosX);
 	void roll();
 	void setHP(int HP);
 	void dead();
@@ -86,7 +87,9 @@ public:
 	float cd_reduction;
 	Animate* makeAnimation(std::string actionName, float timeEachFrame);
 	StatPlayer* statPlayer;
-	
+
+	float animationDelay;
+
 private:
 	void initOption();
 	virtual void update(float elapsed) override;

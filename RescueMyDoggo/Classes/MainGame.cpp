@@ -474,8 +474,14 @@ void MainGame::checkAttackRange(Enemy * eee, int index)
 		if (checkRange(eee,69)) 
 		{
 			if (ppp->isAttacking && ppp->canAADamage[index]) {
-				eee->getHit(ppp->damageCurrent);
-				ppp->canAADamage[index] = true;
+				
+				this->runAction(Sequence::create(DelayTime::create(ppp->animationDelay), 
+					CallFunc::create([=] 
+					{
+					    eee->getHit(ppp->damageCurrent);
+						ppp->canAADamage[index] = true;
+					}), nullptr));
+				
 			}
 
 			if (eee->canDamage && !ppp->isRolling && !eee->isCaster) {
