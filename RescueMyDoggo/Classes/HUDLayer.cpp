@@ -170,9 +170,13 @@ void HUDLayer::setupButtons()
 	}
 }
 
-void HUDLayer::displayCD(Button* button, float cooldown)
+void HUDLayer::resetCDstate()
 {
-	auto mainGameLayer = static_cast<MainGame*> (Director::getInstance()->getRunningScene()->getChildByTag(8888));
+	auto cd1 = static_cast<Label*> (skill1Btn->getChildByTag(100));
+	auto cd2 = static_cast<Label*> (skill2Btn->getChildByTag(100));
+
+	cd1->setVisible(false);
+	cd2->setVisible(false);
 }
 
 void HUDLayer::toggleVisiblity()

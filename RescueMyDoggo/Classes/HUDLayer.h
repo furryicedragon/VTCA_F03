@@ -26,7 +26,7 @@ public:
 	Button *skill2Btn;
 	void setupButtons();
 
-	void displayCD(Button* button, float cooldown);
+	void resetCDstate();
 
 	void toggleVisiblity();
 	void setupStat();

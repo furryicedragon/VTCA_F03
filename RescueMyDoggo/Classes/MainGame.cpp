@@ -845,9 +845,6 @@ void MainGame::delAll()
 
 	auto hud_layer = static_cast<HUDLayer*> (Director::getInstance()->getRunningScene()->getChildByTag(9999));
 	
-	auto cd = static_cast<Label*> (hud_layer->skill1Btn->getChildByTag(100));
-	auto cd2 = static_cast<Label*> (hud_layer->skill2Btn->getChildByTag(100));
-	cd->setVisible(false);
-	cd->setVisible(false);
+	hud_layer->resetCDstate();
 
 }
