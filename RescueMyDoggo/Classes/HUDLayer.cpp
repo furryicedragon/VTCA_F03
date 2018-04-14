@@ -170,13 +170,17 @@ void HUDLayer::setupButtons()
 	}
 }
 
-void HUDLayer::resetCDstate()
+void HUDLayer::resetHUDstate()
 {
+	// reset cooldown labels
 	auto cd1 = static_cast<Label*> (skill1Btn->getChildByTag(100));
 	auto cd2 = static_cast<Label*> (skill2Btn->getChildByTag(100));
 
 	cd1->setVisible(false);
 	cd2->setVisible(false);
+
+	// reset stat bar
+	statPlayer->EXPplayer->setPercentage(0);
 }
 
 void HUDLayer::toggleVisiblity()

@@ -845,6 +845,6 @@ void MainGame::delAll()
 
 	auto hud_layer = static_cast<HUDLayer*> (Director::getInstance()->getRunningScene()->getChildByTag(9999));
 	
-	hud_layer->resetCDstate();
+	hud_layer->resetHUDstate();
 
 }

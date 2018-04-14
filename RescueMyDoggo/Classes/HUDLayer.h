@@ -26,7 +26,7 @@ public:
 	Button *skill2Btn;
 	void setupButtons();
 
-	void resetCDstate();
+	void resetHUDstate();
 
 	void toggleVisiblity();
 	void setupStat();
