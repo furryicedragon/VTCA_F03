@@ -132,7 +132,6 @@ bool MainGame::init()
 
 
 
-
 	return true;
 }
 
@@ -303,9 +302,8 @@ void MainGame::updatePlayerPosition() {
 		movePos.x = MathUtil::lerp(movePos.x, pppPos.x, 0.69f);
 		auto posY = visibleSize.height / 2;
 		if (pppPos.y > visibleSize.height / 2) {
-			if(pppPos.y>visibleSize.height)
-			posY = visibleSize.height;
-			else posY = pppPos.y;
+			if(pppPos.y<visibleSize.height/2+112) posY = pppPos.y;
+			else posY = visibleSize.height / 2 + 112;
 		}
 		movePos.y = MathUtil::lerp(movePos.y, posY, 1.f);
 		auto theLineRight = map1->getContentSize().width / 4*3;
@@ -398,13 +396,14 @@ void MainGame::update(float elapsed)
 		}
 
 		if (this->enemyAdded) {
-			auto a = pow(1.f / 99.f, ppp->timePassedInSecond);
-			this->ppp->runAction(RepeatForever::create(Sequence::create(CallFunc::create([=]() {
-				if (this->checkGravity()) {
-					ppp->setPositionY(ppp->getPosition().y - 1);
-				}
-			}),DelayTime::create(0.22) ,
-				nullptr)));
+			checkGravity();
+
+			auto gravity = RepeatForever::create(Sequence::create(CallFunc::create([=]() { if (this->checkGravity()) { ppp->setPositionY(ppp->getPosition().y - 1); }}), DelayTime::create(0.1), nullptr));
+			gravity->setTag(99);
+			if(ppp->isFalling)
+			this->map1->runAction(gravity);
+
+
 
 			this->updatePlayerPosition();
 			
@@ -467,16 +466,19 @@ bool MainGame::checkGravity()
 		if (!Rect(ppp->getPositionX()-11, ppp->getPositionY(), 22, 80).intersectsRect(item) || ppp->getPosition().y < item.getMaxY())
 			i++;
 	}
-	if (i == grounds.size()) {
-		if(!ppp->isFalling)
-		this->map1->runAction(RepeatForever::create(Sequence::create(DelayTime::create(1), CallFunc::create([=]() {ppp->timePassedInSecond++; }), nullptr)));
+	if (i == grounds.size()) { //neu ko dung tren ground
+		if(!ppp->isRolling)
 		ppp->isFalling = true;
 		return true;
 	}
-	else {
-		ppp->isFalling = false;
-		ppp->timePassedInSecond = 1;
-		return false;
+	else { //neu dang tren ground
+		if (!ppp->isRolling) {
+			ppp->jump2Height = 99999;
+			map1->stopAllActionsByTag(99); //stop gravity reapeat forever
+			ppp->isFalling = false;
+			ppp->timePassedInSecond = 1;
+			return false;
+		}
 		}
 }
 

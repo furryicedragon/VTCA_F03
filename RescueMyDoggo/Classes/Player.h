@@ -41,6 +41,7 @@ public:
 	float currentEXP;
 	float baseEXP;
 	float lastSeenLife;
+	int jump2Height;
 	int timePassedInSecond;
 	int direction;
 	int lastSeenExp;

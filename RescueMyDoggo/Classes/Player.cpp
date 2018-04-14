@@ -304,8 +304,9 @@ void Player::getHit(int damage, float eeePosX) {
 }
 
 void Player::roll() {
-	if (!this->isRolling && !this->isDead && !this->isAttacking && !this->isHit &&this->isSpawn && !this->usingSkill) {
+	if (!this->isRolling && !this->isDead && !this->isAttacking && !this->isHit &&this->isSpawn && !this->usingSkill &&!isFalling) {
 		this->stopAllActions();
+		this->jump2Height = this->getPositionY() + 200;
 		isRolling = true;
 		int theX = /*20*/0;
 		if (this->getPosition().x < theX + 44 + 32 *mapScale && this->direction==0)
@@ -315,7 +316,7 @@ void Player::roll() {
 		//if (this->getPosition().x < 44 + 32*2)
 		//	theX = 0;
 		if (this->direction==0) theX *= -1; // nhan voi -1 de nhay dung' huong'
-		this->runAction(Sequence::create(DelayTime::create(attackSpeed),JumpBy::create(attackSpeed * 2, Vec2(theX, 169),0/*33*/,1),nullptr));
+		this->runAction(Sequence::create(DelayTime::create(attackSpeed),JumpBy::create(attackSpeed * 2, Vec2(theX, 200),0/*33*/,1),nullptr));
 		//this->runAction(Sequence::create(animation("Roll", attackSpeed), CallFunc::create([=]() {this->isRolling = false; this->idleStatus(); }), nullptr));
 		this->runAction(Sequence::create(makeAnimation("evade", attackSpeed), CallFunc::create([=]() {this->isRolling = false; this->idleStatus(); }), nullptr));
 	}
@@ -410,6 +411,13 @@ void Player::update(float elapsed)
 	if (this->currentEXP > this->baseEXP || this->currentEXP==this->baseEXP) {
 		this->currentEXP = 0 + currentEXP - baseEXP;
 		this->levelUp();
+	}
+	if (isRolling) {
+		char* a = "";
+	}
+	auto a = fabsf(this->getPositionY() - this->jump2Height);
+	if (isRolling && fabsf(this->getPositionY() - this->jump2Height)<3) {
+		this->isFalling = true;
 	}
 }
 
