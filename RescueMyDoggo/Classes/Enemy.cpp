@@ -209,6 +209,8 @@ void Enemy::moving() {
 		this->attack();
 		this->isAttacking = true;
 	}
+	if (std::fabsf(ppp->getPosition().y - this->getPosition().y) > 40)
+		this->isChasing = false;
 
 	if (howFar < visionRange && !this->isChasing && !this->isAttacking && std::fabsf(ppp->getPosition().y - this->getPosition().y) < 40) {
 		this->isChasing = true;

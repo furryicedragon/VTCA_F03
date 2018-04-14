@@ -398,9 +398,13 @@ void MainGame::update(float elapsed)
 		}
 
 		if (this->enemyAdded) {
-			this->map1->runAction(RepeatForever::create(Sequence::create(DelayTime::create(1/99), CallFunc::create([=]() {
-						if(this->checkGravity()) ppp->setPositionY(ppp->getPosition().y - 1);
-			}),nullptr)));
+			auto a = pow(1.f / 99.f, ppp->timePassedInSecond);
+			this->ppp->runAction(RepeatForever::create(Sequence::create(CallFunc::create([=]() {
+				if (this->checkGravity()) {
+					ppp->setPositionY(ppp->getPosition().y - 1);
+				}
+			}),DelayTime::create(0.22) ,
+				nullptr)));
 
 			this->updatePlayerPosition();
 			
@@ -463,10 +467,17 @@ bool MainGame::checkGravity()
 		if (!Rect(ppp->getPositionX()-11, ppp->getPositionY(), 22, 80).intersectsRect(item) || ppp->getPosition().y < item.getMaxY())
 			i++;
 	}
-		if (i == grounds.size())
-			return true;
-		else
+	if (i == grounds.size()) {
+		if(!ppp->isFalling)
+		this->map1->runAction(RepeatForever::create(Sequence::create(DelayTime::create(1), CallFunc::create([=]() {ppp->timePassedInSecond++; }), nullptr)));
+		ppp->isFalling = true;
+		return true;
+	}
+	else {
+		ppp->isFalling = false;
+		ppp->timePassedInSecond = 1;
 		return false;
+		}
 }
 
 void MainGame::spawnPlayer()

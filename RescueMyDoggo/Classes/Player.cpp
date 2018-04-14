@@ -17,6 +17,7 @@ Player* Player::create()
 
 void Player::initOption()
 {
+	timePassedInSecond = 1;
 	this->setFlippedX(false);
 	pppFrames = SpriteFrameCache::getInstance();
 	pppFrames->addSpriteFramesWithFile("/MainChar/ppp.plist");

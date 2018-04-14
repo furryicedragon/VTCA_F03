@@ -41,6 +41,7 @@ public:
 	float currentEXP;
 	float baseEXP;
 	float lastSeenLife;
+	int timePassedInSecond;
 	int direction;
 	int lastSeenExp;
 	int currentSkillID;
@@ -53,7 +54,8 @@ public:
 	int previousDirectionInNumber;
 	int checkDirectionInNumber(std::string direction);
 	int skillDamage;
-
+	bool onGravity;
+	bool isFalling;
 	bool usingSkill;
 	bool skill2CD;
 	bool isSpawning;

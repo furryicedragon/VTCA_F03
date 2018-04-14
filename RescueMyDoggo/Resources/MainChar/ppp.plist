@@ -553,7 +553,7 @@
                 <key>aliases</key>
                 <array/>
                 <key>anchor</key>
-                <string>{0.738095,0.434211}</string>
+                <string>{0.690476,0.434211}</string>
                 <key>spriteOffset</key>
                 <string>{-1,1}</string>
                 <key>spriteSize</key>
@@ -570,7 +570,7 @@
                 <key>aliases</key>
                 <array/>
                 <key>anchor</key>
-                <string>{0.75,0.461538}</string>
+                <string>{0.675,0.461538}</string>
                 <key>spriteOffset</key>
                 <string>{-1,1}</string>
                 <key>spriteSize</key>
@@ -1148,7 +1148,7 @@
                 <key>aliases</key>
                 <array/>
                 <key>anchor</key>
-                <string>{0.316456,0.467532}</string>
+                <string>{0.367089,0.467532}</string>
                 <key>spriteOffset</key>
                 <string>{1,1}</string>
                 <key>spriteSize</key>
@@ -1174,7 +1174,7 @@
             <key>size</key>
             <string>{501,1096}</string>
             <key>smartupdate</key>
-            <string>$TexturePacker:SmartUpdate:d17cd0ce673e59ecce46e556126ee61a:2bbef49488f2ea522a0ce26ceca58b89:dad1f358ee937ce39d2fa1aa8d3c0041$</string>
+            <string>$TexturePacker:SmartUpdate:17ec5fd133f3a4a984e0a599f7557a99:2bbef49488f2ea522a0ce26ceca58b89:dad1f358ee937ce39d2fa1aa8d3c0041$</string>
             <key>textureFileName</key>
             <string>ppp.png</string>
         </dict>
