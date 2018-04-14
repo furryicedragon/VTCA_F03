@@ -26,6 +26,7 @@ public:
 	Sprite* attackHelper;
 	Sprite* slash;
 	Sprite* movementHelper;
+	Sprite* nothingBar;
 	SpriteFrameCache* pppFrames;
 	Label* hp;
 	Label* statPlus;
@@ -87,7 +88,10 @@ public:
 	Skill* skill1;
 	float cd_reduction;
 	Animate* makeAnimation(std::string actionName, float timeEachFrame);
+
 	StatPlayer* statPlayer;
+	ProgressTimer* HPonHead;
+	ProgressTimer* HitDame;
 
 	float animationDelay;
 

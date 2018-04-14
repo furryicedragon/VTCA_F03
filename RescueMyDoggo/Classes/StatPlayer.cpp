@@ -29,7 +29,7 @@ void StatPlayer::DisplayStat()
 	nothingBar2->setPosition(statBoard->getPosition().x + 50, statBoard->getPosition().y - 20);
 	nothingBar2->setScale(0.5f);
 
-	DameHit = ProgressTimer::create(Sprite::create("HUD/Bars/hp2.png"));
+	DameHit = ProgressTimer::create(Sprite::create("HUD/Bars/hitDame.png"));
 	DameHit->setType(ProgressTimerType::BAR);
 	DameHit->setPercentage(100);
 	DameHit->setBarChangeRate(Vec2(1, 0));
@@ -54,6 +54,11 @@ void StatPlayer::DisplayStat()
 	EXPplayer->setScale(0.5f);
 	EXPplayer->setPosition(statBoard->getPosition().x + 50, statBoard->getPosition().y - 20);
 
+	level = Label::create();
+	level->setString("1");
+	level->setColor(Color3B( 255, 255, 255));
+	level->setSystemFontSize(16);
+	level->setPosition(statBoard->getPosition().x - 225, statBoard->getPosition().y - 30);
 
 	this->addChild(statBoard, 1);
 	this->addChild(avatar, 2);
@@ -62,5 +67,6 @@ void StatPlayer::DisplayStat()
 	this->addChild(DameHit, 3);
 	this->addChild(HPplayer, 4);
 	this->addChild(EXPplayer, 4);
+	this->addChild(level, 4);
 
 }

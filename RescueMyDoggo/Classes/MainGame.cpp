@@ -124,14 +124,6 @@ bool MainGame::init()
 	this->scheduleUpdate();
 	
 	//this->addChild(ppp->skill1, 3);
-
-
-
-
-
-
-
-
 	return true;
 }
 
@@ -327,13 +319,19 @@ void MainGame::update(float elapsed)
 {
 	auto hud_layer = static_cast<HUDLayer*> (Director::getInstance()->getRunningScene()->getChildByTag(9999));
 
+
 	if(this->isGameStart)
 	{
 		if (ppp->lastSeenLife != std::stoi(ppp->hp->getString()) / ppp->baseHP * 100) {
 			ppp->lastSeenLife = std::stoi(ppp->hp->getString()) / ppp->baseHP * 100;
 			hud_layer->statPlayer->DameHit->runAction(ProgressTo::create(1.0f, ppp->lastSeenLife));
+			ppp->HitDame->runAction(ProgressTo::create(0.5f, ppp->lastSeenLife));
+
 			hud_layer->statPlayer->DameHit->setPercentage(ppp->lastSeenLife);
 			hud_layer->statPlayer->HPplayer->setPercentage(ppp->lastSeenLife);
+
+			ppp->HPonHead->setPercentage(ppp->lastSeenLife);
+			ppp->HitDame->setPercentage(ppp->lastSeenLife);
 		}
 		if (ppp->lastSeenExp != ppp->currentEXP / ppp->baseEXP * 100) {
 			ppp->lastSeenExp = ppp->currentEXP / ppp->baseEXP * 100;
@@ -341,14 +339,18 @@ void MainGame::update(float elapsed)
 			hud_layer->statPlayer->EXPplayer->setPercentage(ppp->lastSeenExp);
 		}
 		if (ppp->isDead && this->isGameOver) {
+			ppp->HPonHead->setVisible(false);
+			ppp->HitDame->setVisible(false);
+
 			hud_layer->statPlayer->DameHit->setPercentage(100);
 			hud_layer->statPlayer->HPplayer->setPercentage(100);
+			ppp->HPonHead->setPercentage(100);
+			ppp->HitDame->setPercentage(100);
 		}
 		if (ppp->isSpawn && !this->enemyAdded) {
 			this->enemyAdded = true;
 			this->allEnemyInit();
 		}
-
 		if (ppp->isSpawn && !ppp->isDead)
 		{
 			// joystick

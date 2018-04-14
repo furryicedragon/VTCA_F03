@@ -81,14 +81,37 @@ void Player::initOption()
 void Player::setHP(int HP)
 {
 	hp = Label::create();
-	//hp->setScale(2.8f);
-	//hp->setAnchorPoint(Vec2(0.5, 0));
+	hp->setScale(2.8f);
+	hp->setAnchorPoint(Vec2(0.5, 0));
 	hp->setString(std::to_string(HP));
-	//hp->setPosition(this->getContentSize().width/2, this->getPosition().y + this->getContentSize().height);
+	hp->setPosition(this->getContentSize().width/2, this->getPosition().y + this->getContentSize().height);
 	hp->setColor(Color3B(255, 0, 0));
 	hp->setSystemFontSize(16);
+	hp->setVisible(false);
 	if(hp)
 	this->addChild(hp, 1);
+	HPonHead = ProgressTimer::create(Sprite::create("HUD/Bars/hp2.png"));
+	HPonHead->setType(ProgressTimerType::BAR);
+	HPonHead->setPercentage(100);
+	HPonHead->setBarChangeRate(Vec2(1, 0));
+	HPonHead->setMidpoint(Vec2(0.0, 0.0));
+	HPonHead->setScale(0.12f);
+	HPonHead->setPosition(this->getContentSize().width / 2,this->getContentSize().height + 20);
+
+	HitDame = ProgressTimer::create(Sprite::create("HUD/Bars/hitDame2.png"));
+	HitDame->setType(ProgressTimerType::BAR);
+	HitDame->setPercentage(100);
+	HitDame->setBarChangeRate(Vec2(1, 0));
+	HitDame->setMidpoint(Vec2(0.0, 0.0));
+	HitDame->setScale(0.12f);
+	HitDame->setPosition(this->getContentSize().width / 2,this->getContentSize().height + 20);
+
+	nothingBar = Sprite::create("HUD/Bars/nothing2.png");
+	nothingBar->setPosition(this->getContentSize().width / 2,this->getContentSize().height + 20);
+	nothingBar->setScale(0.12f);
+	this->addChild(nothingBar);
+	this->addChild(HitDame);
+	this->addChild(HPonHead);
 }
 
 Animate * Player::animation(std::string actionName, float timeEachFrame) {
@@ -395,6 +418,9 @@ void Player::levelUp() {
 	int lvl = std::stoi(level->getString());
 	this->baseEXP += 100 * lvl;
 	level->setString(std::to_string(lvl+1));
+
+	int lvl1 = std::stoi(statPlayer->level->getString());
+	statPlayer->level->setString(std::to_string(lvl1 + 1));
 }
 
 

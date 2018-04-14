@@ -24,6 +24,8 @@ public:
 	Sprite* nothingBar;
 	Sprite* nothingBar2;
 
+	Label* level;
+
 	void DisplayStat();
 };
 
