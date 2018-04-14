@@ -60,6 +60,7 @@ public:
 	bool isFalling;
 	bool usingSkill;
 	bool skill2CD;
+	bool isIdle;
 	bool isSpawning;
 	bool isSpawn;
 	bool isHit;

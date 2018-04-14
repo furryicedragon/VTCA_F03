@@ -400,7 +400,9 @@ void MainGame::update(float elapsed)
 		if (this->enemyAdded) {
 			checkGravity();
 
-			auto gravity = RepeatForever::create(Sequence::create(CallFunc::create([=]() { if (this->checkGravity()) { ppp->setPositionY(ppp->getPosition().y - 1); }}), DelayTime::create(0.1), nullptr));
+			auto gravity = RepeatForever::create(Sequence::create(CallFunc::create([=]() { 
+				if (this->checkGravity()) { ppp->setPositionY(ppp->getPosition().y - 1); 
+				}}), DelayTime::create(0.05), nullptr));
 			gravity->setTag(99);
 			if(ppp->isFalling)
 			this->map1->runAction(gravity);
@@ -479,6 +481,8 @@ bool MainGame::checkGravity()
 			map1->stopAllActionsByTag(99); //stop gravity reapeat forever
 			ppp->isFalling = false;
 			ppp->timePassedInSecond = 1;
+			if (!ppp->isIdle) 
+				ppp->idleStatus();
 			return false;
 		}
 		}
