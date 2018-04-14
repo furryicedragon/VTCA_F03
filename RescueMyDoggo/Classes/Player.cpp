@@ -306,7 +306,7 @@ void Player::roll() {
 	if (!this->isRolling && !this->isDead && !this->isAttacking && !this->isHit &&this->isSpawn && !this->usingSkill) {
 		this->stopAllActions();
 		isRolling = true;
-		int theX = 200;
+		int theX = /*20*/0;
 		if (this->getPosition().x < theX + 44 + 32 *mapScale && this->direction==0)
 			theX = this->getPosition().x - (44 + 32 *mapScale);
 		if (map1Size.width - this->getPosition().x < theX + 44 + 32 *mapScale && this->direction == 1)
@@ -314,7 +314,7 @@ void Player::roll() {
 		//if (this->getPosition().x < 44 + 32*2)
 		//	theX = 0;
 		if (this->direction==0) theX *= -1; // nhan voi -1 de nhay dung' huong'
-		this->runAction(Sequence::create(DelayTime::create(attackSpeed),JumpBy::create(attackSpeed * 2, Vec2(theX, 0),33,1),nullptr));
+		this->runAction(Sequence::create(DelayTime::create(attackSpeed),JumpBy::create(attackSpeed * 2, Vec2(theX, 169),0/*33*/,1),nullptr));
 		//this->runAction(Sequence::create(animation("Roll", attackSpeed), CallFunc::create([=]() {this->isRolling = false; this->idleStatus(); }), nullptr));
 		this->runAction(Sequence::create(makeAnimation("evade", attackSpeed), CallFunc::create([=]() {this->isRolling = false; this->idleStatus(); }), nullptr));
 	}

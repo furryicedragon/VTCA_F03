@@ -50,10 +50,17 @@ bool MainGame::init()
 	if(map1)
 	this->addChild(map1, 0, 33);
 	auto oj = map1->getObjectGroup("Objects");
+	auto groundOj = map1->getObjectGroup("Grounds");
 	auto sPoint = oj->getObject("SpawnPoint");
 	float sPx = sPoint["x"].asFloat();
 	float sPy = sPoint["y"].asFloat();
 	finishPoint = oj->getObject("FinishPoint");
+
+	//auto listGrounds = groundOj->getObjects();
+	for (auto item : groundOj->getObjects()) {
+		grounds.push_back(Rect(item.asValueMap()["x"].asFloat(), item.asValueMap()["y"].asFloat(), item.asValueMap()["width"].asFloat(), item.asValueMap()["height"].asFloat()));
+	}
+	//auto test = ground0["width"].asFloat();
 	meta = map1->getLayer("meta");
 	//Sprite* abc = Sprite::create()
 	while (ppp==nullptr) ppp = Player::create();
@@ -378,6 +385,7 @@ void MainGame::update(float elapsed)
 			if (hud_layer->rollBtn->getValue() && !ppp->usingSkill)
 			{
 				ppp->roll();
+				//ppp->runAction(JumpBy::create(0.5, Vec2(0, 50), 0, 1));
 			}
 			if (hud_layer->skill1Btn->getValue() && !ppp->usingSkill)
 			{
@@ -390,6 +398,15 @@ void MainGame::update(float elapsed)
 		}
 
 		if (this->enemyAdded) {
+			this->map1->runAction(RepeatForever::create(Sequence::create(DelayTime::create(1/99), CallFunc::create([=]() {
+				int i = 0;
+				for (auto item : grounds) {
+					if (!ppp->getBoundingBox().intersectsRect(item) || ppp->getPosition().y < item.getMaxY())
+						i++;
+					if (i == grounds.size())
+						ppp->setPositionY(ppp->getPosition().y - 1);
+				}
+			}),nullptr)));
 
 			this->updatePlayerPosition();
 			

@@ -38,7 +38,7 @@ public:
 	EventKeyboard::KeyCode lastKeyPressed;
 	EventKeyboard::KeyCode anotherKeyPressed;
 
-	
+	std::vector<Rect> grounds;
 	TMXLayer* meta;
 	TMXTiledMap* map1;
 	Vec2 lastMovePos; //for retrieving last y
