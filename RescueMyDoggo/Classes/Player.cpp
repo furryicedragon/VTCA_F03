@@ -238,9 +238,12 @@ void Player::smootherMove() {
 		//auto dashIt = RepeatForever::create(animation("Dash/Dash Normal/Dash", 0.14f));
 		auto dashIt = RepeatForever::create(makeAnimation("walk",0.14f));
 			dashIt->setTag(4);
-			if(!this->isRolling && !this->isFalling)
+			//if(!this->isRolling && !this->isFalling)
 			this->runAction(dashIt);
-			else this->setSpriteFrame(pppFrames->getSpriteFrameByName(std::to_string(direction) + "jump0.png"));
+			//else
+			//{
+			//	this->setSpriteFrame(pppFrames->getSpriteFrameByName(std::to_string(direction) + "jump0.png"));
+			//}
 	}
 }
 int Player::checkDirectionInNumber(std::string direction) {
@@ -332,9 +335,10 @@ void Player::getHit(int damage, float eeePosX) {
 void Player::roll() {
 	if (!this->isRolling && !this->isDead && !this->isAttacking && !this->isHit &&this->isSpawn && !this->usingSkill &&!isFalling) {
 		this->stopAllActions();
+		this->setSpriteFrame(pppFrames->getSpriteFrameByName(std::to_string(direction) + "jump0.png"));
 		this->isIdle = false;
 		this->isMoving = false;
-		this->jump2Height = this->getPositionY() + 200;
+		//this->jump2Height = this->getPositionY() + 200;
 		isRolling = true;
 		int theX = /*20*/0;
 		if (this->getPosition().x < theX + 44 + 32 *mapScale && this->direction==0)
@@ -346,8 +350,8 @@ void Player::roll() {
 		if (this->direction==0) theX *= -1; // nhan voi -1 de nhay dung' huong'
 		//this->runAction(Sequence::create(DelayTime::create(attackSpeed),JumpBy::create(attackSpeed * 2, Vec2(theX, 80),0/*33*/,1),nullptr));
 		//auto a = pppFrames->getSpriteFrameByName(std::to_string(direction) + "jump.png");
-		this->setSpriteFrame(pppFrames->getSpriteFrameByName(std::to_string(direction)+"jump0.png"));
-		this->runAction(Sequence::create(JumpBy::create(0.3, Vec2(theX, 175), 0/*33*/, 1), CallFunc::create([=]() {this->isRolling = false; this->isFalling = true; }), nullptr));
+		//this->setSpriteFrame(pppFrames->getSpriteFrameByName(std::to_string(direction)+"jump0.png"));
+		this->runAction(Sequence::create(JumpBy::create(0.2, Vec2(theX, 109), 0/*33*/, 1), CallFunc::create([=]() {this->isRolling = false; this->isFalling = true; }), nullptr));
 		//this->runAction(Sequence::create(animation("Roll", attackSpeed), CallFunc::create([=]() {this->isRolling = false; this->idleStatus(); }), nullptr));
 		//this->runAction(Sequence::create(makeAnimation("evade", attackSpeed), CallFunc::create([=]() {this->isRolling = false; this->idleStatus(); }), nullptr));
 	}
@@ -446,6 +450,8 @@ void Player::update(float elapsed)
 		this->currentEXP = 0 + currentEXP - baseEXP;
 		this->levelUp();
 	}
+	//if (isFalling || isRolling) 
+	//	this->setSpriteFrame(pppFrames->getSpriteFrameByName(std::to_string(direction) + "jump0.png"));
 }
 
 

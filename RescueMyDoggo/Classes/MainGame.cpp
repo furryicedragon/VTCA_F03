@@ -471,15 +471,16 @@ bool MainGame::checkGravity()
 			i++;
 	}
 	if (i == grounds.size()) { //neu ko dung tren ground
-		if(!ppp->isRolling)
-		ppp->isFalling = true;
+		if (!ppp->isRolling) {
+			ppp->isFalling = true;
+			ppp->setSpriteFrame(ppp->pppFrames->getSpriteFrameByName(std::to_string(ppp->direction) + "jump0.png"));
+		}
 		return true;
 	}
 	else { //neu dang tren ground
 		if (!ppp->isRolling) {
-			ppp->jump2Height = 99999;
-			map1->stopAllActionsByTag(99); //stop gravity reapeat forever
 			ppp->isFalling = false;
+			map1->stopAllActionsByTag(99); //stop gravity reapeat forever
 			ppp->timePassedInSecond = 1;
 			if (!ppp->isIdle) 
 				ppp->idleStatus();
