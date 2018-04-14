@@ -158,20 +158,22 @@ void Enemy::movingAnimation()
 }
 void Enemy::chasing()
 {
-	float howFar = ppp->getPosition().x - (this->getPosition().x + this->getContentSize().width / 2);
-	if (howFar < 0) howFar *= -1;
+	float howFar = std::fabsf(ppp->getPosition().x - (this->getPosition().x + this->getContentSize().width / 2));
 
 	if (this->canChase && !this->isMoving && !this->isAttacking &&this->isChasing && howFar>skillRange-69) {
 		float pppX = ppp->getPosition().x;
-		float moveByX = pppX - (this->getPosition().x + this->getContentSize().width / 2);
-		if (moveByX < 0)  this->setFlippedX(true);
-		else this->setFlippedX(false);
+		if (this->waveNumber == 1 || this->bossNumber == 1) if (pppX < line1X - visionRange) 
+			pppX = line1X;
+		if (this->waveNumber == 2 || this->bossNumber > 1) if (pppX<line3X)
+			pppX=line3X;
 		this->canChase = false;
 		this->isIdle = false;
 		this->isMoving = true;
 		this->breakTime = false;
+		float moveByX = pppX - (this->getPosition().x + this->getContentSize().width / 2);
+		if (moveByX < 0)  this->setFlippedX(true);
+		else this->setFlippedX(false);
 		this->movingAnimation();
-		float a = std::fabsf(moveByX) / moveSpeed;
 
 		auto move2 = Sequence::create(MoveTo::create(std::fabsf(moveByX)/moveSpeed, Vec2(ppp->getPosition().x, this->getPosition().y)),
 			CallFunc::create([=]() 
@@ -203,16 +205,20 @@ void Enemy::randomMoving() {
 	this->runAction(seq);
 }
 void Enemy::moving() {
-	float howFar = ppp->getPosition().x - (this->getPosition().x+this->getContentSize().width/2);
-	if (howFar < 0) howFar *= -1; 
-	if (howFar < skillRange && !this->isAttacking && !this->isOnCD && std::fabsf(ppp->getPosition().y - this->getPosition().y) < 40) {
+	float howFar = std::fabsf(ppp->getPosition().x - (this->getPosition().x + this->getContentSize().width / 2));
+	if (this->waveNumber == 1 || this->bossNumber == 1) 
+		spotPlayerLine = line1X-visionRange;
+	if (this->waveNumber == 2 || this->bossNumber > 1) 
+		spotPlayerLine = line3X;
+	if (howFar < skillRange && !this->isAttacking && !this->isOnCD 
+		&& std::fabsf(ppp->getPosition().y - this->getPosition().y) < 40 && ppp->getPositionX() > spotPlayerLine) {
 		this->attack();
 		this->isAttacking = true;
 	}
-	if (std::fabsf(ppp->getPosition().y - this->getPosition().y) > 40)
+	if (std::fabsf(ppp->getPosition().y - this->getPosition().y) > 40 || ppp->getPositionX() < spotPlayerLine)
 		this->isChasing = false;
 
-	if (howFar < visionRange && !this->isChasing && !this->isAttacking && std::fabsf(ppp->getPosition().y - this->getPosition().y) < 40) {
+	if (howFar < visionRange && !this->isChasing && !this->isAttacking && std::fabsf(ppp->getPosition().y - this->getPosition().y) < 40 && ppp->getPositionX() > spotPlayerLine) {
 		this->isChasing = true;
 	}
 	else {
