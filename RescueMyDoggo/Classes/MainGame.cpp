@@ -42,7 +42,7 @@ bool MainGame::init()
 	isRepeated = false;
 	howManyKeyPressed = 0;
 	visibleSize = Director::getInstance()->getVisibleSize();
-	while(map1==nullptr)
+	//while(map1==nullptr)
 	map1 = TMXTiledMap::create("map1.tmx");
 	auto theTest = map1->getContentSize();
 	//map1->setScale(1.6f);
@@ -63,7 +63,7 @@ bool MainGame::init()
 	//auto test = ground0["width"].asFloat();
 	meta = map1->getLayer("meta");
 	//Sprite* abc = Sprite::create()
-	while (ppp==nullptr) ppp = Player::create();
+	ppp = Player::create();
 	ppp->map1Size = map1->getContentSize();
 	ppp->mapScale = map1->getScale();
 	ppp->setPosition(sPx*map1->getScale(), sPy*map1->getScale());
@@ -837,106 +837,15 @@ void MainGame::delAll()
 	this->allEnemy.clear();
 	this->removeAllChildren();
 
+	this->init();
 
-	congratulation = Sprite::create();
-	congratulation->setAnchorPoint(Vec2(0, 0));
-	auto itsOKMan = RepeatForever::create(animation("Gratz", 0.69f));
-	this->congratulation->runAction(itsOKMan);
-	if (congratulation)
-		this->addChild(congratulation, 99999);
-	this->congratulation->runAction(FadeOut::create(0));
+	this->updatePlayerPosition();
 
 	auto hud_layer = static_cast<HUDLayer*> (Director::getInstance()->getRunningScene()->getChildByTag(9999));
+	
+	auto cd = static_cast<Label*> (hud_layer->skill1Btn->getChildByTag(100));
+	auto cd2 = static_cast<Label*> (hud_layer->skill2Btn->getChildByTag(100));
+	cd->setVisible(false);
+	cd->setVisible(false);
 
-	this->stopActionByTag(99); 
-	this->setPosition(Vec2(0, 0));
-	this->enemyAdded = false;
-	this->gameOver = Sprite::create("/Game Over/0.png");
-	gameOver->setAnchorPoint(Vec2(0, 0));
-	auto itsOverMan = RepeatForever::create(animation("Game Over", 0.1f));
-	this->gameOver->runAction(itsOverMan);
-	this->gameOver->runAction(FadeOut::create(0));
-	if(gameOver)
-	this->addChild(gameOver, 99);
-	this->isGameOver = false;
-
-	currentMap = 1;
-	currentWave = 1;
-	currentBoss = 1;
-	dashHelper = Sprite::create();
-	if(dashHelper)
-	this->addChild(dashHelper);
-	count = 0;
-	isRepeated = false;
-	howManyKeyPressed = 0;
-	visibleSize = Director::getInstance()->getVisibleSize();
-		map1 = TMXTiledMap::create("map1.tmx");
-	auto theTest = map1->getContentSize();
-	map1->setScale(1.6f);
-	map1->setContentSize(map1->getContentSize() *map1->getScale()); //do nothing but helping *2 that's all
-	if(map1)
-	this->addChild(map1, 0, 33);
-	auto oj = map1->getObjectGroup("Objects");
-	auto sPoint = oj->getObject("SpawnPoint");
-	float sPx = sPoint["x"].asFloat();
-	float sPy = sPoint["y"].asFloat();
-	auto fPoint = oj->getObject("FinishPoint");
-	meta = map1->getLayer("meta");
-	ppp = Player::create();
-	ppp->map1Size = map1->getContentSize();
-	ppp->mapScale = map1->getScale();
-	ppp->setPosition(sPx *map1->getScale(), sPy *map1->getScale());
-	ppp->setAnchorPoint(Vec2(0.5, 0));
-	ppp->setScale(0.6f);
-	//ppp->setFlippedX(true);
-	if (ppp != nullptr)
-		this->addChild(ppp, 2);
-	this->ppp->statPlus = Label::create();
-	if (ppp->statPlus) {
-		this->ppp->addChild(ppp->statPlus);
-		ppp->statPlus->setVisible(false);
-	}
-	this->ppp->level = Label::create();
-	if (this->ppp->level) {
-		this->ppp->level->setScale(2.8f);
-		this->ppp->level->setAnchorPoint(Vec2(0.5, 0));
-		this->ppp->level->setString("1");
-		this->ppp->level->setColor(Color3B(255, 255, 255));
-		this->ppp->level->setSystemFontSize(16);
-		this->ppp->level->setPosition(this->ppp->getContentSize().width / 2.7, ppp->getContentSize().height - 69);
-		this->ppp->addChild(ppp->level);
-	}
-	if(ppp->slash)
-	this->addChild(ppp->slash, 9);
-
-	pppPositionHelper = Sprite::create("CloseNormal.png");
-	pppPositionHelper->setOpacity(0);
-	pppPositionHelper->setAnchorPoint(Vec2(0, 0));
-	auto helperPos = Vec2((ppp->getContentSize().width - pppPositionHelper->getContentSize().width) / 2, ppp->getContentSize().height);
-	pppPositionHelper->setPosition(helperPos);
-	if(pppPositionHelper)
-	this->addChild(pppPositionHelper);
-	pppPositionHelper->setScale(0.5);
-	pppPositionHelper->setAnchorPoint(Vec2(0.5, 0));
-
-	this->startGame = Sprite::create("/Play/0.png");
-	this->startGame->setAnchorPoint(Vec2(0, 0));
-	auto playIt = RepeatForever::create(animation("Play", 0.5));
-	this->startGame->runAction(playIt);
-	if(startGame)
-	this->addChild(startGame, 100);
-	this->isGameStart = false;
-
-	ppp->w1kills = 0;
-	ppp->w2kills = 0;
-	boss1 = false;
-	boss2 = false;
-
-	//this->addChild(ppp->skill1, 3);
-	this->updatePlayerPosition();
-	//hud_layer->setupStick();
-	hud_layer->skill1Btn->getChildByTag(100)->setVisible(false);
-	hud_layer->skill2Btn->getChildByTag(100)->setVisible(false);
-	this->scheduleUpdate();
-	//this->scheduleUpdate();
 }

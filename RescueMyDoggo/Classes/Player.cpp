@@ -308,7 +308,7 @@ void Player::roll() {
 		this->stopAllActions();
 		this->jump2Height = this->getPositionY() + 200;
 		isRolling = true;
-		int theX = /*20*/0;
+		int theX = /*20*/40;
 		if (this->getPosition().x < theX + 44 + 32 *mapScale && this->direction==0)
 			theX = this->getPosition().x - (44 + 32 *mapScale);
 		if (map1Size.width - this->getPosition().x < theX + 44 + 32 *mapScale && this->direction == 1)
