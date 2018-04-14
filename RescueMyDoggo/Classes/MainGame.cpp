@@ -399,13 +399,7 @@ void MainGame::update(float elapsed)
 
 		if (this->enemyAdded) {
 			this->map1->runAction(RepeatForever::create(Sequence::create(DelayTime::create(1/99), CallFunc::create([=]() {
-				int i = 0;
-				for (auto item : grounds) {
-					if (!ppp->getBoundingBox().intersectsRect(item) || ppp->getPosition().y < item.getMaxY())
-						i++;
-					if (i == grounds.size())
-						ppp->setPositionY(ppp->getPosition().y - 1);
-				}
+						if(this->checkGravity()) ppp->setPositionY(ppp->getPosition().y - 1);
 			}),nullptr)));
 
 			this->updatePlayerPosition();
@@ -461,6 +455,18 @@ void MainGame::update(float elapsed)
 
 
 
+}
+bool MainGame::checkGravity()
+{
+	int i = 0;
+	for (auto item : grounds) {
+		if (!Rect(ppp->getPositionX()-11, ppp->getPositionY(), 22, 80).intersectsRect(item) || ppp->getPosition().y < item.getMaxY())
+			i++;
+	}
+		if (i == grounds.size())
+			return true;
+		else
+		return false;
 }
 
 void MainGame::spawnPlayer()

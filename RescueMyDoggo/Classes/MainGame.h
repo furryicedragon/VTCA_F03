@@ -54,6 +54,7 @@ public:
 	bool keyReleased(EventKeyboard::KeyCode keyCode, Event* event);
 	bool isRepeated;
 	bool checkRange(Enemy* enemy2Check,int theRange);
+	bool checkGravity();
 	bool isGameOver;
 	bool enemyAdded;
 	bool isGameStart;
