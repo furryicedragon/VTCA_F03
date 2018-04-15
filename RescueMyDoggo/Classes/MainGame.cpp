@@ -35,6 +35,9 @@ bool MainGame::init()
 	currentMap = 1;
 	currentWave = 1;
 	currentBoss = 1;
+	this->boss1 = false;
+	this->boss2 = false;
+
 	dashHelper = Sprite::create();
 	if(dashHelper)
 	this->addChild(dashHelper);
@@ -72,7 +75,8 @@ bool MainGame::init()
 	//ppp->setFlippedX(true);
 	if(ppp!=nullptr)
 	this->addChild(ppp, 2);
-
+	this->ppp->w1kills = 0;
+	this->ppp->w2kills = 0;
 
 
 	this->ppp->statPlus = Label::create();
