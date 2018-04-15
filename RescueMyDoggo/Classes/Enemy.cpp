@@ -212,14 +212,14 @@ void Enemy::moving() {
 	if (this->waveNumber == 2 || this->bossNumber > 1) 
 		spotPlayerLine = line3X;
 	if (howFar < skillRange && !this->isAttacking && !this->isOnCD 
-		&& std::fabsf(ppp->getPosition().y - this->getPosition().y) < 40 && ppp->getPositionX() > spotPlayerLine) {
+		&& std::fabsf(ppp->getPosition().y - this->getPosition().y) < 145 && ppp->getPositionY()-this->getPositionY()>0  && ppp->getPositionX() > spotPlayerLine) {
 		this->attack();
 		this->isAttacking = true;
 	}
-	if (std::fabsf(ppp->getPosition().y - this->getPosition().y) > 40 || ppp->getPositionX() < spotPlayerLine)
+	if (ppp->getPosition().y - this->getPosition().y > 145 || ppp->getPositionX() < spotPlayerLine)
 		this->isChasing = false;
 
-	if (howFar < visionRange && !this->isChasing && !this->isAttacking && std::fabsf(ppp->getPosition().y - this->getPosition().y) < 40 && ppp->getPositionX() > spotPlayerLine) {
+	if (howFar < visionRange && !this->isChasing && !this->isAttacking && std::fabsf(ppp->getPosition().y - this->getPosition().y) < 145 && ppp->getPositionY() - this->getPositionY()>0 && ppp->getPositionX() > spotPlayerLine) {
 		this->isChasing = true;
 	}
 	else {
