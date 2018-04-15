@@ -252,17 +252,17 @@ void Player::knockback(float eeePosX)
 	// blink
 	this->movementHelper->runAction(
 		Sequence::create(
-		Repeat::create(Sequence::create(DelayTime::create((float) 1 / 490), 
+		Repeat::create(Sequence::create(DelayTime::create((float) 1 / ((255-90)*2 *9)), 
 			CallFunc::create([=]() 
-			{ if (this->getOpacity() == 10 && !fade)
+			{ if (this->getOpacity() == 90 && !fade)
 					fade = true;
 				else if (this->getOpacity() == 255 && fade)
 					fade = false;
 
 				if (fade) this->setOpacity(this->getOpacity() + 1);
 				else this->setOpacity(this->getOpacity() - 1);
-			}), nullptr), 490),
-			CallFunc::create([=]() { this->state = 0; }), nullptr));
+			}), nullptr), (255 - 90)*2 *9),
+			CallFunc::create([=]() { this->state = 0; this->idleStatus(); }), nullptr));
 
 	// knockback
 	int theX;
@@ -273,7 +273,7 @@ void Player::knockback(float eeePosX)
 		Sequence::create(
 			Repeat::create(Sequence::create( DelayTime::create((float)0.16/69), 
 				CallFunc::create([=]() {  this->setPositionX(this->getPositionX() + theX); }), nullptr), 69),
-		CallFunc::create([=]() {this->canAct = true; }), nullptr));
+			CallFunc::create([=]() {this->canAct = true; this->idleStatus(); }), nullptr));
 
 }
 
