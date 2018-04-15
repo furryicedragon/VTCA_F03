@@ -265,9 +265,7 @@ void Player::knockback(float eeePosX)
 			CallFunc::create([=]() { this->state = 0; this->idleStatus(); }), nullptr));
 
 	// knockback
-	int theX;
-	if (this->getPositionX() < eeePosX)	theX = -1;
-	else theX = 1;
+	int theX = (this->getPositionX() - this->getContentSize().width / 2 < eeePosX) ? -1 : 1;
 
 	this->movementHelper->runAction(
 		Sequence::create(
