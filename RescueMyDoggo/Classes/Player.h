@@ -20,8 +20,7 @@ public:
 	std::vector<bool> canAADamage;
 	std::vector<Sprite*> effectStatus;
 	std::string weaponKind;
-	std::string lastDirection;
-	std::string secondLastDirection;
+	int lastDirection;
 	Sprite* skillHelper;
 	Sprite* attackHelper;
 	Sprite* slash;
@@ -51,11 +50,9 @@ public:
 	int w2kills;
 	int count;
 	int attackChainNumber;
-	int presentDirectionInNumber;
-	int previousDirectionInNumber;
-	int checkDirectionInNumber(std::string direction);
 	int skillDamage;
 	int state;
+	bool tester;
 	bool onGravity;
 	bool isFalling;
 	bool usingSkill;

@@ -171,7 +171,6 @@ void Player::idleStatus() {
 		repeatIdle->setTag(1);
 		this->runAction(repeatIdle);
 	}
-	this->secondLastDirection = "";
 }
 
 void Player::moving() {
@@ -182,9 +181,8 @@ void Player::moving() {
 		//&& !this->isRolling 
 		&& !this->isAttacking 
 		&& !this->isDead 
-		&&(!this->isMoving || this->secondLastDirection!=lastDirection)) 
+		&&(!this->isMoving || this->lastDirection!=direction)) 
 	{
-
 		this->stopAllActionsByTag(1);
 		if (!this->canMoveDirections[1]) {
 			if (lastX > 0) lastX = 0;
@@ -193,72 +191,30 @@ void Player::moving() {
 			if (lastX < 0) lastX = 0;
 		}
 
-		if (lastDirection == "Left") {
-			this->direction = 0;
-			//this->slash->setFlippedX(false);
-			//this->setFlippedX(false);
-		}
-		if (lastDirection == "Right") {
-			this->direction = 1;
-			//this->slash->setFlippedX(true);
-			//this->setFlippedX(true);
-		}
-
 		smootherMove();
-		secondLastDirection = lastDirection;
+		this->isMoving = true;
+		lastDirection = direction;
 		this->stopAllActionsByTag(3);
 		auto moveBy = MoveBy::create(lastDuration, Vec2(lastX,0));
 		auto repeatMove = RepeatForever::create(moveBy);
 		repeatMove->setTag(3);
 		this->runAction(repeatMove);
-		//this->runAction(Sequence::create(DelayTime::create(0.1) , CallFunc::create([=]() {this->notCombination = true; }), nullptr));
-		this->isMoving = true;
 
 	}
 
 }
 void Player::smootherMove() {
-	previousDirectionInNumber = this->checkDirectionInNumber(secondLastDirection);
-	presentDirectionInNumber = this->checkDirectionInNumber(lastDirection);
-	bool OK = false;
-	switch (previousDirectionInNumber)
-	{
-		case 0:
-		case 1:
-			OK = true;
-		break;
-		case 2:
-			if (presentDirectionInNumber == 3) OK = true;
-				break;
-		case 3:
-			if (presentDirectionInNumber == 2) OK = true;
-			break;
-	}
-	if(OK) {
 		this->stopAllActionsByTag(2);
 		this->stopAllActionsByTag(4);
-		//auto dashIt = RepeatForever::create(animation("Dash/Dash Normal/Dash", 0.14f));
-		auto dashIt = RepeatForever::create(makeAnimation("walk",0.14f));
+		auto dashIt = Sequence::create(makeAnimation("walk", 0.14f), CallFunc::create([=]() {this->isMoving = false; }), nullptr);
 			dashIt->setTag(4);
-			//if(!this->isRolling && !this->isFalling)
 			this->runAction(dashIt);
-			//else
-			//{
-			//	this->setSpriteFrame(pppFrames->getSpriteFrameByName(std::to_string(direction) + "jump0.png"));
-			//}
-	}
-}
-int Player::checkDirectionInNumber(std::string direction) {
-	int directionNumber = 0;
-	
-	if (direction == "Left") directionNumber = 2;
-	if (direction == "Right") directionNumber = 3;
-	return directionNumber;
 }
 
 
 void Player::attack() {
 	if (this->isSpawn && !this->isAttacking && !this->isRolling && !this->isDead && this->canAct && !this->usingSkill) {
+		this->isMoving = false;
 		this->isAttacking = true;
 		//this->slashEffect();                 //thuc hien animation cua slash
 		this->stopAllActions();				//stop all hanh dong de attack
@@ -324,6 +280,7 @@ void Player::knockback(float eeePosX)
 void Player::getHit(int damage, float eeePosX) {
 	if (!this->isDead && this->state != 1) 
 	{
+		tester = true;
 		this->state = 1;
 		this->stopAllActions();
 		this->isAttacking = false;
@@ -557,6 +514,9 @@ void Player::useSkill(int skillID, Button* button)
 
 Animate* Player::makeAnimation(std::string actionName, float timeEachFrame) {
 	Vector<SpriteFrame *> runningFrames;
+	if (tester) {
+		char* a = "";
+	}
 	for (int i = 0; i < 99; i++) {
 		auto frameName = std::to_string(this->direction)+actionName+std::to_string(i)+std::to_string(state)+".png";
 		SpriteFrame* frame = pppFrames->getSpriteFrameByName(frameName);

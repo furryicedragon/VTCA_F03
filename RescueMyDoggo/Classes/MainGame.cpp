@@ -222,14 +222,14 @@ void MainGame::whatYouWant(EventKeyboard::KeyCode keyCode, int yourStatus) {
 			{
 				ppp->lastDuration = 0.25;
 				ppp->lastX = -45;
-				ppp->lastDirection = "Left";
+				ppp->direction = 0;
 				break;
 			}
 			case cocos2d::EventKeyboard::KeyCode::KEY_D:
 			{
 				ppp->lastDuration = 0.25;
 				ppp->lastX = 45;
-				ppp->lastDirection = "Right";
+				ppp->direction = 1;
 				break;
 			}
 			}
