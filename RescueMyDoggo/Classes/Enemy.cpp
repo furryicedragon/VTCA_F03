@@ -161,7 +161,7 @@ void Enemy::chasing()
 	float howFar = std::fabsf(ppp->getPosition().x - (this->getPosition().x + this->getContentSize().width / 2));
 
 	if (this->canChase && !this->isMoving && !this->isAttacking &&this->isChasing && howFar>skillRange-69) {
-		float pppX = ppp->getPosition().x;
+		float pppX = ppp->getPosition().x; 
 		if (this->waveNumber == 1 || this->bossNumber == 1) if (pppX < line1X - visionRange) 
 			pppX = line1X;
 		if (this->waveNumber == 2 || this->bossNumber > 1) if (pppX<line3X)
@@ -174,12 +174,13 @@ void Enemy::chasing()
 		if (moveByX < 0)  this->setFlippedX(true);
 		else this->setFlippedX(false);
 		this->movingAnimation();
+		this->stopAllActionsByTag(4);
 
 		auto move2 = Sequence::create(MoveTo::create(std::fabsf(moveByX)/moveSpeed, Vec2(ppp->getPosition().x, this->getPosition().y)),
 			CallFunc::create([=]() 
 		{this->canChase = true; this->isMoving = false; if (ppp->getPosition().x - (this->getPosition().x + this->getContentSize().width*this->getScale() / 2) > visionRange + 200) this->isChasing = false; else this->idleStatus(); }), nullptr);
 		//could need some fix?! nah
-		move2->setTag(2);
+		move2->setTag(4);
 		this->runAction(move2);
 		//this->movementHelper->runAction(Sequence::create(DelayTime::create(calculateDuration(moveByX, 0)), CallFunc::create([=]() {this->isMoving = false; }), nullptr));
 	}
@@ -190,8 +191,8 @@ void Enemy::randomMoving() {
 	if(this->waveNumber==2 || this->bossNumber>1) randomX = RandomHelper::random_real(line3X, line4X);
 	float eX = this->getPosition().x;
 	float moveByX = randomX - eX;
-
 	this->isIdle = false;
+	this->stopAllActionsByTag(4);
 
 	this->movingAnimation();
 	if (moveByX > 0) this->setFlippedX(false); //done
@@ -201,7 +202,7 @@ void Enemy::randomMoving() {
 	}
 	auto seq = Sequence::create(MoveTo::create(moveByX/moveSpeed, Vec2(randomX, this->getPosition().y)),
 		CallFunc::create([=]() {this->isMoving = false; this->breakTime = false; }), /*DelayTime::create(1),*/ nullptr);
-	seq->setTag(2);
+	seq->setTag(4);
 	this->runAction(seq);
 }
 void Enemy::moving() {
@@ -226,7 +227,7 @@ void Enemy::moving() {
 		{
 			this->breakTime = true;
 			this->idleStatus();
-			this->runAction(Sequence::create(DelayTime::create(1), CallFunc::create([=]() {this->randomMoving(); }), nullptr));
+			this->runAction(Sequence::create(DelayTime::create(RandomHelper::random_real(0.5f,1.0f)), CallFunc::create([=]() {this->randomMoving(); }), nullptr));
 		}
 		else
 		{
@@ -331,7 +332,7 @@ void Enemy::getHit(int damage) {
 		this->canChase = true;
 		this->isIdle = false;
 		this->isAttacking = false;
-		//this->isMoving = false;
+		this->isMoving = false;
 		this->getHitTime++;
 
 		if (getHitTime == 3) {
@@ -434,4 +435,23 @@ void Enemy::update(float elapsed)
 {
 	if(!this->isDead && this->isSpawned)
 	moving();
+	if (this->isChasing && !this->canChase) {
+		if (this->isFlippedX() && ppp->getPositionX() > this->getPositionX()+this->getContentSize().width)
+		{
+			this->stopAllActionsByTag(3);
+			this->stopAllActionsByTag(4);
+			this->setFlippedX(false);
+			this->canChase = true;
+			this->isMoving = false;
+			this->idleStatus();
+		}
+		else if (!this->isFlippedX() && ppp->getPositionX() < this->getPositionX() - this->getContentSize().width) {
+			this->stopAllActionsByTag(3);
+			this->stopAllActionsByTag(4);
+			this->setFlippedX(true);
+			this->canChase = true;
+			this->isMoving = false;
+			this->idleStatus();
+		}
+	}
 }

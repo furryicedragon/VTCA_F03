@@ -35,7 +35,6 @@ public:
 	float skillRange;
 	float skillSpeed;
 	float castSpeed;
-	float pppFirstY;
 	float line1X;
 	float line2X;
 	float line3X;
