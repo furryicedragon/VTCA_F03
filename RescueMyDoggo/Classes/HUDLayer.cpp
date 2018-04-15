@@ -180,7 +180,8 @@ void HUDLayer::resetHUDstate()
 	cd2->setVisible(false);
 
 	// reset stat bar
-	statPlayer->EXPplayer->setPercentage(0);
+	this->statPlayer->removeFromParentAndCleanup(true);
+	this->setupStat();
 }
 
 void HUDLayer::toggleVisiblity()
@@ -190,6 +191,7 @@ void HUDLayer::toggleVisiblity()
 	else
 		this->setVisible(true);
 }
+
 void HUDLayer::setupStat()
 {
 	auto visibleSize = Director::getInstance()->getVisibleSize();
