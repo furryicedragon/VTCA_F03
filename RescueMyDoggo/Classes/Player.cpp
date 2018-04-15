@@ -335,11 +335,10 @@ void Player::getHit(int damage, float eeePosX) {
 			
 			this->runAction(Sequence::create(
 				/*MoveBy::create(0.1f, Vec2(200 * this->getPositionX() > eeePosX ? 1 : -1, 0)),*/
-				Spawn::create(this->makeAnimation("idle", 0.14f), Blink::create(1.0f, 10), nullptr), nullptr));
+				Blink::create(1.0f, 10), CallFunc::create([=]() {this->state = 0; }), nullptr));
 
-			this->runAction(Sequence::create(DelayTime::create(1.0f),
-				CallFunc::create([=]()
-				{ this->state = 0; this->canAct = true; this->idleStatus(); }), nullptr));
+			this->runAction(Sequence::create(MoveBy::create(0.16, Vec2(-69, 0)), CallFunc::create([=]() 
+			{this->canAct = true; }), nullptr));
 		}
 	}
 }

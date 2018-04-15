@@ -477,7 +477,7 @@ bool MainGame::checkGravity()
 	if (i == grounds.size()) { //neu ko dung tren ground
 		if (!ppp->isRolling) {
 			ppp->isFalling = true;
-			if(!ppp->isDead)
+			if(!ppp->isDead &&!ppp->usingSkill)
 			ppp->setSpriteFrame(ppp->pppFrames->getSpriteFrameByName(std::to_string(ppp->direction) + "jump0.png"));
 		}
 		return true;
