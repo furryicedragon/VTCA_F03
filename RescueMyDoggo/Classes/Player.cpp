@@ -291,6 +291,36 @@ void Player::attackCount() {
 
 }
 
+void Player::knockback(float eeePosX)
+{
+	// blink
+	this->movementHelper->runAction(
+		Sequence::create(
+		Repeat::create(Sequence::create(DelayTime::create((float) 1 / 490), 
+			CallFunc::create([=]() 
+			{ if (this->getOpacity() == 10 && !fade)
+					fade = true;
+				else if (this->getOpacity() == 255 && fade)
+					fade = false;
+
+				if (fade) this->setOpacity(this->getOpacity() + 1);
+				else this->setOpacity(this->getOpacity() - 1);
+			}), nullptr), 490),
+			CallFunc::create([=]() { this->state = 0; }), nullptr));
+
+	// knockback
+	int theX;
+	if (this->getPositionX() < eeePosX)	theX = -1;
+	else theX = 1;
+
+	this->movementHelper->runAction(
+		Sequence::create(
+			Repeat::create(Sequence::create( DelayTime::create((float)0.16/69), 
+				CallFunc::create([=]() {  this->setPositionX(this->getPositionX() + theX); }), nullptr), 69),
+		CallFunc::create([=]() {this->canAct = true; }), nullptr));
+
+}
+
 void Player::getHit(int damage, float eeePosX) {
 	if (!this->isDead && this->state != 1) 
 	{
@@ -332,13 +362,8 @@ void Player::getHit(int damage, float eeePosX) {
 			this->hp->setString(std::to_string(healthP));
 		if (!this->isDead) {
 
+			this->knockback(eeePosX);
 			
-			this->runAction(Sequence::create(
-				/*MoveBy::create(0.1f, Vec2(200 * this->getPositionX() > eeePosX ? 1 : -1, 0)),*/
-				Blink::create(1.0f, 10), CallFunc::create([=]() {this->state = 0; }), nullptr));
-
-			this->runAction(Sequence::create(MoveBy::create(0.16, Vec2(-69, 0)), CallFunc::create([=]() 
-			{this->canAct = true; }), nullptr));
 		}
 	}
 }

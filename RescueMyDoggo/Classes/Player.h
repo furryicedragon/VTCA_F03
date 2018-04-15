@@ -70,11 +70,13 @@ public:
 	bool isAttacking;
 	bool isRolling;
 	bool canShowStatUp;
+	bool fade;
 	void attack();
 	void moving();
 	void idleStatus();
 	void attackCount();
 	void smootherMove();
+	void knockback(float eeePosX);
 	void getHit(int damage, float eeePosX);
 	void roll();
 	void setHP(int HP);
