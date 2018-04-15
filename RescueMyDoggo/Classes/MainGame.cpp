@@ -473,6 +473,7 @@ bool MainGame::checkGravity()
 	if (i == grounds.size()) { //neu ko dung tren ground
 		if (!ppp->isRolling) {
 			ppp->isFalling = true;
+			if(!ppp->isDead)
 			ppp->setSpriteFrame(ppp->pppFrames->getSpriteFrameByName(std::to_string(ppp->direction) + "jump0.png"));
 		}
 		return true;
@@ -577,7 +578,7 @@ void MainGame::waveXMapXInit() {
 			this->checkAttackRange(item, i);
 			i++;
 		}
-		if (ppp->w1kills ==8 && !boss1) {
+		if (ppp->w1kills == 8 && !boss1) {
 			this->spawnEffect(allEnemy[4], 1);
 			boss1 = true;
 		}
