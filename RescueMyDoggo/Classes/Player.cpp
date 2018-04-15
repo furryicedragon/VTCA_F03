@@ -32,7 +32,7 @@ void Player::initOption()
 	this->damageCurrent = 16;
 
 	canAADamage.resize(8, false);
-
+	canAct = true;
 
 	attackRange = 100;
 	attackSpeed = 0.14f;
@@ -72,6 +72,8 @@ void Player::initOption()
 	this->idleStatus();
 
 	this->makeAnimation("walk",0.1);
+
+	this->state = 0;
 
 	this->cd_reduction = 1.0f;
 
@@ -156,7 +158,7 @@ void Player::idleStatus() {
 	if (!this->isAttacking 
 		&& !this->isRolling 
 		&& !this->isDead 
-		&& !this->isHit 
+		&& this->canAct 
 		&& this->isSpawn
 		&& !this->usingSkill) 
 	{
@@ -176,7 +178,7 @@ void Player::moving() {
 
 	if (this->isSpawn
 		&& !this->usingSkill
-		&& !this->isHit 
+		&& canAct
 		//&& !this->isRolling 
 		&& !this->isAttacking 
 		&& !this->isDead 
@@ -256,7 +258,7 @@ int Player::checkDirectionInNumber(std::string direction) {
 
 
 void Player::attack() {
-	if (this->isSpawn && !this->isAttacking && !this->isRolling && !this->isDead && !this->isHit && !this->usingSkill) {
+	if (this->isSpawn && !this->isAttacking && !this->isRolling && !this->isDead && this->canAct && !this->usingSkill) {
 		this->isAttacking = true;
 		//this->slashEffect();                 //thuc hien animation cua slash
 		this->stopAllActions();				//stop all hanh dong de attack
@@ -290,10 +292,13 @@ void Player::attackCount() {
 }
 
 void Player::getHit(int damage, float eeePosX) {
-	if (!this->isDead) {
+	if (!this->isDead && this->state != 1) 
+	{
+		this->state = 1;
 		this->stopAllActions();
 		this->isAttacking = false;
 		this->isMoving = false;
+		this->canAct = false;
 		if (this->usingSkill) {
 			this->listSkill.at(currentSkillID)->stopAllActions();
 			if (currentSkillID == 1) {
@@ -326,14 +331,21 @@ void Player::getHit(int damage, float eeePosX) {
 		else
 			this->hp->setString(std::to_string(healthP));
 		if (!this->isDead) {
-			this->isHit = true;
-			this->runAction(Sequence::create(animation("Get hit/Get Hit Stand", 0.14f), CallFunc::create([=]() {this->isHit = false; this->idleStatus(); }), nullptr));
+
+			
+			this->runAction(Sequence::create(
+				/*MoveBy::create(0.1f, Vec2(200 * this->getPositionX() > eeePosX ? 1 : -1, 0)),*/
+				Spawn::create(this->makeAnimation("idle", 0.14f), Blink::create(1.0f, 10), nullptr), nullptr));
+
+			this->runAction(Sequence::create(DelayTime::create(1.0f),
+				CallFunc::create([=]()
+				{ this->state = 0; this->canAct = true; this->idleStatus(); }), nullptr));
 		}
 	}
 }
 
 void Player::roll() {
-	if (!this->isRolling && !this->isDead && !this->isAttacking && !this->isHit &&this->isSpawn && !this->usingSkill &&!isFalling) {
+	if (!this->isRolling && !this->isDead && !this->isAttacking && this->canAct &&this->isSpawn && !this->usingSkill &&!isFalling) {
 		this->stopAllActions();
 		this->setSpriteFrame(pppFrames->getSpriteFrameByName(std::to_string(direction) + "jump0.png"));
 		this->isIdle = false;
@@ -365,7 +377,7 @@ void Player::dead()
 	this->forbidAllAction();
 		//this->runAction(Sequence::create(animation("Death", 0.12), CallFunc::create([=]() {this->runAction(FadeOut::create(1.0)); }), nullptr));
 		//this->runAction(animation("Death", 0.12f));
-	this->setSpriteFrame(pppFrames->getSpriteFrameByName(std::to_string(this->direction)+"dead.png"));
+	this->setSpriteFrame(pppFrames->getSpriteFrameByName(std::to_string(this->direction)+"dead0.png"));
 }
 
 void Player::forbidAllAction()
@@ -457,7 +469,7 @@ void Player::update(float elapsed)
 
 void Player::useSkill(int skillID, Button* button)
 {
-	if (this->isSpawn && !this->isAttacking && !this->isRolling && !this->isDead && !this->listSkill.at(skillID)->onCD) 
+	if (this->isSpawn && !this->isAttacking && !this->isRolling && !this->isDead && this->canAct && !this->listSkill.at(skillID)->onCD) 
 	{
 		currentSkillID = skillID;
 		Skill* skill = listSkill.at(skillID);
@@ -465,7 +477,6 @@ void Player::useSkill(int skillID, Button* button)
 
 		skill->onCD = true;
 
-		this->isHit = false;
 		this->skillDamage = skill->skillDamage;
 		int range = 269;
 		if (skillID != 0) range = 0;
@@ -523,7 +534,7 @@ void Player::useSkill(int skillID, Button* button)
 Animate* Player::makeAnimation(std::string actionName, float timeEachFrame) {
 	Vector<SpriteFrame *> runningFrames;
 	for (int i = 0; i < 99; i++) {
-		auto frameName = std::to_string(this->direction)+actionName+std::to_string(i)+".png";
+		auto frameName = std::to_string(this->direction)+actionName+std::to_string(i)+std::to_string(state)+".png";
 		SpriteFrame* frame = pppFrames->getSpriteFrameByName(frameName);
 		if (!frame)
 			break;

@@ -55,6 +55,7 @@ public:
 	int previousDirectionInNumber;
 	int checkDirectionInNumber(std::string direction);
 	int skillDamage;
+	int state;
 	bool onGravity;
 	bool isFalling;
 	bool usingSkill;
@@ -62,7 +63,7 @@ public:
 	bool isIdle;
 	bool isSpawning;
 	bool isSpawn;
-	bool isHit;
+	bool canAct;
 	bool isDead;
 	bool isHoldingKey;
 	bool isMoving;
