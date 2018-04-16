@@ -509,9 +509,11 @@ void MainGame::spawnPlayer()
 bool MainGame::checkRange(Enemy* enemy2Check, int theRange) {
 
 	auto itemWidth = enemy2Check->getContentSize().width*enemy2Check->getScale();
+	auto calculateIt = 40;
+	if (enemy2Check->bossNumber == 1) calculateIt = 90;
 	auto howfarX = (enemy2Check->getPosition().x + itemWidth / 2) - ppp->getPosition().x;
 		if (((howfarX < 69 && ppp->direction==0 && howfarX>-itemWidth / 2 - theRange)
-			|| (howfarX < itemWidth / 2 + theRange && howfarX>-69 && ppp->direction==1))&& std::fabsf(ppp->getPosition().y - enemy2Check->getPosition().y)<40)
+			|| (howfarX < itemWidth / 2 + theRange && howfarX>-69 && ppp->direction==1))&& ppp->getPosition().y - enemy2Check->getPosition().y<calculateIt && ppp->getPositionY()-enemy2Check->getPositionY()>0)
 			return true;
 		else
 			return false;
@@ -548,8 +550,8 @@ void MainGame::checkAttackRange(Enemy * eee, int index)
 		for (auto item : ppp->listSkill)
 		{
 			if (ppp->usingSkill && item->canDamage[index]
-				&& (skillRect.intersectsRect(eee->getBoundingBox()) 
-					|| (i != 1 && checkRange(eee,item->skillRange))))
+				&& ((skillRect.intersectsRect(eee->getBoundingBox()) && i==1)
+					|| (i ==0 && checkRange(eee,item->skillRange))))
 			{
 					if (!eee->isDead && eee->isSpawned && !eee->invulnerable)
 						this->displayDamage(ppp->damageCurrent / 100 * item->skillDamage, "grey", eee->getPosition(),eee->getContentSize());
@@ -596,7 +598,7 @@ void MainGame::waveXMapXInit() {
 			this->checkAttackRange(item, i);
 			i++;
 		}
-		if (ppp->w1kills == 8 && !boss1) {
+		if (ppp->w1kills > 1 && !boss1) {
 			this->spawnEffect(allEnemy[4], 1);
 			boss1 = true;
 		}
