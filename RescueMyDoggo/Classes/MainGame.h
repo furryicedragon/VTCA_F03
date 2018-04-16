@@ -75,7 +75,7 @@ public:
 	void checkAttackRange(Enemy* eee,int index);
 	void spawnPlayer();
 	Animate* animation(std::string actionName, float timeEachFrame);
-	void displayDamage(int damage, std::string color, Vec2 where);
+	void displayDamage(int damage, std::string color, Vec2 where, Size sizes);
 	void delAll();
 
 private:

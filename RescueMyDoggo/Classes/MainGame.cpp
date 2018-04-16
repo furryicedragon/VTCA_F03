@@ -524,7 +524,7 @@ void MainGame::checkAttackRange(Enemy * eee, int index)
 			if (ppp->isAttacking && ppp->canAADamage[index])
 			{
 				if (!eee->isDead && eee->isSpawned && !eee->invulnerable)
-					this->displayDamage(ppp->damageCurrent, "grey", eee->getPosition());
+					this->displayDamage(ppp->damageCurrent, "grey", eee->getPosition(),eee->getContentSize());
 				eee->getHit(ppp->damageCurrent);
 
 				ppp->canAADamage[index] = false;
@@ -532,7 +532,7 @@ void MainGame::checkAttackRange(Enemy * eee, int index)
 
 			if (eee->canDamage && !ppp->isRolling && !eee->isCaster) {
 				if (!ppp->isDead && ppp->state != 1)
-					this->displayDamage(eee->skillDamage, "blue", ppp->getPosition());
+					this->displayDamage(eee->skillDamage, "blue", ppp->getPosition(),Size(0,0));
 				ppp->getHit(eee->skillDamage, eee->getPosition().x);
 				
 				eee->canDamage = false;
@@ -552,7 +552,7 @@ void MainGame::checkAttackRange(Enemy * eee, int index)
 					|| (i != 1 && checkRange(eee,item->skillRange))))
 			{
 					if (!eee->isDead && eee->isSpawned && !eee->invulnerable)
-						this->displayDamage(ppp->damageCurrent / 100 * item->skillDamage, "grey", eee->getPosition());
+						this->displayDamage(ppp->damageCurrent / 100 * item->skillDamage, "grey", eee->getPosition(),eee->getContentSize());
 					eee->getHit(ppp->damageCurrent / 100 * item->skillDamage);
 					
 					item->canDamage[index] = false;
@@ -570,7 +570,7 @@ void MainGame::checkAttackRange(Enemy * eee, int index)
 		if (eee->isCaster && eee->canDamage && !ppp->isRolling && std::fabsf(eee->spellLanded->getPosition().x-ppp->getPosition().x)<9) {
 			
 			if (!ppp->isDead && ppp->state != 1)
-				this->displayDamage(eee->skillDamage, "blue", ppp->getPosition());
+				this->displayDamage(eee->skillDamage, "blue", ppp->getPosition(),Size(0,0));
 			ppp->getHit(eee->skillDamage, eee->getPosition().x);
 			
 			eee->canDamage = false;
@@ -858,30 +858,46 @@ Animate * MainGame::animation(std::string actionName,float timeEachFrame)
 	return anim;
 }
 
-void MainGame::displayDamage(int damage, std::string color, Vec2 where)
+void MainGame::displayDamage(int damage, std::string color, Vec2 where,Size size)
 {
+
+	auto digit = std::to_string(damage);
 	std::vector<int> digits;
-
-	while (damage > 0)
+	auto test = digit.length();
+	while (digit.length()>0)
 	{
-		auto digit = damage % 10;
-		digits.push_back(digit);
-
-		damage /= 10;
+		test = digit.length();
+		auto what2add = digit;
+		digits.push_back(std::stoi(what2add.erase(1, digit.length())));
+		digit.erase(0,1);
 	}
+
+
+	//while (damage > 0)
+	//{
+	//	auto digit = damage % 10;
+	//	digits.push_back(digit);
+
+	//	damage /= 10;
+	//}
 
 	auto sprite_size = SpriteFrameCache::getInstance()->getSpriteFrameByName(color + "0.png")->getOriginalSize();
 
 	auto start = where;
-	start.x += sprite_size.width * 2;
+	start.x += size.width / 2;
 
 	Vector<Sprite*> digitSprites;
 	for (int i = 0; i < (int)digits.size(); i++)
 	{
 		auto sprite = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(color + std::to_string(digits[i]) + ".png"));
-		start.x -= sprite_size.width;
+		if (i > 0) {
+			if(size.width>0)
+				start.x += sprite_size.width;
+			else start.x += sprite_size.width*0.4;
+		}
 		sprite->setPosition(start);
 
+		if (size.width == 0) sprite->setScale(0.4);
 		digitSprites.pushBack(sprite);
 		this->addChild(sprite, 2);
 	}
