@@ -308,8 +308,6 @@ void Player::getHit(int damage, float eeePosX) {
 		int healthP = std::stoi(this->hp->getString());
 		healthP -= damage;
 
-
-
 		if (healthP < 0 || healthP == 0) {
 			this->hp->setString("0");
 			this->dead();

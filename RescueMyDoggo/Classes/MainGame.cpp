@@ -120,6 +120,8 @@ bool MainGame::init()
 	this->startGame->setPosition(0, 0);
 	this->isGameStart = false;
 
+	auto cache = SpriteFrameCache::getInstance();
+	cache->addSpriteFramesWithFile("damage.plist");
 
 	this->setupPressedKeyHandling();
 	this->setupTouchHandling();
@@ -384,12 +386,10 @@ void MainGame::update(float elapsed)
 			if (hud_layer->attackBtn->getValue() && !ppp->usingSkill)
 			{
 				ppp->attack();
-				//ppp->runAction(JumpBy::create(0.5, Vec2(0, 50), 50, 1));
 			}
 			if (hud_layer->rollBtn->getValue() && !ppp->usingSkill)
 			{
 				ppp->roll();
-				//ppp->runAction(JumpBy::create(0.5, Vec2(0, 50), 0, 1));
 			}
 			if (hud_layer->skill1Btn->getValue() && !ppp->usingSkill)
 			{
@@ -523,11 +523,15 @@ void MainGame::checkAttackRange(Enemy * eee, int index)
 		{
 			if (ppp->isAttacking && ppp->canAADamage[index]) {
 					    eee->getHit(ppp->damageCurrent);
+						if (!eee->isDead && eee->isSpawned && !eee->invulnerable)
+							this->displayDamage(ppp->damageCurrent, "grey", eee->getPosition());
 						ppp->canAADamage[index] = false;
 			}
 
 			if (eee->canDamage && !ppp->isRolling && !eee->isCaster) {
 				ppp->getHit(eee->skillDamage, eee->getPosition().x);
+				if (!ppp->isDead)
+					this->displayDamage(eee->skillDamage, "blue", ppp->getPosition());
 				eee->canDamage = false;
 			}
 		}
@@ -545,6 +549,8 @@ void MainGame::checkAttackRange(Enemy * eee, int index)
 					|| (i != 1 && checkRange(eee,item->skillRange))))
 			{
 					eee->getHit(ppp->damageCurrent / 100 * item->skillDamage);
+					if (!eee->isDead && eee->isSpawned && !eee->invulnerable)
+						this->displayDamage(ppp->damageCurrent, "grey", eee->getPosition());
 					item->canDamage[index] = false;
 			}
 			i++;
@@ -559,6 +565,8 @@ void MainGame::checkAttackRange(Enemy * eee, int index)
 		}
 		if (eee->isCaster && eee->canDamage && !ppp->isRolling && std::fabsf(eee->spellLanded->getPosition().x-ppp->getPosition().x)<9) {
 			ppp->getHit(eee->skillDamage, eee->getPosition().x);
+			if (!ppp->isDead)
+				this->displayDamage(eee->skillDamage, "blue", ppp->getPosition());
 			eee->canDamage = false;
 		}
 
@@ -842,6 +850,41 @@ Animate * MainGame::animation(std::string actionName,float timeEachFrame)
 	Animation* runningAnimation = Animation::createWithSpriteFrames(runningFrames, timeEachFrame);
 	Animate* anim = Animate::create(runningAnimation);
 	return anim;
+}
+
+void MainGame::displayDamage(int damage, std::string color, Vec2 where)
+{
+	std::vector<int> digits;
+
+	while (damage > 0)
+	{
+		auto digit = damage % 10;
+		digits.push_back(digit);
+
+		damage /= 10;
+	}
+
+	auto sprite_size = SpriteFrameCache::getInstance()->getSpriteFrameByName(color + "0.png")->getOriginalSize();
+
+	auto start = where;
+	start.x += sprite_size.width * 2;
+
+	Vector<Sprite*> digitSprites;
+	for (int i = 0; i < (int)digits.size(); i++)
+	{
+		auto sprite = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(color + std::to_string(digits[i]) + ".png"));
+		start.x -= sprite_size.width;
+		sprite->setPosition(start);
+
+		digitSprites.pushBack(sprite);
+		this->addChild(sprite, 2);
+	}
+
+
+	for (auto item : digitSprites)
+		item->runAction(Sequence::create(
+			MoveBy::create(0.5f, Vec2(0, 200)),
+			CallFunc::create([=]() { item->removeFromParentAndCleanup(true); }), nullptr));
 }
 
 void MainGame::delAll() 
