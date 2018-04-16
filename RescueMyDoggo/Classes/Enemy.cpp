@@ -372,7 +372,7 @@ void Enemy::autoRespawn()
 {
 	if (this->canRespawn && this->bossNumber==0) 
 	{
-		float timeTillRespawn = RandomHelper::random_real(2.5f, 5.0f);
+		float timeTillRespawn = RandomHelper::random_real(5.0f, 10.0f);
 		//this->setVisible(true);
 		//this->setOpacity(0);
 
@@ -399,6 +399,7 @@ void Enemy::dead() {
 	if (this->waveNumber == 2) ppp->w2kills++;
 		this->isDead = true;
 		this->isSpawned = false;
+		this->canRespawn = true;
 		//this->stopAllActions();
 		this->forbidAllAction();
 		if(this->checkFrame("Dead"))

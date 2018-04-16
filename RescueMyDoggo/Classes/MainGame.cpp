@@ -342,7 +342,7 @@ void MainGame::update(float elapsed)
 		if (ppp->lastSeenExp != ppp->currentEXP / ppp->baseEXP * 100) {
 			ppp->lastSeenExp = ppp->currentEXP / ppp->baseEXP * 100;
 			hud_layer->statPlayer->EXPplayer->runAction(ProgressTo::create(0.3f, ppp->lastSeenExp));
-			hud_layer->statPlayer->EXPplayer->setPercentage(ppp->lastSeenExp);
+			//hud_layer->statPlayer->EXPplayer->setPercentage(ppp->lastSeenExp);
 		}
 		if (ppp->isDead && this->isGameOver) {
 			ppp->HPonHead->setVisible(false);

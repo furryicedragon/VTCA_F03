@@ -42,9 +42,9 @@ public:
 	float currentEXP;
 	float baseEXP;
 	float lastSeenLife;
+	float lastSeenExp;
 	int timePassedInSecond;
 	int direction;
-	int lastSeenExp;
 	int currentSkillID;
 	int attackRange;
 	int w1kills;
