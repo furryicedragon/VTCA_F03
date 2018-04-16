@@ -521,17 +521,20 @@ void MainGame::checkAttackRange(Enemy * eee, int index)
 	if ((index != 4 || boss1)||(index!=9 || boss2)&&!ppp->isDead) {
 		if (checkRange(eee,69)) 
 		{
-			if (ppp->isAttacking && ppp->canAADamage[index]) {
-					    eee->getHit(ppp->damageCurrent);
-						if (!eee->isDead && eee->isSpawned && !eee->invulnerable)
-							this->displayDamage(ppp->damageCurrent, "grey", eee->getPosition());
-						ppp->canAADamage[index] = false;
+			if (ppp->isAttacking && ppp->canAADamage[index])
+			{
+				if (!eee->isDead && eee->isSpawned && !eee->invulnerable)
+					this->displayDamage(ppp->damageCurrent, "grey", eee->getPosition());
+				eee->getHit(ppp->damageCurrent);
+
+				ppp->canAADamage[index] = false;
 			}
 
 			if (eee->canDamage && !ppp->isRolling && !eee->isCaster) {
-				ppp->getHit(eee->skillDamage, eee->getPosition().x);
-				if (!ppp->isDead)
+				if (!ppp->isDead && ppp->state != 1)
 					this->displayDamage(eee->skillDamage, "blue", ppp->getPosition());
+				ppp->getHit(eee->skillDamage, eee->getPosition().x);
+				
 				eee->canDamage = false;
 			}
 		}
@@ -548,9 +551,10 @@ void MainGame::checkAttackRange(Enemy * eee, int index)
 				&& (skillRect.intersectsRect(eee->getBoundingBox()) 
 					|| (i != 1 && checkRange(eee,item->skillRange))))
 			{
-					eee->getHit(ppp->damageCurrent / 100 * item->skillDamage);
 					if (!eee->isDead && eee->isSpawned && !eee->invulnerable)
 						this->displayDamage(ppp->damageCurrent, "grey", eee->getPosition());
+					eee->getHit(ppp->damageCurrent / 100 * item->skillDamage);
+					
 					item->canDamage[index] = false;
 			}
 			i++;
@@ -564,9 +568,11 @@ void MainGame::checkAttackRange(Enemy * eee, int index)
 			eee->attackLandedEffect();
 		}
 		if (eee->isCaster && eee->canDamage && !ppp->isRolling && std::fabsf(eee->spellLanded->getPosition().x-ppp->getPosition().x)<9) {
-			ppp->getHit(eee->skillDamage, eee->getPosition().x);
-			if (!ppp->isDead)
+			
+			if (!ppp->isDead && ppp->state != 1)
 				this->displayDamage(eee->skillDamage, "blue", ppp->getPosition());
+			ppp->getHit(eee->skillDamage, eee->getPosition().x);
+			
 			eee->canDamage = false;
 		}
 
