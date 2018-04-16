@@ -381,14 +381,14 @@ void Enemy::autoRespawn()
 
 		this->runAction(
 			Sequence::create(
-				DelayTime::create(timeTillRespawn + 0.1f),
+				DelayTime::create(timeTillRespawn + 0.2f),
 				Repeat::create(Sequence::create(
 					DelayTime::create((float)1 / 255),
 					CallFunc::create([=]() { this->setOpacity(this->getOpacity() + 1); }), nullptr), 255),nullptr));
 
 		this->movementHelper->runAction(
 			Sequence::create(
-				DelayTime::create(timeTillRespawn + 1.0f),
+				DelayTime::create(timeTillRespawn + 1.2f),
 				CallFunc::create([=]() { this->isDead = false; this->isSpawned = true; this->setHP(100); }), nullptr));
 	}
 
