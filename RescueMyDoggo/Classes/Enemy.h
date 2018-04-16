@@ -77,6 +77,7 @@ public:
 	void attackLandedEffect();
 	void forbidAllAction();
 	void movingAnimation();
+	void fadeUrSelf();
 	void chasing();
 	//void spawnEffect();
 	Animate* animation(std::string actionName, float timeEachFrame);

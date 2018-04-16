@@ -132,7 +132,7 @@ Animate* Enemy::animation(std::string actionName, float timeEachFrame) {
 }
 
 void Enemy::idleStatus() {
-	if (!this->isIdle && !this->isDead) {
+	if (!this->isIdle &&( !this->isDead || this->canRespawn)) {
 		this->stopAllActionsByTag(1);
 		this->stopAllActionsByTag(3);
 		auto idleState = RepeatForever::create(animation("Idle", 0.12f));
@@ -372,24 +372,24 @@ void Enemy::autoRespawn()
 {
 	if (this->canRespawn && this->bossNumber==0) 
 	{
-		auto timeTillRespawn = RandomHelper::random_real(2.5f, 5.0f);
+		float timeTillRespawn = RandomHelper::random_real(2.5f, 5.0f);
+		//this->setVisible(true);
+		//this->setOpacity(0);
 
 		this->runAction(
 			Sequence::create(
 				DelayTime::create(timeTillRespawn),
-				CallFunc::create([=]() { this->setVisible(true); this->setOpacity(0); }), nullptr));
-
-		this->runAction(
-			Sequence::create(
-				DelayTime::create(timeTillRespawn + 0.2f),
-				Repeat::create(Sequence::create(
-					DelayTime::create((float)1 / 255),
-					CallFunc::create([=]() { this->setOpacity(this->getOpacity() + 1); }), nullptr), 255),nullptr));
+				CallFunc::create([=]() {this->idleStatus(); }),
+				FadeIn::create(1.0f), nullptr));
 
 		this->movementHelper->runAction(
 			Sequence::create(
-				DelayTime::create(timeTillRespawn + 1.2f),
-				CallFunc::create([=]() { this->isDead = false; this->isSpawned = true; this->setHP(100); }), nullptr));
+				DelayTime::create(timeTillRespawn + 1.0f),
+				CallFunc::create([=]() { 
+			this->isDead = false; 
+			this->isSpawned = true; 
+			this->setHP(100);
+			this->canRespawn = false; }), nullptr));
 	}
 
 }
@@ -402,9 +402,9 @@ void Enemy::dead() {
 		//this->stopAllActions();
 		this->forbidAllAction();
 		if(this->checkFrame("Dead"))
-		this->runAction(Sequence::create(animation("Dead", 0.12f), CallFunc::create([=]() {this->setVisible(false); }), nullptr));
+			this->runAction(Sequence::create(animation("Dead", 0.12f), FadeOut::create(0), CallFunc::create([=]() {this->autoRespawn(); }), nullptr));
 
-		this->autoRespawn();
+		
 
 		auto howFar = ppp->getPosition().x - this->getPosition().x;
 		auto theX = 40.f;
