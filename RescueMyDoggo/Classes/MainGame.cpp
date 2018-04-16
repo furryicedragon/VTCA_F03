@@ -552,7 +552,7 @@ void MainGame::checkAttackRange(Enemy * eee, int index)
 					|| (i != 1 && checkRange(eee,item->skillRange))))
 			{
 					if (!eee->isDead && eee->isSpawned && !eee->invulnerable)
-						this->displayDamage(ppp->damageCurrent, "grey", eee->getPosition());
+						this->displayDamage(ppp->damageCurrent / 100 * item->skillDamage, "grey", eee->getPosition());
 					eee->getHit(ppp->damageCurrent / 100 * item->skillDamage);
 					
 					item->canDamage[index] = false;

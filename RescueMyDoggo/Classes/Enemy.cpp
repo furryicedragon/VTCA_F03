@@ -347,7 +347,7 @@ void Enemy::getHit(int damage) {
 		if(hit)
 		this->setSpriteFrame(hit);
 		int x = -16;
-		if (ppp->getPosition().x < this->getPosition().x) 
+		if (ppp->getPositionX() - ppp->getContentSize().width / 2 < this->getPositionX()) 
 		{
 			x *= -1;
 			this->setFlippedX(true);
