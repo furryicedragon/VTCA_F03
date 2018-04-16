@@ -66,7 +66,7 @@ void Player::initOption()
 	this->attackFrameNumber.push_back(one);
 	this->attackFrameNumber.push_back(two);
 	this->attackFrameNumber.push_back(three);
-	this->attackChainNumber = 1;
+	//this->attackChainNumber = 0;
 	this->weaponKind = "onehanded";
 	isAttacking = false;
 	this->idleStatus();
@@ -220,7 +220,7 @@ void Player::attack() {
 		this->stopAllActions();				//stop all hanh dong de attack
 		//std::string name = "Attack/Attack Chain/" + std::to_string(this->attackChainNumber); //name = Folder chua Animate cua (attack)
 		//this->runAction(Sequence::create(animation(name, attackSpeed),
-		this->runAction(Sequence::create(makeAnimation("attack" + std::to_string(this->attackChainNumber), attackSpeed),
+		this->runAction(Sequence::create(makeAnimation("attack" + std::to_string(RandomHelper::random_int(0, 6))/*std::to_string(this->attackChainNumber)*/, attackSpeed),
 			CallFunc::create([=]() 
 			{
 				std::fill(canAADamage.begin(), canAADamage.end(), false);
@@ -229,23 +229,24 @@ void Player::attack() {
 		}),	nullptr));
 		this->runAction(Sequence::create(DelayTime::create(0.1), DelayTime::create(this->animationDelay - 0.1), CallFunc::create([=]() {
 			std::fill(canAADamage.begin(), canAADamage.end(), true); }), nullptr));
-		this->attackCount(); //dung de tang them 1 don vi moi khi attack (**)
+		//this->attackCount(); //dung de tang them 1 don vi moi khi attack (**)
 	}
 }
-void Player::attackCount() {
-		this->attackHelper->stopAllActionsByTag(1); //neu attack lien tiep se stop "helperAction(sau vai giay khong danh thu tu combo se ve 1)"
-	if (attackChainNumber == 6) //(**)
-		attackChainNumber = 0; //sau don danh thu 3 se tu dong quay ve don danh thu nhat (**)
-	else {
-		attackChainNumber++; //tang thu tu don danh them 1
-		//int frameNumbers = attackFrameNumber[this->attackChainNumber - 1]; //check so luong frame animation trong folder cua Attack dua theo 
-							//																									attack ChainNumber
-		auto helperAction(Sequence::create(DelayTime::create(0.12/**(frameNumbers-1)*/ +10.1), CallFunc::create([=]() {this->attackChainNumber = 1; }), nullptr));
-		helperAction->setTag(1);
-		this->attackHelper->runAction(helperAction);
-	}
 
-}
+//void Player::attackCount() {
+//		this->attackHelper->stopAllActionsByTag(1); //neu attack lien tiep se stop "helperAction(sau vai giay khong danh thu tu combo se ve 1)"
+//	if (attackChainNumber == 6) //(**)
+//		attackChainNumber = 0; //sau don danh thu 3 se tu dong quay ve don danh thu nhat (**)
+//	else {
+//		attackChainNumber++; //tang thu tu don danh them 1
+//		//int frameNumbers = attackFrameNumber[this->attackChainNumber - 1]; //check so luong frame animation trong folder cua Attack dua theo 
+//							//																									attack ChainNumber
+//		auto helperAction(Sequence::create(DelayTime::create(0.12/**(frameNumbers-1)*/ +10.1), CallFunc::create([=]() {this->attackChainNumber = 0; }), nullptr));
+//		helperAction->setTag(1);
+//		this->attackHelper->runAction(helperAction);
+//	}
+//
+//}
 
 void Player::knockback(float eeePosX)
 {

@@ -49,7 +49,7 @@ public:
 	int w1kills;
 	int w2kills;
 	int count;
-	int attackChainNumber;
+	//int attackChainNumber;
 	int skillDamage;
 	int state;
 	bool tester;
@@ -71,7 +71,7 @@ public:
 	void attack();
 	void moving();
 	void idleStatus();
-	void attackCount();
+	//void attackCount();
 	void smootherMove();
 	void knockback(float eeePosX);
 	void getHit(int damage, float eeePosX);
