@@ -510,7 +510,7 @@ bool MainGame::checkRange(Enemy* enemy2Check, int theRange) {
 
 	auto itemWidth = enemy2Check->getContentSize().width*enemy2Check->getScale();
 	auto calculateIt = 40;
-	if (enemy2Check->bossNumber == 1) calculateIt = 90;
+	if (enemy2Check->bossNumber == 1) calculateIt = 150;
 	auto howfarX = (enemy2Check->getPosition().x + itemWidth / 2) - ppp->getPosition().x;
 		if (((howfarX < 69 && ppp->direction==0 && howfarX>-itemWidth / 2 - theRange)
 			|| (howfarX < itemWidth / 2 + theRange && howfarX>-69 && ppp->direction==1))&& ppp->getPosition().y - enemy2Check->getPosition().y<calculateIt && ppp->getPositionY()-enemy2Check->getPositionY()>0)
