@@ -370,16 +370,26 @@ void Enemy::getHit(int damage) {
 
 void Enemy::autoRespawn()
 {
-	if (this->canRespawn && this->bossNumber==0) {
+	if (this->canRespawn && this->bossNumber==0) 
+	{
+		auto timeTillRespawn = RandomHelper::random_real(2.5f, 5.0f);
+
 		this->runAction(
-			Sequence::create(DelayTime::create(RandomHelper::random_int(10,20)), 
-				CallFunc::create([=]()
-				{
-					this->setVisible(true);
-					this->isDead = false;
-					this->setHP(100);
-					this->isSpawned = true;
-		}), nullptr));
+			Sequence::create(
+				DelayTime::create(timeTillRespawn),
+				CallFunc::create([=]() { this->setVisible(true); this->setOpacity(0); }), nullptr));
+
+		this->runAction(
+			Sequence::create(
+				DelayTime::create(timeTillRespawn + 0.1f),
+				Repeat::create(Sequence::create(
+					DelayTime::create((float)1 / 255),
+					CallFunc::create([=]() { this->setOpacity(this->getOpacity() + 1); }), nullptr), 255),nullptr));
+
+		this->movementHelper->runAction(
+			Sequence::create(
+				DelayTime::create(timeTillRespawn + 1.0f),
+				CallFunc::create([=]() { this->isDead = false; this->isSpawned = true; this->setHP(100); }), nullptr));
 	}
 
 }
