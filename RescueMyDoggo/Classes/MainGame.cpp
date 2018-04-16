@@ -224,14 +224,14 @@ void MainGame::whatYouWant(EventKeyboard::KeyCode keyCode, int yourStatus) {
 			{
 				ppp->lastDuration = 0.25;
 				ppp->lastX = -45;
-				ppp->direction = 0;
+				ppp->lastDirection = "Left";
 				break;
 			}
 			case cocos2d::EventKeyboard::KeyCode::KEY_D:
 			{
 				ppp->lastDuration = 0.25;
 				ppp->lastX = 45;
-				ppp->direction = 1;
+				ppp->lastDirection = "Right";
 				break;
 			}
 			}
@@ -885,7 +885,7 @@ void MainGame::displayDamage(int damage, std::string color, Vec2 where,Size size
 
 	auto start = where;
 	start.x += size.width / 2;
-	start.y += RandomHelper::random_int(0, 100);
+	start.y += RandomHelper::random_int(0, 50);
 
 	Vector<Sprite*> digitSprites;
 	for (int i = 0; i < (int)digits.size(); i++)
@@ -903,7 +903,7 @@ void MainGame::displayDamage(int damage, std::string color, Vec2 where,Size size
 		this->addChild(sprite, 2);
 	}
 
-	auto theY = RandomHelper::random_int(100, 200);
+	auto theY = RandomHelper::random_int(50, 150);
 
 	for (auto item : digitSprites)
 		item->runAction(Sequence::create(

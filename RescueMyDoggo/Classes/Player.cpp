@@ -170,6 +170,7 @@ void Player::idleStatus() {
 		auto repeatIdle = RepeatForever::create(makeAnimation("idle", 0.16969f));
 		repeatIdle->setTag(1);
 		this->runAction(repeatIdle);
+		this->secondLastDirection = "";
 	}
 }
 
@@ -181,7 +182,7 @@ void Player::moving() {
 		//&& !this->isRolling 
 		&& !this->isAttacking 
 		&& !this->isDead 
-		&&(!this->isMoving || this->lastDirection!=direction)) 
+		&&(!this->isMoving || this->lastDirection!=secondLastDirection)) 
 	{
 		this->stopAllActionsByTag(1);
 		if (!this->canMoveDirections[1]) {
@@ -191,9 +192,11 @@ void Player::moving() {
 			if (lastX < 0) lastX = 0;
 		}
 
+		if (lastDirection == "Left") this->direction = 0;
+		if (lastDirection == "Right") this->direction = 1;
+		secondLastDirection = lastDirection;
 		smootherMove();
 		this->isMoving = true;
-		lastDirection = direction;
 		this->stopAllActionsByTag(3);
 		auto moveBy = MoveBy::create(lastDuration, Vec2(lastX,0));
 		auto repeatMove = RepeatForever::create(moveBy);

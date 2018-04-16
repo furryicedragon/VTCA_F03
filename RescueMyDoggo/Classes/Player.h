@@ -20,7 +20,8 @@ public:
 	std::vector<bool> canAADamage;
 	std::vector<Sprite*> effectStatus;
 	std::string weaponKind;
-	int lastDirection;
+	std::string lastDirection;
+	std::string secondLastDirection;
 	Sprite* skillHelper;
 	Sprite* attackHelper;
 	Sprite* slash;
