@@ -885,6 +885,7 @@ void MainGame::displayDamage(int damage, std::string color, Vec2 where,Size size
 
 	auto start = where;
 	start.x += size.width / 2;
+	start.y += RandomHelper::random_int(0, 100);
 
 	Vector<Sprite*> digitSprites;
 	for (int i = 0; i < (int)digits.size(); i++)
@@ -902,10 +903,12 @@ void MainGame::displayDamage(int damage, std::string color, Vec2 where,Size size
 		this->addChild(sprite, 2);
 	}
 
+	auto theY = RandomHelper::random_int(100, 200);
 
 	for (auto item : digitSprites)
 		item->runAction(Sequence::create(
-			MoveBy::create(0.5f, Vec2(0, 200)),
+			MoveBy::create(0.5f, Vec2(0, theY)),
+			FadeOut::create(0.5f),
 			CallFunc::create([=]() { item->removeFromParentAndCleanup(true); }), nullptr));
 }
 
