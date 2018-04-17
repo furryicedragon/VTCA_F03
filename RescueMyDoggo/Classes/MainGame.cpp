@@ -49,7 +49,7 @@ bool MainGame::init()
 	map1 = TMXTiledMap::create("map1.tmx");
 	auto theTest = map1->getContentSize();
 	//map1->setScale(1.6f);
-	map1->setContentSize(map1->getContentSize()*map1->getScale()); //do nothing but helping *2 that's all
+	//map1->setContentSize(map1->getContentSize()); //do nothing but helping *2 that's all
 	if(map1)
 	this->addChild(map1, 0, 33);
 	auto oj = map1->getObjectGroup("Objects");
@@ -69,7 +69,7 @@ bool MainGame::init()
 	ppp = Player::create();
 	ppp->map1Size = map1->getContentSize();
 	ppp->mapScale = map1->getScale();
-	ppp->setPosition(sPx*map1->getScale(), sPy*map1->getScale());
+	ppp->setPosition(sPx, sPy);
 	//ppp->setAnchorPoint(Vec2(0,0));
 	//ppp->setScale(0.6f);
 	//ppp->setFlippedX(true);
@@ -230,14 +230,14 @@ void MainGame::whatYouWant(EventKeyboard::KeyCode keyCode, int yourStatus) {
 			{
 			case cocos2d::EventKeyboard::KeyCode::KEY_A:
 			{
-				ppp->lastDuration = 0.25;
+				ppp->lastDuration = 0.15;
 				ppp->lastX = -45;
 				ppp->lastDirection = "Left";
 				break;
 			}
 			case cocos2d::EventKeyboard::KeyCode::KEY_D:
 			{
-				ppp->lastDuration = 0.25;
+				ppp->lastDuration = 0.15;
 				ppp->lastX = 45;
 				ppp->lastDirection = "Right";
 				break;
@@ -304,6 +304,7 @@ Point MainGame::tileCoordForPosition(Point position) {
 void MainGame::updatePlayerPosition() {
 	//if (ppp->isSpawn) {
 		auto pppPos = this->ppp->getPosition();
+
 		auto movePos = this->pppPositionHelper->getPosition();
 		movePos.x = MathUtil::lerp(movePos.x, pppPos.x, 0.69f);
 		auto posY = visibleSize.height / 2;
@@ -312,21 +313,21 @@ void MainGame::updatePlayerPosition() {
 			else posY = visibleSize.height / 2 + 112;
 		}
 		movePos.y = MathUtil::lerp(movePos.y, posY, 1.f);
-		auto theLineRight = map1->getContentSize().width / 4*3;
-		auto theLineLeft = map1->getContentSize().width / 4;
-			auto followPlayer = Follow::create(pppPositionHelper,Rect::ZERO);
+		/*auto theLineRight = map1->getContentSize().width / 4*1.3f;
+		auto theLineLeft = map1->getContentSize().width / 4;*/
+		//auto theLineRight = map1->getContentSize().width - 360;
+		//auto theLineLeft = 360 ;
+			auto followPlayer = Follow::create(pppPositionHelper,Rect(0, 0, map1->getContentSize().width, map1->getContentSize().height));
 			followPlayer->setTag(99);
 			//if ((pppPos.y < 145*map1->getScale() &&!ppp->isRolling) || ((pppPos.y < 145*map1->getScale()+33)&&ppp->isRolling)) 
 			//	movePos.y = visibleSize.height/2;
 		
-			if (pppPos.x < theLineLeft) 
+			/*if (pppPos.x < theLineLeft) 
 				movePos.x = theLineLeft;
-			else if (pppPos.x > theLineRight) movePos.x = theLineRight;
+			else if (pppPos.x > theLineRight) movePos.x = theLineRight;*/
 
 			this->runAction(followPlayer);
 			this->pppPositionHelper->setPosition(movePos);
-	//}
-
 }
 
 void MainGame::update(float elapsed)
