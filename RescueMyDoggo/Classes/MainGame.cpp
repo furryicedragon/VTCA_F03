@@ -107,8 +107,6 @@ bool MainGame::init()
 	if(ppp->slash)
 	this->addChild(ppp->slash,9);
 
-
-
 	while(pppPositionHelper==nullptr) pppPositionHelper = Sprite::create("CloseNormal.png");
 	pppPositionHelper->setOpacity(0);
 	pppPositionHelper->setAnchorPoint(Vec2(0, 0));
@@ -333,14 +331,14 @@ void MainGame::update(float elapsed)
 {
 	auto hud_layer = static_cast<HUDLayer*> (Director::getInstance()->getRunningScene()->getChildByTag(9999));
 
-
 	if(this->isGameStart)
-	{
+	{	
 		auto pos = ppp->getPosition();
 		pos.y += 60;
 		this->HPonHead->setPosition(pos);
 		this->HitDame->setPosition(pos);
 		this->nothingBar->setPosition(pos);
+		hud_layer->scoreLabel->setString(String::createWithFormat("Score: %d", ppp->score)->getCString());
 
 		if (ppp->lastSeenLife != std::stoi(ppp->hp->getString()) / ppp->baseHP * 100) {
 			ppp->lastSeenLife = std::stoi(ppp->hp->getString()) / ppp->baseHP * 100;
@@ -414,7 +412,6 @@ void MainGame::update(float elapsed)
 				ppp->useSkill(0, hud_layer->skill2Btn);
 			}
 		}
-
 		if (this->enemyAdded) {
 			checkGravity();
 
@@ -464,7 +461,6 @@ void MainGame::update(float elapsed)
 				}
 			}
 		}
-
 		if (ppp->isDead && !this->isGameOver) {
 			ppp->isSpawn = false;
 			auto where2Put = pppPositionHelper->getPosition().x - visibleSize.width / 2;
