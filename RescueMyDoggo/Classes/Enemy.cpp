@@ -303,6 +303,7 @@ void Enemy::casterSpell()
 }
 void Enemy::mobilitySS()
 {
+	this->mobilityUsing = true;
 	this->invulnerable = true;
 	this->movementHelper->stopActionByTag(123);
 	float howFar = ppp->getPosition().x - (this->getPosition().x + this->getContentSize().width / 2);
@@ -310,10 +311,10 @@ void Enemy::mobilitySS()
 	if (howFar < skillRange) {
 		if (this->bossNumber == 1 && this->mapNumber == 1)
 			this->runAction(Sequence::create(DelayTime::create(castSpeed*(mobilitySSAt + 1)),
-				JumpTo::create(castSpeed*mobilitySpeed, Vec2(ppp->getPosition().x - this->getContentSize().width / 2, this->getPosition().y), 72, 1), CallFunc::create([=]() {this->canDamage = true;  this->invulnerable = false; }), nullptr));
+				JumpTo::create(castSpeed*mobilitySpeed, Vec2(ppp->getPosition().x - this->getContentSize().width / 2, this->getPosition().y), 72, 1), CallFunc::create([=]() {this->mobilityUsing = false; this->canDamage = true;  this->invulnerable = false; }), nullptr));
 		else
 		this->runAction(Sequence::create(DelayTime::create(castSpeed*(mobilitySSAt + 1)),
-			MoveTo::create(castSpeed*mobilitySpeed, Vec2(ppp->getPosition().x - this->getContentSize().width / 2, this->getPosition().y)), CallFunc::create([=]() {this->canDamage = true; this->invulnerable = false; }), nullptr));
+			MoveTo::create(castSpeed*mobilitySpeed, Vec2(ppp->getPosition().x - this->getContentSize().width / 2, this->getPosition().y)), CallFunc::create([=]() {this->mobilityUsing = false; this->canDamage = true; this->invulnerable = false; }), nullptr));
 	}
 			
 }
@@ -384,7 +385,7 @@ void Enemy::autoRespawn()
 				CallFunc::create([=]() {this->idleStatus(); }),
 				FadeIn::create(1.0f), nullptr));
 
-		this->movementHelper->runAction(
+		this->runAction(
 			Sequence::create(
 				DelayTime::create(timeTillRespawn + 1.0f),
 				CallFunc::create([=]() { 
@@ -467,6 +468,7 @@ void Enemy::update(float elapsed)
 		{
 			this->stopAllActionsByTag(3);
 			this->stopAllActionsByTag(4);
+			if(!this->mobilityUsing)
 			this->setFlippedX(false);
 			this->canChase = true;
 			this->isMoving = false;
@@ -475,6 +477,7 @@ void Enemy::update(float elapsed)
 		else if (!this->isFlippedX() && ppp->getPositionX() < this->getPositionX() - this->getContentSize().width) {
 			this->stopAllActionsByTag(3);
 			this->stopAllActionsByTag(4);
+			if(!this->mobilityUsing)
 			this->setFlippedX(true);
 			this->canChase = true;
 			this->isMoving = false;

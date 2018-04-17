@@ -42,6 +42,7 @@ public:
 	float randomX;
 	float randomY;
 	float spotPlayerLine;
+	bool mobilityUsing;
 	bool canRespawn;
 	bool interuptable;
 	bool invulnerable;
