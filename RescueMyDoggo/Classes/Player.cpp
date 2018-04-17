@@ -193,25 +193,24 @@ void Player::moving(float dt) {
 		&& this->isMoving) 
 	{
 		this->stopAllActionsByTag(1);
-		if (!this->canMoveDirections[1]) {
-			if (lastX > 0) lastX = 0;
-		}
-		if (!this->canMoveDirections[3]) {
-			if (lastX < 0) lastX = 0;
-		}
 		float speed;
 		if (lastDirection == "Left") {
 			this->direction = 0;
-			speed = 275 * dt;
-			this->setPositionX(this->getPositionX()-speed);
+			speed = 275 * dt * -1;
 		}
 		if (lastDirection == "Right") {
-			speed = 275 * dt;
-			this->setPositionX(this->getPositionX() + speed);
 			this->direction = 1;
+			speed = 275 * dt;
 		}
 
+		if (!this->canMoveDirections[1]) {
+			if (speed > 0) speed = 0;
+		}
+		if (!this->canMoveDirections[3]) {
+			if (speed < 0) speed = 0;
+		}
 
+		this->setPositionX(this->getPositionX() + speed);
 		smootherMove();
 		secondLastDirection = lastDirection;
 		//this->isMoving = true;
