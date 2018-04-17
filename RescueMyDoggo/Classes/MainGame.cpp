@@ -228,15 +228,17 @@ void MainGame::whatYouWant(EventKeyboard::KeyCode keyCode, int yourStatus) {
 			{
 			case cocos2d::EventKeyboard::KeyCode::KEY_A:
 			{
-				ppp->lastDuration = 0.15;
-				ppp->lastX = -45;
+				//ppp->lastDuration = 0.15;
+				//ppp->lastX = -45;
+				ppp->isMoving = true;
 				ppp->lastDirection = "Left";
 				break;
 			}
 			case cocos2d::EventKeyboard::KeyCode::KEY_D:
 			{
-				ppp->lastDuration = 0.15;
-				ppp->lastX = 45;
+				//ppp->lastDuration = 0.15;
+				//ppp->lastX = 45;
+				ppp->isMoving = true;
 				ppp->lastDirection = "Right";
 				break;
 			}
@@ -429,7 +431,8 @@ void MainGame::update(float elapsed)
 			
 
 			if (ppp->isHoldingKey && !ppp->isAttacking) {
-				ppp->moving();
+				ppp->isMoving = true;
+				ppp->moving(elapsed);
 			}
 			checkCollision(ppp);
 			if(currentWave!=0)

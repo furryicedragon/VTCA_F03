@@ -68,9 +68,10 @@ public:
 	bool isAttacking;
 	bool isRolling;
 	bool canShowStatUp;
+	bool doneWalking;
 	bool fade;
 	void attack();
-	void moving();
+	void moving(float dt);
 	void idleStatus();
 	//void attackCount();
 	void smootherMove();

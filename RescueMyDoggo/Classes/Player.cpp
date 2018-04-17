@@ -17,6 +17,7 @@ Player* Player::create()
 
 void Player::initOption()
 {
+	this->doneWalking = true;
 	timePassedInSecond = 1;
 	this->setFlippedX(false);
 	pppFrames = SpriteFrameCache::getInstance();
@@ -168,6 +169,7 @@ void Player::idleStatus() {
 		&& this->isSpawn
 		&& !this->usingSkill) 
 	{
+		this->doneWalking = true;
 		this->isIdle = true;
 		this->isAttacking = false;
 		this->isMoving = false;
@@ -180,7 +182,7 @@ void Player::idleStatus() {
 	}
 }
 
-void Player::moving() {
+void Player::moving(float dt) {
 
 	if (this->isSpawn
 		&& !this->usingSkill
@@ -188,7 +190,7 @@ void Player::moving() {
 		//&& !this->isRolling 
 		&& !this->isAttacking 
 		&& !this->isDead 
-		&&(!this->isMoving || this->lastDirection!=secondLastDirection)) 
+		&& this->isMoving) 
 	{
 		this->stopAllActionsByTag(1);
 		if (!this->canMoveDirections[1]) {
@@ -197,27 +199,43 @@ void Player::moving() {
 		if (!this->canMoveDirections[3]) {
 			if (lastX < 0) lastX = 0;
 		}
+		float speed;
+		if (lastDirection == "Left") {
+			this->direction = 0;
+			speed = 275 * dt;
+			this->setPositionX(this->getPositionX()-speed);
+		}
+		if (lastDirection == "Right") {
+			speed = 275 * dt;
+			this->setPositionX(this->getPositionX() + speed);
+			this->direction = 1;
+		}
 
-		if (lastDirection == "Left") this->direction = 0;
-		if (lastDirection == "Right") this->direction = 1;
-		secondLastDirection = lastDirection;
+
 		smootherMove();
-		this->isMoving = true;
-		this->stopAllActionsByTag(3);
-		auto moveBy = MoveBy::create(lastDuration, Vec2(lastX,0));
-		auto repeatMove = RepeatForever::create(moveBy);
-		repeatMove->setTag(3);
-		this->runAction(repeatMove);
+		secondLastDirection = lastDirection;
+		//this->isMoving = true;
+		//this->stopAllActionsByTag(3);
+		//auto moveBy = MoveBy::create(lastDuration, Vec2(lastX,0));
+		//auto repeatMove = RepeatForever::create(moveBy);
+		//repeatMove->setTag(3);
+		//this->runAction(repeatMove);
 
 	}
 
 }
 void Player::smootherMove() {
-		this->stopAllActionsByTag(2);
+		//this->stopAllActionsByTag(2);
+	if (this->lastDirection != secondLastDirection) {
 		this->stopAllActionsByTag(4);
-		auto dashIt = Sequence::create(makeAnimation("walk", 0.14f), CallFunc::create([=]() {this->isMoving = false; }), nullptr);
-			dashIt->setTag(4);
-			this->runAction(dashIt);
+		this->doneWalking = true;
+	}
+	if (this->doneWalking) {
+		doneWalking = false;
+		auto walkIt = Sequence::create(makeAnimation("walk", 0.14f), CallFunc::create([=]() {doneWalking = true; }), nullptr);
+		walkIt->setTag(4);
+		this->runAction(walkIt);
+	}
 }
 
 
@@ -225,6 +243,7 @@ void Player::attack() {
 	if (this->isSpawn && !this->isAttacking && !this->isRolling && !this->isDead && this->canAct && !this->usingSkill) {
 		this->isMoving = false;
 		this->isAttacking = true;
+		this->doneWalking = true;
 		//this->slashEffect();                 //thuc hien animation cua slash
 		this->stopAllActions();				//stop all hanh dong de attack
 		//std::string name = "Attack/Attack Chain/" + std::to_string(this->attackChainNumber); //name = Folder chua Animate cua (attack)
@@ -292,11 +311,12 @@ void Player::knockback(float eeePosX)
 void Player::getHit(int damage, float eeePosX) {
 	if (!this->isDead && this->state != 1) 
 	{
+		this->doneWalking = true;
 		tester = true;
 		this->state = 1;
 		this->stopAllActions();
 		this->isAttacking = false;
-		this->isMoving = false;
+		//this->aa = false;
 		this->canAct = false;
 		if (this->usingSkill) {
 			this->listSkill.at(currentSkillID)->stopAllActions();
@@ -340,7 +360,8 @@ void Player::roll() {
 		this->stopAllActions();
 		this->setSpriteFrame(pppFrames->getSpriteFrameByName(std::to_string(direction) + "jump0.png"));
 		this->isIdle = false;
-		this->isMoving = false;
+		//this->isMoving = false;
+		this->doneWalking = true;
 		//this->jump2Height = this->getPositionY() + 200;
 		isRolling = true;
 		int theX = /*20*/0;
@@ -363,6 +384,7 @@ void Player::roll() {
 
 void Player::dead()
 {
+	this->doneWalking = true;
 	this->isDead = true;
 	//this->stopAllActions();
 	this->forbidAllAction();
@@ -462,6 +484,7 @@ void Player::useSkill(int skillID, Button* button)
 {
 	if (this->isSpawn && !this->isAttacking && !this->isRolling && !this->isDead && this->canAct && !this->listSkill.at(skillID)->onCD) 
 	{
+		this->doneWalking = true;
 		currentSkillID = skillID;
 		Skill* skill = listSkill.at(skillID);
 		skill->setupCD(button);
