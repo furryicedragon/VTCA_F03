@@ -31,6 +31,9 @@ public:
 	void toggleVisiblity();
 	void setupStat();
 	StatPlayer* statPlayer;
+
+	Label* scoreLabel;
+	void DisplayScore();
 };
 
 #endif // !HUDLAYER_hpp

@@ -413,14 +413,28 @@ void Enemy::dead() {
 		auto theX = 40.f;
 		if (howFar > 0) theX *= -1;
 		this->runAction(MoveBy::create(0.5, Vec2(theX, 0)));
-		if (this->waveNumber == 1) 
+		if (this->waveNumber == 1)
+		{
 			ppp->currentEXP += 25;
+			ppp->score += 10;
+		}
+			
 		if (this->waveNumber == 2) 
+		{
 			ppp->currentEXP += 50;
-		if (this->bossNumber == 1) 
+			ppp->score += 20;
+		}
+			
+		if (this->bossNumber == 1)
+		{
 			ppp->currentEXP += 150;
+			ppp->score += 20;
+		}		
 		if (this->bossNumber == 2) 
+		{
 			ppp->currentEXP += 300;
+			ppp->score += 40;
+		}
 }
 
 void Enemy::forbidAllAction()

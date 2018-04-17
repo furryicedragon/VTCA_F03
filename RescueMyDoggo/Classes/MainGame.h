@@ -24,6 +24,7 @@ public:
 	Enemy* boss2m2;
 	Enemy* bossfm1;
 	Enemy* bossfm2;
+	Enemy* eee;
 	Player* ppp;
 	Sprite* nothingBar;
 	ProgressTimer* HPonHead;
@@ -81,6 +82,7 @@ public:
 	void displayDamage(int damage, std::string color, Vec2 where, Size sizes);
 	void delAll();
 
+	Label* scoreLabel;
 private:
 	virtual void update(float elapsed) override;
 	bool checkCollision(Player* pPlayer);

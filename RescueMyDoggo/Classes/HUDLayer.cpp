@@ -11,6 +11,7 @@ bool HUDLayer::init()
 	this->setupStick();
 	this->setupButtons();
 	this->setupStat();
+	this->DisplayScore();
 	this->setVisible(false);
 	return true;
 }
@@ -204,4 +205,18 @@ void HUDLayer::setupStat()
 	statPlayer->setPosition(StatPosition);
 	statPlayer->autorelease();
 	this->addChild(statPlayer);
+}
+void HUDLayer::DisplayScore()
+{
+	auto visibleSize = Director::getInstance()->getVisibleSize();
+	Vec2 origin = Director::getInstance()->getVisibleOrigin();
+	Vec2 ScorePosition = Vec2(visibleSize.width - 100, visibleSize.height);
+
+	scoreLabel = Label::create();
+
+	scoreLabel->setString("Score: 0");
+	scoreLabel->setColor(Color3B(255, 255, 0));
+	scoreLabel->setSystemFontSize(22);
+	scoreLabel->setPosition(ScorePosition);
+	this->addChild(scoreLabel);
 }

@@ -94,6 +94,8 @@ public:
 	ProgressTimer* HPonHead;
 	ProgressTimer* HitDame;
 
+	int score;
+
 	float animationDelay;
 
 private:

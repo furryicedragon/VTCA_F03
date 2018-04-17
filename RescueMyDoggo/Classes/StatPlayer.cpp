@@ -7,7 +7,6 @@ bool StatPlayer::init()
 	{
 		return false;
 	}
-
 	this->DisplayStat();
 	return true;
 }
