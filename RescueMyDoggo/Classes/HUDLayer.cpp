@@ -198,7 +198,7 @@ void HUDLayer::setupStat()
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
-	Vec2 StatPosition = Vec2(visibleSize.width* 0.35f, visibleSize.height * 0.95);
+	Vec2 StatPosition = Vec2(visibleSize.width* 0.35f, visibleSize.height * 0.92f);
 
 	statPlayer = new StatPlayer();
 	statPlayer->init();
@@ -209,14 +209,11 @@ void HUDLayer::setupStat()
 void HUDLayer::DisplayScore()
 {
 	auto visibleSize = Director::getInstance()->getVisibleSize();
-	Vec2 origin = Director::getInstance()->getVisibleOrigin();
-	Vec2 ScorePosition = Vec2(visibleSize.width - 100, visibleSize.height);
+	Vec2 ScorePosition = Vec2(visibleSize.width * ((float)2/3), visibleSize.height * 0.91f);
 
-	scoreLabel = Label::create();
+	scoreLabel = Label::createWithSystemFont("Score: 0", "Calibri", 40.0f, Size::ZERO, TextHAlignment::CENTER, TextVAlignment::CENTER);
 
-	scoreLabel->setString("Score: 0");
 	scoreLabel->setColor(Color3B(255, 255, 0));
-	scoreLabel->setSystemFontSize(22);
 	scoreLabel->setPosition(ScorePosition);
 	this->addChild(scoreLabel);
 }
