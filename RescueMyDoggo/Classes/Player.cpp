@@ -279,7 +279,11 @@ void Player::knockback(float eeePosX)
 	this->movementHelper->runAction(
 		Sequence::create(
 			Repeat::create(Sequence::create( DelayTime::create((float)0.16/69), 
-				CallFunc::create([=]() {  this->setPositionX(this->getPositionX() + theX); }), nullptr), 69),
+				CallFunc::create([=]() {
+					if ((this->getPositionX() > 32 + 44) 
+						&& (this->getPositionX() < map1Size.width - (32 + 44)))
+						this->setPositionX(this->getPositionX() + theX); 
+				}), nullptr), 69),
 			CallFunc::create([=]() {this->canAct = true; this->idleStatus(); }), nullptr));
 
 }
