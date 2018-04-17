@@ -111,9 +111,14 @@ void Player::setHP(int HP)
 	nothingBar = Sprite::create("HUD/Bars/nothing2.png");
 	nothingBar->setPosition(this->getContentSize().width / 2,this->getContentSize().height + 20);
 	nothingBar->setScale(0.12f);
-	this->addChild(nothingBar);
+
+	HPonHead->retain();
+	HitDame->retain();
+	nothingBar->retain();
+
+	/*this->addChild(nothingBar);
 	this->addChild(HitDame);
-	this->addChild(HPonHead);
+	this->addChild(HPonHead);*/
 }
 
 Animate * Player::animation(std::string actionName, float timeEachFrame) {

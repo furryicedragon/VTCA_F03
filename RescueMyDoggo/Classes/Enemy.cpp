@@ -55,6 +55,8 @@ void Enemy::initOption()
 	if(movementHelper)
 	this->addChild(movementHelper);
 
+	this->hp->setVisible(false);
+
 	auto getHitFrame = Sprite::create(combination + "/Get Hit/0.png");
 	if(getHitFrame)
 	this->getHitFrameSize = getHitFrame->getContentSize();

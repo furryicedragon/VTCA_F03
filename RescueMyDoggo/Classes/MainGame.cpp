@@ -95,6 +95,14 @@ bool MainGame::init()
 		this->ppp->addChild(ppp->level);
 	}
 
+	this->HPonHead = ppp->HPonHead;
+	this->HitDame = ppp->HitDame;
+	this->nothingBar = ppp->nothingBar;
+
+	this->addChild(HPonHead, 5);
+	this->addChild(HitDame, 4);
+	this->addChild(nothingBar, 3);
+
 	this->setPosition(Vec2(0, 0));
 	if(ppp->slash)
 	this->addChild(ppp->slash,9);
@@ -328,16 +336,22 @@ void MainGame::update(float elapsed)
 
 	if(this->isGameStart)
 	{
+		auto pos = ppp->getPosition();
+		pos.y += 60;
+		this->HPonHead->setPosition(pos);
+		this->HitDame->setPosition(pos);
+		this->nothingBar->setPosition(pos);
+
 		if (ppp->lastSeenLife != std::stoi(ppp->hp->getString()) / ppp->baseHP * 100) {
 			ppp->lastSeenLife = std::stoi(ppp->hp->getString()) / ppp->baseHP * 100;
 			hud_layer->statPlayer->DameHit->runAction(ProgressTo::create(1.0f, ppp->lastSeenLife));
-			ppp->HitDame->runAction(ProgressTo::create(0.5f, ppp->lastSeenLife));
+			this->HitDame->runAction(ProgressTo::create(0.5f, ppp->lastSeenLife));
 
 			hud_layer->statPlayer->DameHit->setPercentage(ppp->lastSeenLife);
 			hud_layer->statPlayer->HPplayer->setPercentage(ppp->lastSeenLife);
 
-			ppp->HPonHead->setPercentage(ppp->lastSeenLife);
-			ppp->HitDame->setPercentage(ppp->lastSeenLife);
+			this->HPonHead->setPercentage(ppp->lastSeenLife);
+			this->HitDame->setPercentage(ppp->lastSeenLife);
 		}
 		if (ppp->lastSeenExp != ppp->currentEXP / ppp->baseEXP * 100) {
 			ppp->lastSeenExp = ppp->currentEXP / ppp->baseEXP * 100;
@@ -345,13 +359,13 @@ void MainGame::update(float elapsed)
 			//hud_layer->statPlayer->EXPplayer->setPercentage(ppp->lastSeenExp);
 		}
 		if (ppp->isDead && this->isGameOver) {
-			ppp->HPonHead->setVisible(false);
-			ppp->HitDame->setVisible(false);
+			this->HPonHead->setVisible(false);
+			this->HitDame->setVisible(false);
 
 			hud_layer->statPlayer->DameHit->setPercentage(100);
 			hud_layer->statPlayer->HPplayer->setPercentage(100);
-			ppp->HPonHead->setPercentage(100);
-			ppp->HitDame->setPercentage(100);
+			this->HPonHead->setPercentage(100);
+			this->HitDame->setPercentage(100);
 		}
 		if (ppp->isSpawn && !this->enemyAdded) {
 			this->enemyAdded = true;

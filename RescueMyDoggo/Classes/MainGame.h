@@ -25,6 +25,9 @@ public:
 	Enemy* bossfm1;
 	Enemy* bossfm2;
 	Player* ppp;
+	Sprite* nothingBar;
+	ProgressTimer* HPonHead;
+	ProgressTimer* HitDame;
 
 	Sprite* pppPositionHelper;
 	Sprite* dashHelper;
