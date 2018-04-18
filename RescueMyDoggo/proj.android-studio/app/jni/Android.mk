@@ -11,10 +11,20 @@ LOCAL_MODULE := MyGame_shared
 
 LOCAL_MODULE_FILENAME := libMyGame
 
-CPP_FILES := $(shell \find \$(LOCAL_PATH)/../../../Classes \-name \*.cpp)
+LOCAL_SRC_FILES := hellocpp/main.cpp \
+ $(LOCAL_PATH)/../../../Classes/AppDelegate.cpp \
+$(LOCAL_PATH)/../../../Classes/MainGame.cpp \
+$(LOCAL_PATH)/../../../Classes/Button.cpp \
+$(LOCAL_PATH)/../../../Classes/ButtonBase.cpp \
+$(LOCAL_PATH)/../../../Classes/Enemy.cpp \
+$(LOCAL_PATH)/../../../Classes/HUDLayer.cpp \
+$(LOCAL_PATH)/../../../Classes/Joystick.cpp \
+$(LOCAL_PATH)/../../../Classes/JoystickBase.cpp \
+$(LOCAL_PATH)/../../../Classes/MainScene.cpp \
+$(LOCAL_PATH)/../../../Classes/Player.cpp \
+$(LOCAL_PATH)/../../../Classes/Skill.cpp \
+$(LOCAL_PATH)/../../../Classes/StatPlayer.cpp
 
-LOCAL_SRC_FILES := $(LOCAL_PATH)/hellocpp/main.cpp
-LOCAL_SRC_FILES += $(CPP_FILES:$(LOCAL_PATH)/%=%)
 
 LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../../Classes
 
