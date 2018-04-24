@@ -270,7 +270,7 @@ bool MainGame::checkCollision(Player* pPlayer)
 }
 void MainGame::check4Directions(Point posDirection, int directionClock) {
 	int tileGID = meta->getTileGIDAt(this->tileCoordForPosition(posDirection));
-	CCLOG("%d", tileGID);
+	//CCLOG("%d", tileGID);
 	if (tileGID) {
 		auto properties = map1->getPropertiesForGID(tileGID).asValueMap();
 
