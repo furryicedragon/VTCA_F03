@@ -861,7 +861,7 @@ Animate * MainGame::animation(std::string actionName,float timeEachFrame)
 {
 	Vector<SpriteFrame *> runningFrames;
 	for (int i = 0; i < 99; i++) {
-		auto frameName = "/"+actionName+"/" + std::to_string(i) + ".png";
+		auto frameName = actionName+"/" + std::to_string(i) + ".png";
 		Sprite* getSize = Sprite::create(frameName);
 		if (!getSize)
 			break;
