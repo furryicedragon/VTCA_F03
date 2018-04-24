@@ -3,9 +3,9 @@
 #define Player_hpp
  
 #include<cocos2d.h>
-#include<Skill.h>
 #include <string>
 #include <iomanip>
+#include"Skill.h""
 #include "Button.h"
 #include "ButtonBase.h"
 #include "StatPlayer.h"
