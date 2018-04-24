@@ -10,9 +10,11 @@ Scene* MainScene::createScene()
 bool MainScene::init()
 {
 	HUDLayer* hud = HUDLayer::create();
+	if(hud)
 	this->addChild(hud, 10, 9999);
 
 	MainGame* mainGame = MainGame::create();
+	if(mainGame)
 	this->addChild(mainGame, 1, 8888);
 
 	

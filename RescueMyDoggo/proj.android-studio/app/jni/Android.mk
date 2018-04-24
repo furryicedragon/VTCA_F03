@@ -8,7 +8,7 @@ $(call import-add-path,$(LOCAL_PATH)/../../../cocos2d/cocos)
 $(call import-add-path,$(LOCAL_PATH)/../../../cocos2d/cocos/audio/include)
 
 LOCAL_MODULE := MyGame_shared
-
+LOCAL_SHORT_COMMANDS := true
 LOCAL_MODULE_FILENAME := libMyGame
 
 LOCAL_SRC_FILES := hellocpp/main.cpp \

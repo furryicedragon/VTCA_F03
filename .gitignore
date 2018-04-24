@@ -86,6 +86,7 @@ proj.android-studio/app/local.properties
 proj.android-studio/*/build/
 cocos2d/cocos/platform/android/libcocos2dx/build/
 cocos2d/cocos/platform/android/java/libs/gps/build/
+RescueMydoggo/proj.android-studio/app/obj/local
 
 # proj.ios_mac
 cocos2d/build/build/

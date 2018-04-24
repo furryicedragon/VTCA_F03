@@ -24,14 +24,13 @@ public:
 	std::string secondLastDirection;
 	Sprite* skillHelper;
 	Sprite* attackHelper;
-	Sprite* slash;
 	Sprite* movementHelper;
 	Sprite* nothingBar;
 	SpriteFrameCache* pppFrames;
 	Label* hp;
 	Label* statPlus;
 	Label* level;
-	Size map1Size;
+	float mapWidth;
 	float mapScale;
 	float attackSpeed;
 	float damageCurrent;

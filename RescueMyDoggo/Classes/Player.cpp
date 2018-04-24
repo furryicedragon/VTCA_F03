@@ -4,7 +4,7 @@ using namespace std;
 Player* Player::create()
 {
 	Player* pSprite = new Player();
-	if (pSprite && pSprite->initWithFile("/MainChar/0idle0.png"))
+	if (pSprite && pSprite->initWithFile("0idle0.png"))
 	{
 		pSprite->setAnchorPoint(Vec2(0.70930, 0.41095));
 		pSprite->autorelease();
@@ -21,7 +21,7 @@ void Player::initOption()
 	timePassedInSecond = 1;
 	this->setFlippedX(false);
 	pppFrames = SpriteFrameCache::getInstance();
-	pppFrames->addSpriteFramesWithFile("/MainChar/ppp.plist");
+	pppFrames->addSpriteFramesWithFile("ppp.plist");
 	this->lastSeenLife = 100;
 	this->isSpawning = true;
 	this->setOpacity(255);
@@ -44,9 +44,6 @@ void Player::initOption()
 	this->canMoveDirections.push_back(true);
 	}
 	this->count = 0;
-	slash = Sprite::create("/MainChar/Effects/Slash/1.png");
-	slash->setVisible(false);
-	slash->setScale(1.9f);
 
 	attackHelper = Sprite::create();
 	if(attackHelper)
@@ -84,6 +81,7 @@ void Player::initOption()
 
 void Player::setHP(int HP)
 {
+
 	hp = Label::create();
 	hp->setScale(2.8f);
 	hp->setAnchorPoint(Vec2(0.5, 0));
@@ -300,7 +298,7 @@ void Player::knockback(float eeePosX)
 			Repeat::create(Sequence::create( DelayTime::create((float)0.16/69), 
 				CallFunc::create([=]() {
 					if ((this->getPositionX() > 32 + 44) 
-						&& (this->getPositionX() < map1Size.width - (32 + 44)))
+						&& (this->getPositionX() < mapWidth - (32 + 44)))
 						this->setPositionX(this->getPositionX() + theX); 
 				}), nullptr), 69),
 			CallFunc::create([=]() {this->canAct = true; this->idleStatus(); }), nullptr));
@@ -366,8 +364,8 @@ void Player::roll() {
 		int theX = /*20*/0;
 		if (this->getPosition().x < theX + 44 + 32 *mapScale && this->direction==0)
 			theX = this->getPosition().x - (44 + 32 *mapScale);
-		if (map1Size.width - this->getPosition().x < theX + 44 + 32 *mapScale && this->direction == 1)
-			theX = map1Size.width - this->getPosition().x - (44 + 32 *mapScale); //dung de check xem neu shift evade co gan diem cuoi cung cua map k, "to make sure we can't jump out of the map"
+		if (mapWidth - this->getPosition().x < theX + 44 + 32 *mapScale && this->direction == 1)
+			theX = mapWidth - this->getPosition().x - (44 + 32 *mapScale); //dung de check xem neu shift evade co gan diem cuoi cung cua map k, "to make sure we can't jump out of the map"
 		//if (this->getPosition().x < 44 + 32*2)
 		//	theX = 0;
 		if (this->direction==0) theX *= -1; // nhan voi -1 de nhay dung' huong'
@@ -395,8 +393,6 @@ void Player::dead()
 void Player::forbidAllAction()
 {
 	this->stopAllActions();
-	this->slash->stopAllActions();
-	this->slash->setVisible(false);
 }
 
 void Player::statUp()
@@ -495,8 +491,8 @@ void Player::useSkill(int skillID, Button* button)
 		if (skillID != 0) range = 0;
 		if (this->getPosition().x < range + 44 + 32 * mapScale && this->direction==0)
 			range = this->getPosition().x - (44 + 32 * mapScale);
-		if (map1Size.width - this->getPosition().x < 259 + 44 + 32 * mapScale && this->direction==1)
-			range = map1Size.width - this->getPosition().x - (44 + 32 * mapScale);
+		if (mapWidth - this->getPosition().x < 259 + 44 + 32 * mapScale && this->direction==1)
+			range = mapWidth - this->getPosition().x - (44 + 32 * mapScale);
 
 		if (this->direction == 0) {
 			range *= -1;
@@ -546,9 +542,6 @@ void Player::useSkill(int skillID, Button* button)
 
 Animate* Player::makeAnimation(std::string actionName, float timeEachFrame) {
 	Vector<SpriteFrame *> runningFrames;
-	if (tester) {
-		char* a = "";
-	}
 	for (int i = 0; i < 99; i++) {
 		auto frameName = std::to_string(this->direction)+actionName+std::to_string(i)+std::to_string(state)+".png";
 		SpriteFrame* frame = pppFrames->getSpriteFrameByName(frameName);

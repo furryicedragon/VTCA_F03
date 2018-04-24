@@ -5,10 +5,10 @@ Enemy* Enemy::create(int xMapNumber, int xWaveNumber, int xBossNumber)
 {
 	Enemy* pSprite = new Enemy();
 
-	string xFile2Init = "/Enemies/Map " + std::to_string(xMapNumber);
+	string xFile2Init = "/Enemies/Map" + std::to_string(xMapNumber);
 	string xBossOrWave = "";
-	if (xBossNumber == 0) xBossOrWave = "/Wave " + std::to_string(xWaveNumber) + "/Moving/0.png";
-	else xBossOrWave = "/Boss " + std::to_string(xBossNumber) + "/Moving/0.png";
+	if (xBossNumber == 0) xBossOrWave = "/Wave" + std::to_string(xWaveNumber) + "/Moving/0.png";
+	else xBossOrWave = "/Boss" + std::to_string(xBossNumber) + "/Moving/0.png";
 	string xCombination = xFile2Init + xBossOrWave;
 	if (pSprite && pSprite->initWithFile(xCombination))
 	{
@@ -57,7 +57,7 @@ void Enemy::initOption()
 
 	this->hp->setVisible(false);
 
-	auto getHitFrame = Sprite::create(combination + "/Get Hit/0.png");
+	auto getHitFrame = Sprite::create(combination + "/GetHit/0.png");
 	if(getHitFrame)
 	this->getHitFrameSize = getHitFrame->getContentSize();
 	this->idleStatus();
@@ -83,7 +83,7 @@ void Enemy::setHP(int HP)
 
 	hp->setString(std::to_string(HP));
 
-	if (!hpBar)
+	if (!hpBar && hp)
 	{
 		this->addChild(hp, 1);
 		this->hpBar = true;
@@ -92,12 +92,12 @@ void Enemy::setHP(int HP)
 
 void Enemy::getFolderName()
 {
-	string file2Init = "/Enemies/Map " + std::to_string(this->mapNumber);
+	string file2Init = "/Enemies/Map" + std::to_string(this->mapNumber);
 	string bossOrWave = "";
-	if (bossNumber == 0) bossOrWave = "/Wave " + std::to_string(this->waveNumber);
-	else bossOrWave = "/Boss " + std::to_string(this->bossNumber);
+	if (bossNumber == 0) bossOrWave = "/Wave" + std::to_string(this->waveNumber);
+	else bossOrWave = "/Boss" + std::to_string(this->bossNumber);
 	combination = file2Init + bossOrWave;
-	this->getLastFrameNumberOf("Skill Using");
+	this->getLastFrameNumberOf("SkillUsing");
 	this->getLastFrameNumberOf("Spell");
 }
 
@@ -107,7 +107,7 @@ void Enemy::getLastFrameNumberOf(std::string actionName)
 		auto frameName = combination + "/" + actionName + "/" + to_string(i) + ".png";
 		Sprite* getSize = Sprite::create(frameName);
 		if (!getSize) {
-			if (actionName == "Skill Using")
+			if (actionName == "SkillUsing")
 				useSkillLastFN = i;
 			if (actionName == "Spell")
 				skillLastFN = i;
@@ -255,7 +255,7 @@ void Enemy::attack() {
 		this->canMove = true;
 		this->breakTime = false;
 
-		this->runAction(Sequence::create(animation("Skill Using", castSpeed),
+		this->runAction(Sequence::create(animation("SkillUsing", castSpeed),
 			CallFunc::create([=]() {this->canDamage = false; this->isAttacking = false; this->idleStatus(); }), nullptr));
 		if (this->isCaster) {
 			this->casterSpell();
@@ -319,10 +319,10 @@ void Enemy::mobilitySS()
 			
 }
 void Enemy::attackLandedEffect() {
-	if (this->checkFrame("Skill Landed")) {
+	if (this->checkFrame("SkillLanded")) {
 		this->spellLanded->setPosition(Vec2(ppp->getPosition().x, ppp->getPosition().y));
 		this->spellLanded->runAction(Sequence::create(
-			CallFunc::create([=]() {this->canDamage = true; this->spellLanded->setVisible(true); }), animation("Skill Landed", 0.12f), CallFunc::create([=]() {this->canDamage = false; this->spellLanded->setVisible(false); this->spellLanded->setPosition(0, 0); }), nullptr));
+			CallFunc::create([=]() {this->canDamage = true; this->spellLanded->setVisible(true); }), animation("SkillLanded", 0.12f), CallFunc::create([=]() {this->canDamage = false; this->spellLanded->setVisible(false); this->spellLanded->setPosition(0, 0); }), nullptr));
 	}
 }
 
@@ -346,7 +346,7 @@ void Enemy::getHit(int damage) {
 			this->movementHelper->runAction(doIt);
 		}
 
-		SpriteFrame * hit = SpriteFrame::create(combination + "/Get Hit/0.png", Rect(0, 0, this->getHitFrameSize.width,this->getHitFrameSize.height));
+		SpriteFrame * hit = SpriteFrame::create(combination + "/GetHit/0.png", Rect(0, 0, this->getHitFrameSize.width,this->getHitFrameSize.height));
 		if(hit)
 		this->setSpriteFrame(hit);
 		int x = -16;

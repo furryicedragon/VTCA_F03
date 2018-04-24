@@ -10,8 +10,6 @@ bool MainGame::init()
 	{
 		return false;
 	}
-
-
 	congratulation = Sprite::create();
 	congratulation->setAnchorPoint(Vec2(0, 0));
 	auto itsOKMan = RepeatForever::create(animation("Gratz", 1));
@@ -23,9 +21,10 @@ bool MainGame::init()
 
 	this->canRetry = false;
 	this->enemyAdded = false;
-	this->gameOver = Sprite::create("/Game Over/0.png");
+	//PolygonInfo over = "a";
+	this->gameOver = Sprite::create("0.png");
 	gameOver->setAnchorPoint(Vec2(0, 0));
-	auto itsOverMan = RepeatForever::create(animation("Game Over",0.1f));
+	auto itsOverMan = RepeatForever::create(animation("GameOver",0.1f));
 	this->gameOver->runAction(itsOverMan);
 	this->gameOver->runAction(FadeOut::create(0));
 	if(gameOver)
@@ -67,13 +66,13 @@ bool MainGame::init()
 	meta = map1->getLayer("meta");
 	//Sprite* abc = Sprite::create()
 	ppp = Player::create();
-	ppp->map1Size = map1->getContentSize();
+	ppp->mapWidth = map1->getContentSize().width;
 	ppp->mapScale = map1->getScale();
 	ppp->setPosition(sPx, sPy);
 	//ppp->setAnchorPoint(Vec2(0,0));
 	//ppp->setScale(0.6f);
 	//ppp->setFlippedX(true);
-	if(ppp!=nullptr)
+	if(ppp)
 	this->addChild(ppp, 2);
 	this->ppp->w1kills = 0;
 	this->ppp->w2kills = 0;
@@ -98,14 +97,14 @@ bool MainGame::init()
 	this->HPonHead = ppp->HPonHead;
 	this->HitDame = ppp->HitDame;
 	this->nothingBar = ppp->nothingBar;
-
+	if(HPonHead)
 	this->addChild(HPonHead, 5);
+	if(HitDame)
 	this->addChild(HitDame, 4);
+	if(nothingBar)
 	this->addChild(nothingBar, 3);
 
 	this->setPosition(Vec2(0, 0));
-	if(ppp->slash)
-	this->addChild(ppp->slash,9);
 
 	while(pppPositionHelper==nullptr) pppPositionHelper = Sprite::create("CloseNormal.png");
 	pppPositionHelper->setOpacity(0);
@@ -117,7 +116,7 @@ bool MainGame::init()
 	pppPositionHelper->setScale(0.5);
 	pppPositionHelper->setAnchorPoint(Vec2(0.5, 0));
 
-	this->startGame = Sprite::create("/Play/0.png");
+	this->startGame = Sprite::create();
 	this->startGame->setAnchorPoint(Vec2(0, 0));
 	auto playIt = RepeatForever::create(animation("Play", 0.5));
 	this->startGame->runAction(playIt);
@@ -287,7 +286,6 @@ void MainGame::check4Directions(Point posDirection, int directionClock) {
 			bool  collect = properties["Collectible"].asBool();
 			if (collect) {
 				//do something else 
-				char* abc = "a";
 			}
 
 		}
@@ -445,6 +443,7 @@ void MainGame::update(float elapsed)
 					item->setHP(0);
 					item->dead();
 					this->finishPortal = Sprite::create();
+					if(finishPortal)
 					this->addChild(finishPortal, 99);
 					finishPortal->setVisible(true);
 					finishPortal->setAnchorPoint(Vec2(0, 0));
@@ -458,7 +457,7 @@ void MainGame::update(float elapsed)
 				if (std::fabsf(ppp->getPosition().x - finishPortal->getPosition().x) < 10) {
 					ppp->isSpawn = false;
 					ppp->forbidAllAction();
-					ppp->runAction(this->animation("MainChar/Win Boss", ppp->attackSpeed));
+					//ppp->runAction(this->animation("MainChar/WinBoss", ppp->attackSpeed));
 					this->congratulation->setPosition(Vec2(this->getPosition().x*-1,0));
 					this->congratulation->runAction(FadeIn::create(1.6f));
 					hud_layer->setVisible(false);
@@ -694,8 +693,8 @@ void MainGame::allEnemyInit()
 		//wave->isSpawned = true;
 		wave->setVisible(false);
 		wave->isSpawned = false;
-		if (wave->spell != nullptr) this->addChild(wave->spell, 9);
-		if (wave->spellLanded != nullptr) this->addChild(wave->spellLanded, 9);
+		if (wave->spell) this->addChild(wave->spell, 9);
+		if (wave->spellLanded) this->addChild(wave->spellLanded, 9);
 		wave->setAnchorPoint(Vec2(0, 0));
 		allEnemy.push_back(wave);
 		if (allEnemy[i]) {
@@ -721,8 +720,8 @@ void MainGame::allEnemyInit()
 		boss1m1->initOption();
 		auto boss1Pos = oj->getObject("Boss1");
 		boss1m1->setPosition(Vec2(boss1Pos["x"].asFloat() *map1->getScale(), boss1Pos["y"].asFloat() *map1->getScale()));
-		if (boss1m1->spell != nullptr) this->addChild(boss1m1->spell, 9);
-		if (boss1m1->spellLanded != nullptr) this->addChild(boss1m1->spellLanded, 9);
+		if (boss1m1->spell) this->addChild(boss1m1->spell, 9);
+		if (boss1m1->spellLanded) this->addChild(boss1m1->spellLanded, 9);
 		boss1m1->line1X = line1["x"].asFloat() *map1->getScale();
 		boss1m1->line2X = line2["x"].asFloat() *map1->getScale();
 		boss1m1->line3X = line3["x"].asFloat() *map1->getScale();
@@ -759,8 +758,8 @@ void MainGame::allEnemyInit()
 		wave->ppp = ppp;
 		wave->setVisible(false);
 		wave->isSpawned = false;
-		if (wave->spell != nullptr) this->addChild(wave->spell, 9);
-		if (wave->spellLanded != nullptr) this->addChild(wave->spellLanded, 9);
+		if (wave->spell) this->addChild(wave->spell, 9);
+		if (wave->spellLanded) this->addChild(wave->spellLanded, 9);
 		wave->setAnchorPoint(Vec2(0, 0));
 		allEnemy.push_back(wave);
 		if (allEnemy[i + 5]) {
@@ -785,8 +784,8 @@ void MainGame::allEnemyInit()
 		boss2m1->initOption();
 		auto boss2Pos = oj->getObject("Boss2");
 		boss2m1->setPosition(Vec2(boss2Pos["x"].asFloat() *map1->getScale(), boss2Pos["y"].asFloat() *map1->getScale()));
-		if (boss2m1->spell != nullptr) this->addChild(boss2m1->spell, 9);
-		if (boss2m1->spellLanded != nullptr) this->addChild(boss2m1->spellLanded, 9);
+		if (boss2m1->spell) this->addChild(boss2m1->spell, 9);
+		if (boss2m1->spellLanded) this->addChild(boss2m1->spellLanded, 9);
 		boss2m1->line1X = line1["x"].asFloat() *map1->getScale();
 		boss2m1->line2X = line2["x"].asFloat() *map1->getScale();
 		boss2m1->line3X = line3["x"].asFloat() *map1->getScale();
@@ -816,8 +815,8 @@ void MainGame::allEnemyInit()
 		bossfm1->initOption();
 		auto boss3Pos = oj->getObject("Boss3");
 		bossfm1->setPosition(Vec2(boss3Pos["x"].asFloat() *map1->getScale(), boss3Pos["y"].asFloat() *map1->getScale()));
-		if (bossfm1->spell != nullptr) this->addChild(bossfm1->spell, 9);
-		if (bossfm1->spellLanded != nullptr) this->addChild(bossfm1->spellLanded, 9);
+		if (bossfm1->spell) this->addChild(bossfm1->spell, 9);
+		if (bossfm1->spellLanded) this->addChild(bossfm1->spellLanded, 9);
 		bossfm1->line1X = line1["x"].asFloat() *map1->getScale();
 		bossfm1->line2X = line2["x"].asFloat() *map1->getScale();
 		bossfm1->line3X = line3["x"].asFloat() *map1->getScale();
@@ -836,17 +835,19 @@ void MainGame::allEnemyInit()
 	if (this->ppp->listSkill.size() < 1) {
 
 		Point testPos = Point(this->ppp->getContentSize().width / 1.8, this->ppp->getContentSize().height / 2);
-		//ppp->listSkill.insert(0, Skill::create(300,169, 3, 3, 4 , 2, 2, testPos, "MainChar/Effects/Dash Stab","Dash/Dash Attack"));
-		ppp->listSkill.insert(0, Skill::create(120,169, 3, 1, 2 , 1, 1, testPos, "MainChar/Effects/Dash Stab","attack0"));
+		//ppp->listSkill.insert(0, Skill::create(300,169, 3, 3, 4 , 2, 2, testPos, "MainChar/Effects/DashStab","Dash/Dash Attack"));
+		ppp->listSkill.insert(0, Skill::create(120,169, 3, 1, 2 , 1, 1, testPos, "MainChar/Effects/DashStab","attack0"));
+		if(ppp->listSkill.at(0))
 		this->ppp->addChild(ppp->listSkill.at(0), 3);
 		ppp->listSkill.at(0)->setVisible(false);
 		ppp->listSkill.at(0)->setScale(0.5);
 
 		//Point skillPos = Point(ppp->getPosition().x,ppp->getPosition().y);
-		ppp->listSkill.insert(1, Skill::create(333,129, 3, 3, 4, 2, 2, Point(ppp->getPosition().x, ppp->getPosition().y), "MainChar/Effects/Skill 2", "attack5"));
+		ppp->listSkill.insert(1, Skill::create(333,129, 3, 3, 4, 2, 2, Point(ppp->getPosition().x, ppp->getPosition().y), "MainChar/Effects/Skill2", "attack5"));
 		ppp->listSkill.at(1)->setAnchorPoint(Vec2(0.5, 0.5));
 		ppp->listSkill.at(1)->setScale(0.4);
-		this->addChild(ppp->listSkill.at(1), 6);
+		if(ppp->listSkill.at(1))
+		this->addChild(ppp->listSkill.at(1));
 		ppp->listSkill.at(1)->setVisible(false);
 
 	}
@@ -916,6 +917,7 @@ void MainGame::displayDamage(int damage, std::string color, Vec2 where,Size size
 
 		if (size.width == 0) sprite->setScale(0.4);
 		digitSprites.pushBack(sprite);
+		if(sprite)
 		this->addChild(sprite, 2);
 	}
 
