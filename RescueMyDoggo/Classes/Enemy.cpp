@@ -5,7 +5,7 @@ Enemy* Enemy::create(int xMapNumber, int xWaveNumber, int xBossNumber)
 {
 	Enemy* pSprite = new Enemy();
 
-	string xFile2Init = "/Enemies/Map" + std::to_string(xMapNumber);
+	string xFile2Init = "Enemies/Map" + std::to_string(xMapNumber);
 	string xBossOrWave = "";
 	if (xBossNumber == 0) xBossOrWave = "/Wave" + std::to_string(xWaveNumber) + "/Moving/0.png";
 	else xBossOrWave = "/Boss" + std::to_string(xBossNumber) + "/Moving/0.png";
@@ -92,7 +92,7 @@ void Enemy::setHP(int HP)
 
 void Enemy::getFolderName()
 {
-	string file2Init = "/Enemies/Map" + std::to_string(this->mapNumber);
+	string file2Init = "Enemies/Map" + std::to_string(this->mapNumber);
 	string bossOrWave = "";
 	if (bossNumber == 0) bossOrWave = "/Wave" + std::to_string(this->waveNumber);
 	else bossOrWave = "/Boss" + std::to_string(this->bossNumber);

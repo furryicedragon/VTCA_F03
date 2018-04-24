@@ -125,7 +125,7 @@ Animate * Player::animation(std::string actionName, float timeEachFrame) {
 	
 	Vector<SpriteFrame *> runningFrames;
 	for (int i = 1; i < 99; i++) {
-		auto frameName = "/MainChar/" + actionName +"/"+ this->weaponKind +"/(" + to_string(i) + ").png";
+		auto frameName = "MainChar/" + actionName +"/"+ this->weaponKind +"/(" + to_string(i) + ").png";
 		Sprite* getSize = Sprite::create(frameName);
 		if (!getSize)
 			break;
@@ -143,7 +143,7 @@ Animate * Player::allAnimation(std::string actionName, float timeEachFrame)
 {
 	Vector<SpriteFrame *> runningFrames;
 	for (int i = 1; i < 99; i++) {
-		auto frameName = "/" + actionName + "/(" + to_string(i) + ").png";
+		auto frameName = actionName + "/(" + to_string(i) + ").png";
 		Sprite* getSize = Sprite::create(frameName);
 		if (!getSize)
 			break;

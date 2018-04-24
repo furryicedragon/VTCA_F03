@@ -10,7 +10,7 @@ bool MainGame::init()
 	{
 		return false;
 	}
-	congratulation = Sprite::create();
+	congratulation = Sprite::create("Gratz/0.png");
 	congratulation->setAnchorPoint(Vec2(0, 0));
 	auto itsOKMan = RepeatForever::create(animation("Gratz", 1));
 	this->congratulation->runAction(itsOKMan);
@@ -22,7 +22,7 @@ bool MainGame::init()
 	this->canRetry = false;
 	this->enemyAdded = false;
 	//PolygonInfo over = "a";
-	this->gameOver = Sprite::create("0.png");
+	this->gameOver = Sprite::create("GameOver/0.png");
 	gameOver->setAnchorPoint(Vec2(0, 0));
 	auto itsOverMan = RepeatForever::create(animation("GameOver",0.1f));
 	this->gameOver->runAction(itsOverMan);
@@ -628,7 +628,7 @@ void MainGame::spawnEffect(Enemy* enemy2Spawn,int index)
 	Vector<SpriteFrame*> backwardsFrame;
 	Vector<SpriteFrame*> loopFrame;
 	for (int i = 0; i < 99; i++) {
-		auto frameName = "/Enemies/Effect/Spawn/" + std::to_string(i) + ".png";
+		auto frameName = "Enemies/Effect/Spawn/" + std::to_string(i) + ".png";
 		Sprite* getSize = Sprite::create(frameName);
 		if (!getSize)
 			break;

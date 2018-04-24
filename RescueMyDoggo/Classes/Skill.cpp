@@ -3,7 +3,7 @@
 Skill* Skill::create(int range,float damage, float coolDown, float appearTime, float disappearTime,float MobilityTime, float MobilityDelayTime , Point skillPos, std::string skillName, std::string castName)
 {
 	Skill* pointerSprite = new Skill();
-	if (pointerSprite && pointerSprite->initWithFile("/Enemies/Map2/Wave1/Spell/0.png"))
+	if (pointerSprite && pointerSprite->initWithFile("Enemies/Map2/Wave1/Spell/0.png"))
 	{
 		pointerSprite->autorelease();
 		pointerSprite->coolDownTime = coolDown;
@@ -32,7 +32,7 @@ void Skill::initOptions()
 
 	for (int i = 1; i < 99; i++) 
 	{
-		auto frameName = "/"+skillAName + "/(" + std::to_string(i) + ").png";
+		auto frameName = skillAName + "/(" + std::to_string(i) + ").png";
 		Sprite* getSize = Sprite::create(frameName);
 		if (!getSize)
 			break;
