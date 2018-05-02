@@ -78,10 +78,9 @@ public:
 	void attackLandedEffect();
 	void forbidAllAction();
 	void movingAnimation();
+	void fadeUrSelf();
 	void chasing();
 	//void spawnEffect();
-
-	Map<std::string, Animate*> listAnimations;
 	Animate* animation(std::string actionName, float timeEachFrame);
 private:
 	virtual void update(float elapsed) override;

@@ -5,7 +5,7 @@
 #include<cocos2d.h>
 #include <string>
 #include <iomanip>
-#include"Skill.h"
+#include"Skill.h""
 #include "Button.h"
 #include "ButtonBase.h"
 #include "StatPlayer.h"
@@ -14,8 +14,6 @@ class Player :public cocos2d::Sprite {
 public:
 	static Player* create();
 	cocos2d::Vector<Skill*> listSkill;
-	cocos2d::Map<std::string, Animate*> listAnimations;
-
 	std::vector<EventKeyboard::KeyCode> inputKeys;
 	std::vector<int> attackFrameNumber;
 	std::vector<bool> canMoveDirections;
@@ -78,6 +76,7 @@ public:
 	void roll();
 	void setHP(int HP);
 	void dead();
+	Animate* animation(std::string actionName, float timeEachFrame);
 	Animate* allAnimation(std::string actionName, float timeEachFrame);
 	void forbidAllAction();
 	void statUp();
