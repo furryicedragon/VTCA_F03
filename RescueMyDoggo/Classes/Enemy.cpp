@@ -116,20 +116,29 @@ void Enemy::getLastFrameNumberOf(std::string actionName)
 	}
 }
 
-Animate* Enemy::animation(std::string actionName, float timeEachFrame) {
-	Vector<SpriteFrame *> runningFrames;
-	for (int i = 0; i < 99; i++) {
-		auto frameName = combination + "/"+ actionName + "/" + to_string(i) + ".png";
-		Sprite* getSize = Sprite::create(frameName);
-		if (!getSize)
-			break;
+Animate* Enemy::animation(std::string actionName, float timeEachFrame) 
+{
+	Animate* anim = listAnimations.at(actionName);
 
-		Size theSize = getSize->getContentSize();
-		auto frame = SpriteFrame::create(frameName, Rect(0, 0, theSize.width, theSize.height));
-		runningFrames.pushBack(frame);
+	if (anim == nullptr)
+	{
+		Vector<SpriteFrame *> runningFrames;
+		for (int i = 0; i < 99; i++) {
+			auto frameName = combination + "/" + actionName + "/" + to_string(i) + ".png";
+			Sprite* getSize = Sprite::create(frameName);
+			if (!getSize)
+				break;
+
+			Size theSize = getSize->getContentSize();
+			auto frame = SpriteFrame::create(frameName, Rect(0, 0, theSize.width, theSize.height));
+			runningFrames.pushBack(frame);
+		}
+		Animation* runningAnimation = Animation::createWithSpriteFrames(runningFrames, timeEachFrame);
+		anim = Animate::create(runningAnimation);
+
+		listAnimations.insert(actionName, anim);
 	}
-	Animation* runningAnimation = Animation::createWithSpriteFrames(runningFrames, timeEachFrame);
-	Animate* anim = Animate::create(runningAnimation);
+
 	return anim;
 }
 
