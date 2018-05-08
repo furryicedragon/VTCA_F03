@@ -439,9 +439,9 @@ void MainGame::update(float elapsed)
 				for (auto item : allEnemy)
 				{
 					congratz = true;
-					item->canRespawn = false;
 					item->setHP(0);
 					item->dead();
+					item->canRespawn = false;
 					this->finishPortal = Sprite::create();
 					if(finishPortal)
 					this->addChild(finishPortal, 99);
