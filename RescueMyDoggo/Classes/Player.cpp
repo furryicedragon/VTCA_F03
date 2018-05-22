@@ -22,6 +22,7 @@ void Player::initOption()
 	this->setFlippedX(false);
 	pppFrames = SpriteFrameCache::getInstance();
 	pppFrames->addSpriteFramesWithFile("ppp.plist");
+
 	this->lastSeenLife = 100;
 	this->isSpawning = true;
 	this->setOpacity(255);
@@ -119,24 +120,6 @@ void Player::setHP(int HP)
 	/*this->addChild(nothingBar);
 	this->addChild(HitDame);
 	this->addChild(HPonHead);*/
-}
-
-Animate * Player::animation(std::string actionName, float timeEachFrame) {
-	
-	Vector<SpriteFrame *> runningFrames;
-	for (int i = 1; i < 99; i++) {
-		auto frameName = "MainChar/" + actionName +"/"+ this->weaponKind +"/(" + to_string(i) + ").png";
-		Sprite* getSize = Sprite::create(frameName);
-		if (!getSize)
-			break;
-
-		Size theSize = getSize->getContentSize();
-		auto frame = SpriteFrame::create(frameName, Rect(0, 0, theSize.width, theSize.height));
-		runningFrames.pushBack(frame);
-	}
-	Animation* runningAnimation = Animation::createWithSpriteFrames(runningFrames, timeEachFrame);
-	Animate* anim = Animate::create(runningAnimation);
-	return anim;
 }
 
 Animate * Player::allAnimation(std::string actionName, float timeEachFrame)
@@ -540,18 +523,33 @@ void Player::useSkill(int skillID, Button* button)
 }
 
 
-Animate* Player::makeAnimation(std::string actionName, float timeEachFrame) {
-	Vector<SpriteFrame *> runningFrames;
-	for (int i = 0; i < 99; i++) {
-		auto frameName = std::to_string(this->direction)+actionName+std::to_string(i)+std::to_string(state)+".png";
-		SpriteFrame* frame = pppFrames->getSpriteFrameByName(frameName);
-		if (!frame)
-			break;
-		runningFrames.pushBack(frame);
+Animate* Player::makeAnimation(std::string actionName, float timeEachFrame) 
+{
+	std::string key = actionName + this->lastDirection;
+	
+	Animate* anim = listAnimations.at(key);
+
+	if (anim == nullptr)
+	{
+		Vector<SpriteFrame *> runningFrames;
+		for (int i = 0; i < 99; i++) {
+			auto frameName = std::to_string(this->direction) + actionName + std::to_string(i) + std::to_string(state) + ".png";
+			SpriteFrame* frame = pppFrames->getSpriteFrameByName(frameName);
+			if (!frame)
+				break;
+			runningFrames.pushBack(frame);
+		}
+		Animation* runningAnimation = Animation::createWithSpriteFrames(runningFrames, timeEachFrame);
+		anim = Animate::create(runningAnimation);
+
+		listAnimations.insert(key, anim);
+
+		this->animationDelay = timeEachFrame * (runningFrames.size() - 1);
 	}
-	Animation* runningAnimation = Animation::createWithSpriteFrames(runningFrames, timeEachFrame);
-	Animate* anim = Animate::create(runningAnimation);
-	this->animationDelay = timeEachFrame * (runningFrames.size() - 1);
+	else
+	{
+		this->animationDelay = timeEachFrame * (anim->getAnimation()->getFrames().size() - 1);
+	}
 
 	return anim;
 }
