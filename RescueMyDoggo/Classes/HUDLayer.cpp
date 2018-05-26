@@ -209,11 +209,14 @@ void HUDLayer::setupStat()
 void HUDLayer::DisplayScore()
 {
 	auto visibleSize = Director::getInstance()->getVisibleSize();
-	Vec2 ScorePosition = Vec2(visibleSize.width * ((float)2/3), visibleSize.height * 0.91f);
+	Vec2 ScorePosition = Vec2(visibleSize.width * ((float)4/5), visibleSize.height * 0.93f);
+	scoreSprite = Sprite::create("HUD/Bars/scoreBar.png");
+	scoreSprite->setPosition(ScorePosition);
+	scoreSprite->setScale(0.6f);
 
-	scoreLabel = Label::createWithSystemFont("Score: 0", "Calibri", 40.0f, Size::ZERO, TextHAlignment::CENTER, TextVAlignment::CENTER);
-
-	scoreLabel->setColor(Color3B(255, 255, 0));
-	scoreLabel->setPosition(ScorePosition);
-	this->addChild(scoreLabel);
+	scoreLabel = Label::createWithSystemFont("0", "fonts/SF Atarian System.ttf", 40.0f, Size::ZERO, TextHAlignment::CENTER, TextVAlignment::CENTER);
+	scoreLabel->setColor(Color3B(255, 255, 255));
+	scoreLabel->setPosition(scoreSprite->getPosition().x, scoreSprite->getPosition().y + 2);
+	this->addChild(scoreSprite, 0);
+	this->addChild(scoreLabel, 1);
 }

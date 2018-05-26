@@ -33,6 +33,7 @@ public:
 	StatPlayer* statPlayer;
 
 	Label* scoreLabel;
+	Sprite* scoreSprite;
 	void DisplayScore();
 };
 

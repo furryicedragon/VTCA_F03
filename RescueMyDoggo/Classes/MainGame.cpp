@@ -339,7 +339,7 @@ void MainGame::update(float elapsed)
 		this->HPonHead->setPosition(pos);
 		this->HitDame->setPosition(pos);
 		this->nothingBar->setPosition(pos);
-		hud_layer->scoreLabel->setString("Score: " + std::to_string(ppp->score));
+		hud_layer->scoreLabel->setString(std::to_string(ppp->score));
 
 		if (ppp->lastSeenLife != std::stoi(ppp->hp->getString()) / ppp->baseHP * 100) {
 			ppp->lastSeenLife = std::stoi(ppp->hp->getString()) / ppp->baseHP * 100;
