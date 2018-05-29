@@ -14,6 +14,7 @@
     <ClCompile Include="..\Classes\ButtonBase.cpp" />
     <ClCompile Include="..\Classes\Skill.cpp" />
     <ClCompile Include="..\Classes\StatPlayer.cpp" />
+    <ClCompile Include="..\Classes\MainMenuScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Classes\AppDelegate.h" />
@@ -29,6 +30,7 @@
     <ClInclude Include="..\Classes\ButtonBase.h" />
     <ClInclude Include="..\Classes\Skill.h" />
     <ClInclude Include="..\Classes\StatPlayer.h" />
+    <ClInclude Include="..\Classes\MainMenuScene.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="game.rc" />

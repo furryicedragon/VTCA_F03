@@ -1,5 +1,7 @@
-#include "MainGame.h"
+﻿#include "MainGame.h"
 #include <ui/CocosGUI.h>
+#include "MainMenuScene.h"
+#include "MainScene.h"
 USING_NS_CC;
 
 
@@ -22,13 +24,13 @@ bool MainGame::init()
 	this->canRetry = false;
 	this->enemyAdded = false;
 	//PolygonInfo over = "a";
-	this->gameOver = Sprite::create("GameOver/0.png");
+	/*this->gameOver = Sprite::create("GameOver/0.png");
 	gameOver->setAnchorPoint(Vec2(0, 0));
 	auto itsOverMan = RepeatForever::create(animation("GameOver",0.1f));
 	this->gameOver->runAction(itsOverMan);
 	this->gameOver->runAction(FadeOut::create(0));
 	if(gameOver)
-	this->addChild(gameOver, 99);
+	this->addChild(gameOver, 99);*/
 	this->isGameOver = false;
 
 	currentMap = 1;
@@ -116,14 +118,15 @@ bool MainGame::init()
 	pppPositionHelper->setScale(0.5);
 	pppPositionHelper->setAnchorPoint(Vec2(0.5, 0));
 
-	this->startGame = Sprite::create();
-	this->startGame->setAnchorPoint(Vec2(0, 0));
-	auto playIt = RepeatForever::create(animation("Play", 0.5));
-	this->startGame->runAction(playIt);
-	if(startGame)
-	this->addChild(startGame, 100);
-	this->startGame->setPosition(0, 0);
+	//this->startGame = Sprite::create();
+	//this->startGame->setAnchorPoint(Vec2(0, 0));
+	//auto playIt = RepeatForever::create(animation("Play", 0.5));
+	//this->startGame->runAction(playIt);
+	//if(startGame)
+	//this->addChild(startGame, 100);
+	//this->startGame->setPosition(0, 0);
 	this->isGameStart = false;
+	
 
 	auto cache = SpriteFrameCache::getInstance();
 	cache->addSpriteFramesWithFile("damage.plist");
@@ -155,12 +158,8 @@ bool MainGame::onTouchBegan(Touch* touch, Event* event)
 		this->runAction(Sequence::create(DelayTime::create(1), CallFunc::create([=]() {this->delAll(); }), nullptr));
 	}
 
-	if (!this->isGameStart) {
-		isGameStart = true;
-		this->startGame->runAction(FadeOut::create(0.9f));
-		this->spawnPlayer();
-		hud_layer->toggleVisiblity();
-	}
+	//Start game click true
+
 	return true;
 }
 
@@ -184,7 +183,7 @@ bool MainGame::keyPressed(EventKeyboard::KeyCode keyCode, Event* event) {
 	}
 
 	if (keyCode == EventKeyboard::KeyCode::KEY_ENTER) {
-		this->gameOver->runAction(FadeOut::create(0.1f));
+		/*this->gameOver->runAction(FadeOut::create(0.1f));*/
 	}
 
  	//if (keyCode == EventKeyboard::KeyCode::KEY_SPACE) ppp->useSkill(0);
@@ -468,12 +467,53 @@ void MainGame::update(float elapsed)
 			ppp->isSpawn = false;
 			auto where2Put = pppPositionHelper->getPosition().x - visibleSize.width / 2;
 			if (where2Put < 0) where2Put = 0;
-			this->gameOver->setPosition(Vec2(where2Put,0));
-			this->gameOver->runAction(FadeIn::create(2.0f));
+			/*this->gameOver->setPosition(Vec2(where2Put,0));
+			this->gameOver->runAction(FadeIn::create(2.0f));*/
+			Sprite* backOptionDead = Sprite::create(GUI_backMainmenu);
+			backOptionDead->setScale(4);
+			backOptionDead->setPosition(ppp->getPosition());
+			if (backOptionDead)
+				this->addChild(backOptionDead, 9999);
+
+			////show button ra menu hay chơi lại khi chết dưới cái back
+			auto btBack = ui::Button::create(BT_HomeGame);
+
+			//btBack->setPosition(backOptionDead->getPosition()/1.2);
+			btBack->setPosition(Vec2(backOptionDead->getPosition().x / 1.3, backOptionDead->getPosition().y / 0.8));
+			btBack->addTouchEventListener([&](Ref* sender, ui::Widget::TouchEventType type)
+			{
+				switch (type)
+				{
+				case ui::Widget::TouchEventType::BEGAN:
+					break;
+				case ui::Widget::TouchEventType::ENDED:
+					Scene *mainScene = MainScene::create();
+					Director::getInstance()->pushScene(mainScene);
+					
+					break;
+				}
+			});
+			this->addChild(btBack, 9999);
+			auto btAccept = ui::Button::create(BT_RetryGame);
+			
+			btAccept->setPosition(Vec2(backOptionDead->getPosition().x / 0.8, backOptionDead->getPosition().y / 0.8));
+			btAccept->addTouchEventListener([&](Ref* sender, ui::Widget::TouchEventType type)
+			{
+				switch (type)
+				{
+				case ui::Widget::TouchEventType::BEGAN:
+					break;
+				case ui::Widget::TouchEventType::ENDED:
+					this->retryGameDead();
+					break;
+
+				}
+			});
+			this->addChild(btAccept, 9999);
 			this->isGameOver = true;
 			hud_layer->setVisible(false);
-			this->runAction(Sequence::create(DelayTime::create(1), CallFunc::create([=]() {this->canRetry=true; }), nullptr));
-			this->runAction(Sequence::create(DelayTime::create(1), CallFunc::create([=]() {this->canRetry=true;}), nullptr));
+			/*this->runAction(Sequence::create(DelayTime::create(1), CallFunc::create([=]() {this->canRetry=true; }), nullptr));
+			this->runAction(Sequence::create(DelayTime::create(1), CallFunc::create([=]() {this->canRetry=true;}), nullptr));*/
 		}
 		}
 
@@ -943,4 +983,21 @@ void MainGame::delAll()
 	
 	hud_layer->resetHUDstate();
 
+}
+
+void MainGame::gameStarto()
+{
+	auto hud_layer = static_cast<HUDLayer*> (Director::getInstance()->getRunningScene()->getChildByTag(9999));
+	if (!this->isGameStart) {
+		isGameStart = true;
+		this->spawnPlayer();
+		hud_layer->toggleVisiblity();
+	}
+}
+
+void MainGame::retryGameDead()
+{
+	canRetry = false;
+	this->runAction(Sequence::create(DelayTime::create(1), CallFunc::create([=]() {this->delAll(); this->gameStarto(); }), nullptr));
+	
 }

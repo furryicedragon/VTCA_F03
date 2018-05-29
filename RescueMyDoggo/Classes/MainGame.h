@@ -12,6 +12,10 @@
 
 USING_NS_CC;
 
+#define GUI_backMainmenu "UIUX/bgMenu.png"
+#define BT_HomeGame "UIUX/button_start.png"
+#define BT_RetryGame "UIUX/retry_button.png"
+
 class MainGame : public cocos2d::Node
 {
 public:
@@ -81,6 +85,9 @@ public:
 	Animate* animation(std::string actionName, float timeEachFrame);
 	void displayDamage(int damage, std::string color, Vec2 where, Size sizes);
 	void delAll();
+	void gameStarto();
+	//Menu
+	void retryGameDead();
 
 	Label* scoreLabel;
 private:
