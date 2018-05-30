@@ -525,7 +525,7 @@ void Player::useSkill(int skillID, Button* button)
 
 Animate* Player::makeAnimation(std::string actionName, float timeEachFrame) 
 {
-	std::string key = actionName + this->lastDirection;
+	std::string key = actionName + std::to_string(this->direction);
 	
 	Animate* anim = listAnimations.at(key);
 

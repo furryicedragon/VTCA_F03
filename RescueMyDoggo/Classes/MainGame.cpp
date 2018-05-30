@@ -150,9 +150,6 @@ void MainGame::setupTouchHandling() {
 
 bool MainGame::onTouchBegan(Touch* touch, Event* event)
 {
-	auto hud_layer = static_cast<HUDLayer*> (Director::getInstance()->getRunningScene()->getChildByTag(9999));
-	if (!ppp->statPlayer)
-		ppp->statPlayer = hud_layer->statPlayer;
 	if (this->isGameOver && canRetry) {
 		canRetry = false;
 		this->runAction(Sequence::create(DelayTime::create(1), CallFunc::create([=]() {this->delAll(); }), nullptr));
@@ -988,6 +985,8 @@ void MainGame::delAll()
 void MainGame::gameStarto()
 {
 	auto hud_layer = static_cast<HUDLayer*> (Director::getInstance()->getRunningScene()->getChildByTag(9999));
+	if (!ppp->statPlayer)
+		ppp->statPlayer = hud_layer->statPlayer;
 	if (!this->isGameStart) {
 		isGameStart = true;
 		this->spawnPlayer();
