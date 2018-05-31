@@ -485,7 +485,7 @@ bool MainGame::checkGravity()
 {
 	int i = 0;
 	for (auto item : grounds) {
-		if (!Rect(ppp->getPositionX()-11, ppp->getPositionY(), 22, 80).intersectsRect(item) || ppp->getPosition().y < item.getMaxY())
+		if (!Rect(ppp->getPositionX()-11, ppp->getPositionY() - 20, 22, 80).intersectsRect(item) || ppp->getPosition().y - 20 < item.getMaxY())
 			i++;
 	}
 	if (i == grounds.size()) { //neu ko dung tren ground
