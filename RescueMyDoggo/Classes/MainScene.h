@@ -7,6 +7,8 @@
 #include"MainGame.h"
 #include"HUDLayer.h"
 #include"MainMenuScene.h"
+#include"GameLayer.h"
+
 USING_NS_CC;
 
 class MainScene : public cocos2d::Scene

@@ -1,4 +1,4 @@
-#include "MainScene.h"
+﻿#include "MainScene.h"
 
 USING_NS_CC;
 
@@ -17,9 +17,13 @@ bool MainScene::init()
 	if(hud)
 	this->addChild(hud, 10, 9999);
 
+	GameLayer* game = GameLayer::create();
+	if (game)
+	this->addChild(game, 3, 9900);
+
 	MainGame* mainGame = MainGame::create();
 	if (mainGame) {
-		this->addChild(mainGame, 1, 8888);
+	this->addChild(mainGame, 1, 8888);
 		//mainGame->setVisible(false);
 	}
 

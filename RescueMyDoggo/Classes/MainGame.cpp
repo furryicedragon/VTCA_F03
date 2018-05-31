@@ -466,47 +466,11 @@ void MainGame::update(float elapsed)
 			if (where2Put < 0) where2Put = 0;
 			/*this->gameOver->setPosition(Vec2(where2Put,0));
 			this->gameOver->runAction(FadeIn::create(2.0f));*/
-			Sprite* backOptionDead = Sprite::create(GUI_backMainmenu);
-			backOptionDead->setScale(4);
-			backOptionDead->setPosition(ppp->getPosition());
-			if (backOptionDead)
-				this->addChild(backOptionDead, 9999);
-
-			////show button ra menu hay chơi lại khi chết dưới cái back
-			auto btBack = ui::Button::create(BT_HomeGame);
-
-			//btBack->setPosition(backOptionDead->getPosition()/1.2);
-			btBack->setPosition(Vec2(backOptionDead->getPosition().x / 1.3, backOptionDead->getPosition().y / 0.8));
-			btBack->addTouchEventListener([&](Ref* sender, ui::Widget::TouchEventType type)
-			{
-				switch (type)
-				{
-				case ui::Widget::TouchEventType::BEGAN:
-					break;
-				case ui::Widget::TouchEventType::ENDED:
-					Scene *mainScene = MainScene::create();
-					Director::getInstance()->pushScene(mainScene);
-					
-					break;
-				}
-			});
-			this->addChild(btBack, 9999);
-			auto btAccept = ui::Button::create(BT_RetryGame);
 			
-			btAccept->setPosition(Vec2(backOptionDead->getPosition().x / 0.8, backOptionDead->getPosition().y / 0.8));
-			btAccept->addTouchEventListener([&](Ref* sender, ui::Widget::TouchEventType type)
-			{
-				switch (type)
-				{
-				case ui::Widget::TouchEventType::BEGAN:
-					break;
-				case ui::Widget::TouchEventType::ENDED:
-					this->retryGameDead();
-					break;
+			auto game_layer = static_cast<GameLayer*> (Director::getInstance()->getRunningScene()->getChildByTag(9900));
+			if (game_layer)
+			game_layer->setVisible(true);
 
-				}
-			});
-			this->addChild(btAccept, 9999);
 			this->isGameOver = true;
 			hud_layer->setVisible(false);
 			/*this->runAction(Sequence::create(DelayTime::create(1), CallFunc::create([=]() {this->canRetry=true; }), nullptr));

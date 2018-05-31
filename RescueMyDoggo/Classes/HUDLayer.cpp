@@ -1,4 +1,4 @@
-#include <HUDLayer.h>
+﻿#include <HUDLayer.h>
 USING_NS_CC;
 
 bool HUDLayer::init()
