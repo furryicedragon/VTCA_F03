@@ -414,7 +414,7 @@ void MainGame::update(float elapsed)
 
 			auto gravity = RepeatForever::create(Sequence::create(CallFunc::create([=]() { 
 				if (this->checkGravity()) { ppp->setPositionY(ppp->getPosition().y - 1); 
-				}}), DelayTime::create(0.05), nullptr));
+				}}), DelayTime::create(0.05f), nullptr));
 			gravity->setTag(99);
 			if(ppp->isFalling)
 			this->map1->runAction(gravity);
@@ -466,13 +466,11 @@ void MainGame::update(float elapsed)
 			if (where2Put < 0) where2Put = 0;
 			/*this->gameOver->setPosition(Vec2(where2Put,0));
 			this->gameOver->runAction(FadeIn::create(2.0f));*/
-			
-			auto game_layer = static_cast<GameLayer*> (Director::getInstance()->getRunningScene()->getChildByTag(9900));
-			if (game_layer)
-			game_layer->setVisible(true);
-
 			this->isGameOver = true;
 			hud_layer->setVisible(false);
+
+			auto gameOverLayer = static_cast<Layer*> (Director::getInstance()->getRunningScene()->getChildByTag(9900) );
+			gameOverLayer->setVisible(true);
 			/*this->runAction(Sequence::create(DelayTime::create(1), CallFunc::create([=]() {this->canRetry=true; }), nullptr));
 			this->runAction(Sequence::create(DelayTime::create(1), CallFunc::create([=]() {this->canRetry=true;}), nullptr));*/
 		}
@@ -846,7 +844,7 @@ void MainGame::allEnemyInit()
 		//Point skillPos = Point(ppp->getPosition().x,ppp->getPosition().y);
 		ppp->listSkill.insert(1, Skill::create(333,129, 3, 3, 4, 2, 2, Point(ppp->getPosition().x, ppp->getPosition().y), "MainChar/Effects/Skill2", "attack5"));
 		ppp->listSkill.at(1)->setAnchorPoint(Vec2(0.5, 0.5));
-		ppp->listSkill.at(1)->setScale(0.4);
+		ppp->listSkill.at(1)->setScale(0.4f);
 		if(ppp->listSkill.at(1))
 		this->addChild(ppp->listSkill.at(1));
 		ppp->listSkill.at(1)->setVisible(false);
@@ -912,11 +910,11 @@ void MainGame::displayDamage(int damage, std::string color, Vec2 where,Size size
 		if (i > 0) {
 			if(size.width>0)
 				start.x += sprite_size.width;
-			else start.x += sprite_size.width*0.4;
+			else start.x += sprite_size.width*0.4f;
 		}
 		sprite->setPosition(start);
 
-		if (size.width == 0) sprite->setScale(0.4);
+		if (size.width == 0) sprite->setScale(0.4f);
 		digitSprites.pushBack(sprite);
 		if(sprite)
 		this->addChild(sprite, 2);
@@ -934,7 +932,7 @@ void MainGame::displayDamage(int damage, std::string color, Vec2 where,Size size
 void MainGame::delAll() 
 {
 	this->allEnemy.clear();
-	this->removeAllChildren();
+	this->removeAllChildrenWithCleanup(true);
 
 	this->init();
 
@@ -958,7 +956,7 @@ void MainGame::gameStarto()
 	}
 }
 
-void MainGame::retryGameDead()
+void MainGame::restartGame()
 {
 	canRetry = false;
 	this->runAction(Sequence::create(DelayTime::create(1), CallFunc::create([=]() {this->delAll(); this->gameStarto(); }), nullptr));

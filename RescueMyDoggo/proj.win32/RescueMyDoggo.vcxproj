@@ -152,7 +152,6 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClCompile Include="..\Classes\Button.cpp" />
     <ClCompile Include="..\Classes\ButtonBase.cpp" />
     <ClCompile Include="..\Classes\Enemy.cpp" />
-    <ClCompile Include="..\Classes\GameLayer.cpp" />
     <ClCompile Include="..\Classes\HUDLayer.cpp" />
     <ClCompile Include="..\Classes\Joystick.cpp" />
     <ClCompile Include="..\Classes\JoystickBase.cpp" />
@@ -169,7 +168,6 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClInclude Include="..\Classes\Button.h" />
     <ClInclude Include="..\Classes\ButtonBase.h" />
     <ClInclude Include="..\Classes\Enemy.h" />
-    <ClInclude Include="..\Classes\GameLayer.h" />
     <ClInclude Include="..\Classes\HUDLayer.h" />
     <ClInclude Include="..\Classes\Joystick.h" />
     <ClInclude Include="..\Classes\JoystickBase.h" />

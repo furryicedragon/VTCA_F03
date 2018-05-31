@@ -87,7 +87,7 @@ public:
 	void delAll();
 	void gameStarto();
 	//Menu
-	void retryGameDead();
+	void restartGame();
 
 	Label* scoreLabel;
 private:

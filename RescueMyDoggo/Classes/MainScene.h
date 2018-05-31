@@ -7,7 +7,7 @@
 #include"MainGame.h"
 #include"HUDLayer.h"
 #include"MainMenuScene.h"
-#include"GameLayer.h"
+#include "ui\CocosGUI.h"
 
 USING_NS_CC;
 
@@ -17,5 +17,7 @@ public:
 	static Scene* createScene();
 	CREATE_FUNC(MainScene);
 	virtual bool init() override;
+
+	void setupGameOverLayer();
 };
 #endif // !MainScene_hpp

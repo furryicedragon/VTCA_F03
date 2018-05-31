@@ -26,27 +26,22 @@ USING_NS_CC;
 #define BT_accept "UIUX/shadedDark23.png"
 #define UI_barfg "UIUX/LoadingBarFileRed.png"
 #define UI_barbg "UIUX/LoadingBarFile.png"
-#define BG_audio "UIUX/John-legend_all-of-me_PADYPADY.mp3"
+#define BG_audio "UIUX/Polyphia-The_Worst.mp3"
 
 
-class MainMenuScene : public cocos2d::Scene
+class MainMenuScene : public cocos2d::Layer
 {
 public:
 
 	virtual bool init() override;
-	cocos2d::Sprite* _background;
+	cocos2d::Sprite* _background, *_bgOption;
 	void showBackGround();
-	void showMenuGame();
-	void showOption();
+	void setupMenuGame();
+	void setupOption();
 
-	bool onTouchBegan(Touch* touch, Event* event);
 	Menu* _menuGame;
 
-	void showSliderOption();
-	void saveMusicOption();
-
-	float bgMusic = 100, gameMusic = 100;
-	float _bgMusic, _gameMusic;
+	float bgMusic = 0.3f, gameMusic = 0.3f;
 
 	void bgAudio();
 
