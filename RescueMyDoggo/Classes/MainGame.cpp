@@ -337,6 +337,36 @@ void MainGame::update(float elapsed)
 		this->nothingBar->setPosition(pos);
 		hud_layer->scoreLabel->setString(std::to_string(ppp->score));
 
+		/*Rect rectPlay = ppp->getBoundingBox();
+		if (ppp->SilverDrop->isVisible()) {
+			Rect rectSilver = ppp->SilverDrop->getBoundingBox();
+			if (ppp->canDrops) {
+				if (rectPlay.intersectsRect(rectSilver)) {
+					auto fadeoutAction = FadeOut::create(0.1);
+					auto JumpAction = MoveBy::create(0.2, Vec2(0, 50));
+					auto sequen = Sequence::create(JumpAction, fadeoutAction, NULL);
+					ppp->SilverDrop->runAction(sequen);
+					ppp->canDrops = false;
+					ppp->score += 10;
+				}
+			}
+		}
+		else if (ppp->GoldDrop->isVisible())
+		{
+			Rect rectGold = ppp->GoldDrop->getBoundingBox();
+			if (ppp->canDrops) {
+				if (rectPlay.intersectsRect(rectGold)) {
+					auto fadeoutAction = FadeOut::create(0.1);
+					auto JumpAction = MoveBy::create(0.2, Vec2(0, 50));
+					auto sequen = Sequence::create(JumpAction, fadeoutAction, NULL);
+					ppp->GoldDrop->runAction(sequen);
+					ppp->canDrops = false;
+					ppp->score += 50;
+				}
+			}
+		}*/
+
+
 		if (ppp->lastSeenLife != std::stoi(ppp->hp->getString()) / ppp->baseHP * 100) {
 			ppp->lastSeenLife = std::stoi(ppp->hp->getString()) / ppp->baseHP * 100;
 			hud_layer->statPlayer->DameHit->runAction(ProgressTo::create(1.0f, ppp->lastSeenLife));
@@ -588,6 +618,25 @@ void MainGame::checkAttackRange(Enemy * eee, int index)
 			ppp->getHit(eee->skillDamage, eee->getPosition().x);
 			
 			eee->canDamage = false;
+		}
+
+		if (eee->SilverDrop == true) {
+			if (ppp->SilverDrop) {
+				ppp->SilverDrop->setPosition(eee->getPosition().x, eee->getPosition().y + 40);
+				auto jump = JumpBy::create(0.5, Vec2(0, -25), 100, 1);
+				this->addChild(ppp->SilverDrop);
+				ppp->SilverDrop->runAction(jump);
+				eee->SilverDrop = false;
+
+			}
+		}
+		else if (eee->GoldDrop == true) {
+			ppp->GoldDrop->setPosition(eee->getPosition().x, eee->getPosition().y + 40);
+			auto jump = JumpBy::create(0.5, Vec2(0, -27), 100, 1);
+			this->addChild(ppp->GoldDrop);
+			ppp->GoldDrop->runAction(jump);
+			eee->GoldDrop = false;
+
 		}
 
 		//if (ppp->skill1->launching)

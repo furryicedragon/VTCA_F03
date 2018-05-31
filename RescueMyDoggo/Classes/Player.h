@@ -24,11 +24,16 @@ public:
 	std::string weaponKind;
 	std::string lastDirection;
 	std::string secondLastDirection;
+
+	Sprite* SilverDrop;
+	Sprite* GoldDrop;
+
 	Sprite* skillHelper;
 	Sprite* attackHelper;
 	Sprite* movementHelper;
 	Sprite* nothingBar;
 	SpriteFrameCache* pppFrames;
+	SpriteFrameCache* moneyFrame;
 	Label* hp;
 	Label* statPlus;
 	Label* level;
@@ -51,6 +56,7 @@ public:
 	//int attackChainNumber;
 	int skillDamage;
 	int state;
+	bool canDrops;
 	bool tester;
 	bool onGravity;
 	bool isFalling;
