@@ -6,7 +6,6 @@
 #include<JoystickBase.h>
 #include<Button.h>
 #include<ButtonBase.h>
-#include<MainGame.h>
 #include<StatPlayer.h>
 USING_NS_CC;
 

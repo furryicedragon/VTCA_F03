@@ -13,11 +13,13 @@ public:
 	Sprite* movementHelper;
 	Sprite* spell;
 	Sprite* spellLanded;
+	Sprite* moneyDrop;
 	Size getHitFrameSize;
 	Player* ppp;
 	Animate* idleAnim;
 	std::string combination;
 	float skillDamage;
+	int moneyRank;
 	int mapNumber;
 	int waveNumber;
 	int bossNumber;
@@ -43,9 +45,7 @@ public:
 	float randomY;
 	float spotPlayerLine;
 
-	bool SilverDrop;
-	bool GoldDrop;
-
+	bool canDrop;
 	bool mobilityUsing;
 	bool canRespawn;
 	bool interuptable;

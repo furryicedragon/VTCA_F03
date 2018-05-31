@@ -17,17 +17,6 @@ Player* Player::create()
 
 void Player::initOption()
 {
-	this->moneyFrame = SpriteFrameCache::getInstance();
-	this->moneyFrame->addSpriteFramesWithFile("drops.plist", "drops.png");
-
-	this->SilverDrop = Sprite::create();
-	this->SilverDrop->setVisible(false);
-	this->GoldDrop = Sprite::create();
-	this->GoldDrop->setVisible(false);
-
-	this->canDrops = false;
-
-
 	this->doneWalking = true;
 	timePassedInSecond = 1;
 	this->setFlippedX(false);

@@ -25,8 +25,7 @@ Enemy* Enemy::create(int xMapNumber, int xWaveNumber, int xBossNumber)
 
 void Enemy::initOption()
 {
-	this->GoldDrop = false;
-	this->SilverDrop = false;
+	this->canDrop = false;
 	this->canChase = true;
 	this->canRespawn = true;
 	this->getHitTime = 0;
@@ -415,7 +414,6 @@ void Enemy::dead() {
 		this->isSpawned = false;
 		this->canRespawn = true;
 
-		ppp->canDrops = true;
 
 		//this->stopAllActions();
 		this->forbidAllAction();
@@ -430,80 +428,30 @@ void Enemy::dead() {
 		this->runAction(MoveBy::create(0.5, Vec2(theX, 0)));
 		if (this->waveNumber == 1)
 		{
-			SilverDrop = true;
-
-			const int numberSprite = 4;
-			ppp->SilverDrop = Sprite::createWithSpriteFrameName("silver0.png");
-			Vector<SpriteFrame*> animFrames;
-			animFrames.reserve(numberSprite);
-			animFrames.pushBack(SpriteFrameCache::getInstance()->getSpriteFrameByName("silver1.png"));
-			animFrames.pushBack(SpriteFrameCache::getInstance()->getSpriteFrameByName("silver2.png"));
-			animFrames.pushBack(SpriteFrameCache::getInstance()->getSpriteFrameByName("silver3.png"));
-			Animation* animationss = Animation::createWithSpriteFrames(animFrames, 0.2f);
-			Animate* animate = Animate::create(animationss);
-			ppp->SilverDrop->runAction(RepeatForever::create(animate));
-			ppp->SilverDrop->setVisible(true);
+			moneyRank = 1;
 			ppp->currentEXP += 25;
-
 		}
 			
 		if (this->waveNumber == 2) 
 		{
-			SilverDrop = true;
-
-			const int numberSprite = 4;
-			ppp->SilverDrop = Sprite::createWithSpriteFrameName("silver0.png");
-			Vector<SpriteFrame*> animFrames;
-			animFrames.reserve(numberSprite);
-			animFrames.pushBack(SpriteFrameCache::getInstance()->getSpriteFrameByName("silver1.png"));
-			animFrames.pushBack(SpriteFrameCache::getInstance()->getSpriteFrameByName("silver2.png"));
-			animFrames.pushBack(SpriteFrameCache::getInstance()->getSpriteFrameByName("silver3.png"));
-			Animation* animationss = Animation::createWithSpriteFrames(animFrames, 0.2f);
-			Animate* animate = Animate::create(animationss);
-			ppp->SilverDrop->runAction(RepeatForever::create(animate));
-			ppp->SilverDrop->setVisible(true);
+			moneyRank = 1;
 			ppp->currentEXP += 50;
 
 		}
 			
 		if (this->bossNumber == 1)
 		{
-			GoldDrop = true;
-
-			const int numberSprite = 4;
-			ppp->GoldDrop = Sprite::createWithSpriteFrameName("gold0.png");
-			Vector<SpriteFrame*> animFrames;
-			animFrames.reserve(numberSprite);
-			animFrames.pushBack(SpriteFrameCache::getInstance()->getSpriteFrameByName("gold1.png"));
-			animFrames.pushBack(SpriteFrameCache::getInstance()->getSpriteFrameByName("gold2.png"));
-			animFrames.pushBack(SpriteFrameCache::getInstance()->getSpriteFrameByName("gold3.png"));
-			Animation* animationss = Animation::createWithSpriteFrames(animFrames, 0.2f);
-			Animate* animate = Animate::create(animationss);
-			ppp->GoldDrop->runAction(RepeatForever::create(animate));
-			ppp->GoldDrop->setVisible(true);
-
+			moneyRank = 2;
 			ppp->currentEXP += 150;
 
 		}		
 		if (this->bossNumber == 2) 
 		{
-			GoldDrop = true;
-
-			const int numberSprite = 4;
-			ppp->GoldDrop = Sprite::createWithSpriteFrameName("gold0.png");
-			Vector<SpriteFrame*> animFrames;
-			animFrames.reserve(numberSprite);
-			animFrames.pushBack(SpriteFrameCache::getInstance()->getSpriteFrameByName("gold1.png"));
-			animFrames.pushBack(SpriteFrameCache::getInstance()->getSpriteFrameByName("gold2.png"));
-			animFrames.pushBack(SpriteFrameCache::getInstance()->getSpriteFrameByName("gold3.png"));
-			Animation* animationss = Animation::createWithSpriteFrames(animFrames, 0.2f);
-			Animate* animate = Animate::create(animationss);
-			ppp->GoldDrop->runAction(RepeatForever::create(animate));
-			ppp->GoldDrop->setVisible(true);
-
+			moneyRank = 2;
 			ppp->currentEXP += 300;
-
 		}
+		this->canDrop = true;
+		this->moneyDrop->setVisible(true);
 }
 
 void Enemy::forbidAllAction()

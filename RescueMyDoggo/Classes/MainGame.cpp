@@ -8,6 +8,7 @@ USING_NS_CC;
 
 bool MainGame::init()
 {
+	doneAddingEnemy = false;
 	if (!Node::init()) 
 	{
 		return false;
@@ -128,9 +129,9 @@ bool MainGame::init()
 	this->isGameStart = false;
 	
 
-	auto cache = SpriteFrameCache::getInstance();
+	cache = SpriteFrameCache::getInstance();
 	cache->addSpriteFramesWithFile("damage.plist");
-
+	cache->addSpriteFramesWithFile("drops.plist");
 	this->setupPressedKeyHandling();
 	this->setupTouchHandling();
 
@@ -326,7 +327,6 @@ void MainGame::updatePlayerPosition() {
 
 void MainGame::update(float elapsed)
 {
-	auto hud_layer = static_cast<HUDLayer*> (Director::getInstance()->getRunningScene()->getChildByTag(9999));
 
 	if(this->isGameStart)
 	{	
@@ -335,60 +335,32 @@ void MainGame::update(float elapsed)
 		this->HPonHead->setPosition(pos);
 		this->HitDame->setPosition(pos);
 		this->nothingBar->setPosition(pos);
-		hud_layer->scoreLabel->setString(std::to_string(ppp->score));
+		hud_layer()->scoreLabel->setString(std::to_string(ppp->score));
 
-		/*Rect rectPlay = ppp->getBoundingBox();
-		if (ppp->SilverDrop->isVisible()) {
-			Rect rectSilver = ppp->SilverDrop->getBoundingBox();
-			if (ppp->canDrops) {
-				if (rectPlay.intersectsRect(rectSilver)) {
-					auto fadeoutAction = FadeOut::create(0.1);
-					auto JumpAction = MoveBy::create(0.2, Vec2(0, 50));
-					auto sequen = Sequence::create(JumpAction, fadeoutAction, NULL);
-					ppp->SilverDrop->runAction(sequen);
-					ppp->canDrops = false;
-					ppp->score += 10;
-				}
-			}
-		}
-		else if (ppp->GoldDrop->isVisible())
-		{
-			Rect rectGold = ppp->GoldDrop->getBoundingBox();
-			if (ppp->canDrops) {
-				if (rectPlay.intersectsRect(rectGold)) {
-					auto fadeoutAction = FadeOut::create(0.1);
-					auto JumpAction = MoveBy::create(0.2, Vec2(0, 50));
-					auto sequen = Sequence::create(JumpAction, fadeoutAction, NULL);
-					ppp->GoldDrop->runAction(sequen);
-					ppp->canDrops = false;
-					ppp->score += 50;
-				}
-			}
-		}*/
-
+		if (doneAddingEnemy) this->dropMoney();
 
 		if (ppp->lastSeenLife != std::stoi(ppp->hp->getString()) / ppp->baseHP * 100) {
 			ppp->lastSeenLife = std::stoi(ppp->hp->getString()) / ppp->baseHP * 100;
-			hud_layer->statPlayer->DameHit->runAction(ProgressTo::create(1.0f, ppp->lastSeenLife));
+			hud_layer()->statPlayer->DameHit->runAction(ProgressTo::create(1.0f, ppp->lastSeenLife));
 			this->HitDame->runAction(ProgressTo::create(0.5f, ppp->lastSeenLife));
 
-			hud_layer->statPlayer->DameHit->setPercentage(ppp->lastSeenLife);
-			hud_layer->statPlayer->HPplayer->setPercentage(ppp->lastSeenLife);
+			hud_layer()->statPlayer->DameHit->setPercentage(ppp->lastSeenLife);
+			hud_layer()->statPlayer->HPplayer->setPercentage(ppp->lastSeenLife);
 
 			this->HPonHead->setPercentage(ppp->lastSeenLife);
 			this->HitDame->setPercentage(ppp->lastSeenLife);
 		}
 		if (ppp->lastSeenExp != ppp->currentEXP / ppp->baseEXP * 100) {
 			ppp->lastSeenExp = ppp->currentEXP / ppp->baseEXP * 100;
-			hud_layer->statPlayer->EXPplayer->runAction(ProgressTo::create(0.3f, ppp->lastSeenExp));
-			//hud_layer->statPlayer->EXPplayer->setPercentage(ppp->lastSeenExp);
+			hud_layer()->statPlayer->EXPplayer->runAction(ProgressTo::create(0.3f, ppp->lastSeenExp));
+			//hud_layer()->statPlayer->EXPplayer->setPercentage(ppp->lastSeenExp);
 		}
 		if (ppp->isDead && this->isGameOver) {
 			this->HPonHead->setVisible(false);
 			this->HitDame->setVisible(false);
 
-			hud_layer->statPlayer->DameHit->setPercentage(100);
-			hud_layer->statPlayer->HPplayer->setPercentage(100);
+			hud_layer()->statPlayer->DameHit->setPercentage(100);
+			hud_layer()->statPlayer->HPplayer->setPercentage(100);
 			this->HPonHead->setPercentage(100);
 			this->HitDame->setPercentage(100);
 		}
@@ -399,19 +371,19 @@ void MainGame::update(float elapsed)
 		if (ppp->isSpawn && !ppp->isDead)
 		{
 			// joystick
-			if (hud_layer->movementStick->getVelocity().x > 0)
+			if (hud_layer()->movementStick->getVelocity().x > 0)
 			{
 				whatYouWant(EventKeyboard::KeyCode::KEY_D, 2);
 				this->canIdle = true;
 				ppp->isHoldingKey = true;
 			}
-			if (hud_layer->movementStick->getVelocity().x < 0)
+			if (hud_layer()->movementStick->getVelocity().x < 0)
 			{
 				this->canIdle = true;
 				whatYouWant(EventKeyboard::KeyCode::KEY_A, 2);
 				ppp->isHoldingKey = true;
 			}
-			if (hud_layer->movementStick->getVelocity().x == 0)
+			if (hud_layer()->movementStick->getVelocity().x == 0)
 			{
 				if (canIdle) {
 					canIdle = false;
@@ -422,21 +394,21 @@ void MainGame::update(float elapsed)
 			}
 			
 			//HUD buttons
-			if (hud_layer->attackBtn->getValue() && !ppp->usingSkill)
+			if (hud_layer()->attackBtn->getValue() && !ppp->usingSkill)
 			{
 				ppp->attack();
 			}
-			if (hud_layer->rollBtn->getValue() && !ppp->usingSkill)
+			if (hud_layer()->rollBtn->getValue() && !ppp->usingSkill)
 			{
 				ppp->roll();
 			}
-			if (hud_layer->skill1Btn->getValue() && !ppp->usingSkill)
+			if (hud_layer()->skill1Btn->getValue() && !ppp->usingSkill)
 			{
-				ppp->useSkill(1, hud_layer->skill1Btn);
+				ppp->useSkill(1, hud_layer()->skill1Btn);
 			}
-			if (hud_layer->skill2Btn->getValue() && !ppp->usingSkill)
+			if (hud_layer()->skill2Btn->getValue() && !ppp->usingSkill)
 			{
-				ppp->useSkill(0, hud_layer->skill2Btn);
+				ppp->useSkill(0, hud_layer()->skill2Btn);
 			}
 		}
 		if (this->enemyAdded) {
@@ -486,7 +458,7 @@ void MainGame::update(float elapsed)
 					//ppp->runAction(this->animation("MainChar/WinBoss", ppp->attackSpeed));
 					this->congratulation->setPosition(Vec2(this->getPosition().x*-1,0));
 					this->congratulation->runAction(FadeIn::create(1.6f));
-					hud_layer->setVisible(false);
+					hud_layer()->setVisible(false);
 				}
 			}
 		}
@@ -497,7 +469,7 @@ void MainGame::update(float elapsed)
 			/*this->gameOver->setPosition(Vec2(where2Put,0));
 			this->gameOver->runAction(FadeIn::create(2.0f));*/
 			this->isGameOver = true;
-			hud_layer->setVisible(false);
+			hud_layer()->setVisible(false);
 
 			auto gameOverLayer = static_cast<Layer*> (Director::getInstance()->getRunningScene()->getChildByTag(9900) );
 			gameOverLayer->setVisible(true);
@@ -547,6 +519,11 @@ void MainGame::spawnPlayer()
 		CallFunc::create([=]() {this->removeChild(zap, true); }), nullptr));
 }
 
+
+HUDLayer* MainGame::hud_layer()
+{
+	return static_cast<HUDLayer*> (Director::getInstance()->getRunningScene()->getChildByTag(9999));
+}
 
 bool MainGame::checkRange(Enemy* enemy2Check, int theRange) {
 
@@ -619,36 +596,6 @@ void MainGame::checkAttackRange(Enemy * eee, int index)
 			
 			eee->canDamage = false;
 		}
-
-		if (eee->SilverDrop == true) {
-			if (ppp->SilverDrop) {
-				ppp->SilverDrop->setPosition(eee->getPosition().x, eee->getPosition().y + 40);
-				auto jump = JumpBy::create(0.5, Vec2(0, -25), 100, 1);
-				this->addChild(ppp->SilverDrop);
-				ppp->SilverDrop->runAction(jump);
-				eee->SilverDrop = false;
-
-			}
-		}
-		else if (eee->GoldDrop == true) {
-			ppp->GoldDrop->setPosition(eee->getPosition().x, eee->getPosition().y + 40);
-			auto jump = JumpBy::create(0.5, Vec2(0, -27), 100, 1);
-			this->addChild(ppp->GoldDrop);
-			ppp->GoldDrop->runAction(jump);
-			eee->GoldDrop = false;
-
-		}
-
-		//if (ppp->skill1->launching)
-		//{
-		//	//check projectile collision
-		//	if (ppp->skill1->getBoundingBox().intersectsRect(eee->getBoundingBox()) && ppp->skill1->canDamage[index])
-		//	{
-		//		ppp->skill1->canDamage[index] = false;
-
-		//		eee->getHit(ppp->damageCurrent);
-		//	}
-		//}
 	}
 
 }
@@ -721,6 +668,9 @@ void MainGame::allEnemyInit()
 	auto line4 = oj->getObject("Line4");
 	for (int i = 0; i < 4; i++) {
 		Enemy* wave = Enemy::create(2, 1, 0);
+		wave->moneyDrop = Sprite::create();
+		wave->moneyDrop->setVisible(false);
+		this->addChild(wave->moneyDrop, 9);
 		//wave->setScale(1.6f);
 		wave->skillDamage = 11;
 		wave->visionRange = 310;
@@ -754,6 +704,9 @@ void MainGame::allEnemyInit()
 
 	{	//boss 1
 		this->boss1m1 = Enemy::create(1, 0, 1);
+		boss1m1->moneyDrop = Sprite::create();
+		boss1m1->moneyDrop->setVisible(false);
+		this->addChild(boss1m1->moneyDrop, 9);
 		boss1m1->visionRange = 420;
 		boss1m1->skillDamage = 150;
 		//boss1m1->setScale(1.6f);
@@ -787,6 +740,9 @@ void MainGame::allEnemyInit()
 
 	for (int i = 0; i < 4; i++) {
 		Enemy* wave = Enemy::create(1, 2, 0);
+		wave->moneyDrop = Sprite::create();
+		wave->moneyDrop->setVisible(false);
+		this->addChild(wave->moneyDrop, 9);
 		//wave->setScale(1.6f);
 		wave->skillDamage = 96;
 		wave->visionRange = 350;
@@ -818,6 +774,9 @@ void MainGame::allEnemyInit()
 
 	{	//boss2
 		this->boss2m1 = Enemy::create(1, 0, 2);
+		boss2m1->moneyDrop = Sprite::create();
+		boss2m1->moneyDrop->setVisible(false);
+		this->addChild(boss2m1->moneyDrop, 9);
 		//boss2m1->setScale(1.6f);
 		boss2m1->skillDamage = 200;
 		boss2m1->visionRange = 450;
@@ -850,6 +809,9 @@ void MainGame::allEnemyInit()
 
 	{	//boss3
 		this->bossfm1 = Enemy::create(1, 0, 3);
+		bossfm1->moneyDrop = Sprite::create();
+		bossfm1->moneyDrop->setVisible(false);
+		this->addChild(bossfm1->moneyDrop, 9);
 		bossfm1->norAtkDmgAfterF = 1;
 		bossfm1->doneAtkAfterF = 4;
 		bossfm1->skillDamage = 169;
@@ -903,6 +865,7 @@ void MainGame::allEnemyInit()
 	{
 		item->canDamage.resize(allEnemy.size(), false);
 	}
+	doneAddingEnemy = true;
 }
 
 Animate * MainGame::animation(std::string actionName,float timeEachFrame)
@@ -987,21 +950,19 @@ void MainGame::delAll()
 
 	this->updatePlayerPosition();
 
-	auto hud_layer = static_cast<HUDLayer*> (Director::getInstance()->getRunningScene()->getChildByTag(9999));
 	
-	hud_layer->resetHUDstate();
+	hud_layer()->resetHUDstate();
 
 }
 
 void MainGame::gameStarto()
 {
-	auto hud_layer = static_cast<HUDLayer*> (Director::getInstance()->getRunningScene()->getChildByTag(9999));
 	if (!ppp->statPlayer)
-		ppp->statPlayer = hud_layer->statPlayer;
+		ppp->statPlayer = hud_layer()->statPlayer;
 	if (!this->isGameStart) {
 		isGameStart = true;
 		this->spawnPlayer();
-		hud_layer->toggleVisiblity();
+		hud_layer()->toggleVisiblity();
 	}
 }
 
@@ -1010,4 +971,45 @@ void MainGame::restartGame()
 	canRetry = false;
 	this->runAction(Sequence::create(DelayTime::create(1), CallFunc::create([=]() {this->delAll(); this->gameStarto(); }), nullptr));
 	
+}
+
+void MainGame::dropMoneyInit() //viet them 1 ham(collect Money) dat vao update check tat ca sprite moneyDrop trong vector listDrops
+{
+	for (auto item : allEnemy) {
+		if (item->moneyDrop->isVisible() && item->canDrop) {
+			item->canDrop = false;
+			if (item->moneyRank == 1) {
+				listDrops.pushBack(item->moneyDrop);
+				item->moneyDrop->runAction(RepeatForever::create(makeAnimation("silver", 0.1234)));
+				//run Animation cua silver(moneyRank1)
+
+
+
+				//them hieu ung jumpby lam cho tien nay ra tu ng quai
+			}
+			
+			
+			// lam tuong tu voi moneyRank2(gold)
+			if (item->moneyRank == 2) {
+
+			}
+
+
+		}
+	}
+}
+
+Animate* MainGame::makeAnimation(std::string actionName, float timeEachFrame)
+{
+	Vector<SpriteFrame*> runningFrames;
+	for (int i = 0; i < 99; i++) {
+		auto frameName = actionName + std::to_string(i) + ".png";
+		SpriteFrame* frame = cache->getSpriteFrameByName(frameName);
+		if (!frame)
+			break;
+		runningFrames.pushBack(frame);
+	}
+	Animation* runningAnimation = Animation::createWithSpriteFrames(runningFrames, timeEachFrame);
+	Animate* anim = Animate::create(runningAnimation);
+	return anim;
 }

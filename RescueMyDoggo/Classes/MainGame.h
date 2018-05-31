@@ -46,6 +46,8 @@ public:
 	EventKeyboard::KeyCode lastKeyPressed;
 	EventKeyboard::KeyCode anotherKeyPressed;
 
+	SpriteFrameCache* cache;
+	cocos2d::Vector<Sprite*> listDrops;
 	std::vector<Rect> grounds;
 	TMXLayer* meta;
 	TMXTiledMap* map1;
@@ -53,6 +55,7 @@ public:
 	Point tileCoordForPosition(Point position);
 	std::vector<EventKeyboard::KeyCode> repeatedKeys;
 	std::vector<Enemy*> allEnemy;
+	bool doneAddingEnemy;
 	bool congratz;
 	bool canRetry;
 	bool boss1;
@@ -83,13 +86,16 @@ public:
 	void checkAttackRange(Enemy* eee,int index);
 	void spawnPlayer();
 	Animate* animation(std::string actionName, float timeEachFrame);
+	Animate * makeAnimation(std::string actionName, float timeEachFrame);
 	void displayDamage(int damage, std::string color, Vec2 where, Size sizes);
 	void delAll();
 	void gameStarto();
 	//Menu
 	void restartGame();
+	void dropMoneyInit();
 
 	Label* scoreLabel;
+	static HUDLayer* hud_layer();
 private:
 	virtual void update(float elapsed) override;
 	bool checkCollision(Player* pPlayer);
