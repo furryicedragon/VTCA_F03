@@ -337,7 +337,7 @@ void MainGame::update(float elapsed)
 		this->nothingBar->setPosition(pos);
 		hud_layer()->scoreLabel->setString(std::to_string(ppp->score));
 
-		if (doneAddingEnemy) this->dropMoney();
+		if (doneAddingEnemy) this->dropMoneyInit();
 
 		if (ppp->lastSeenLife != std::stoi(ppp->hp->getString()) / ppp->baseHP * 100) {
 			ppp->lastSeenLife = std::stoi(ppp->hp->getString()) / ppp->baseHP * 100;
