@@ -972,18 +972,22 @@ void MainGame::dropMoneyInit()
 				if (item->moneyRank == 1) {
 					listDrops.pushBack(moneyDrop);
 					moneyDrop->runAction(RepeatForever::create(makeAnimation("silver", 0.12f)));
+					moneyDrop->setTag(1);
 				}
 				if (item->moneyRank == 2) {
 					listDrops.pushBack(moneyDrop);
 					moneyDrop->runAction(RepeatForever::create(makeAnimation("goldcoin", 0.15f)));
+					moneyDrop->setTag(2);
 				}
 				if (item->moneyRank == 3) {
 					listDrops.pushBack(moneyDrop);
 					moneyDrop->runAction(RepeatForever::create(makeAnimation("money", 0.15f)));
+					moneyDrop->setTag(3);
 				}
 				if (item->moneyRank == 4) {
 					listDrops.pushBack(moneyDrop);
 					moneyDrop->runAction(RepeatForever::create(makeAnimation("treasure", 0.15f)));
+					moneyDrop->setTag(4);
 				}
 				auto jumpAction = JumpBy::create(0.5, Vec2(0, 15), 100, 1);
 				moneyDrop->runAction(jumpAction);			
@@ -991,30 +995,26 @@ void MainGame::dropMoneyInit()
 	}
 }
 void MainGame::collectMoney() {
-	Rect  rectPlay = ppp->getBoundingBox();
+	if(listDrops.size()>0)
 	for (auto item : listDrops) {
-		for (auto eItem : allEnemy) {
-			if (item->isVisible()) {
-				Rect moneyRect = item->getBoundingBox();
-				if (rectPlay.intersectsRect(moneyRect)) {
-					if (eItem->moneyRank == 1) {
-						ppp->score += 10;	
-						item->setVisible(false);
-					}
-					if (eItem->moneyRank == 2) {
-						ppp->score += 20;
-						item->setVisible(false);
-					}
-					if (eItem->moneyRank == 3) {
-						ppp->score += 100;
-						item->setVisible(false);
-											}
-					if (eItem->moneyRank == 4) {
-						ppp->score += 500;
-						item->setVisible(false);
-  				    }		
-				}
-		    }	
+		Rect moneyRect = item->getBoundingBox();
+		Rect playerRect = ppp->getBoundingBox();
+		if (playerRect.intersectsRect(moneyRect)) {
+			if (item->getTag() == 1) {
+				ppp->score += 10;	
+  			}
+			if (item->getTag() == 2) {
+				ppp->score += 20;
+			}
+			if (item->getTag() == 3) {
+				ppp->score += 100;
+			}
+			if (item->getTag() == 4) {
+				ppp->score += 500;
+			}
+			item->setVisible(false);
+			listDrops.eraseObject(item, false);
+			break;
 		}
 	}
 }
