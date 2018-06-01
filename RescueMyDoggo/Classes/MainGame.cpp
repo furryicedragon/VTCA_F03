@@ -997,22 +997,31 @@ void MainGame::dropMoneyInit()
 void MainGame::collectMoney() {
 	if(listDrops.size()>0)
 	for (auto item : listDrops) {
-		Rect moneyRect = item->getBoundingBox();
-		Rect playerRect = ppp->getBoundingBox();
-		if (playerRect.intersectsRect(moneyRect)) {
-			if (item->getTag() == 1) {
-				ppp->score += 10;	
-  			}
-			if (item->getTag() == 2) {
-				ppp->score += 20;
+		if (item->getTag() != 69) {
+			Rect moneyRect = item->getBoundingBox();
+			Rect playerRect = ppp->getBoundingBox();
+			if (playerRect.intersectsRect(moneyRect)) {
+				if (item->getTag() == 1) {
+					ppp->score += 10;
+				}
+				if (item->getTag() == 2) {
+					ppp->score += 20;
+				}
+				if (item->getTag() == 3) {
+					ppp->score += 100;
+				}
+				if (item->getTag() == 4) {
+					ppp->score += 500;
+				}
+				item->setTag(69);
+				item->runAction(Sequence::create(DelayTime::create(0.2f), FadeOut::create(0.5f), 
+					CallFunc::create([=]() {this->removeChild(item, true); item->setName("deletethisshit"); }), nullptr));
+				
 			}
-			if (item->getTag() == 3) {
-				ppp->score += 100;
-			}
-			if (item->getTag() == 4) {
-				ppp->score += 500;
-			}
-			item->setVisible(false);
+		}
+		else
+		{
+			if (item->getName() == "deletethisshit");
 			listDrops.eraseObject(item, false);
 			break;
 		}
