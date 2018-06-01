@@ -13,7 +13,6 @@ public:
 	Sprite* movementHelper;
 	Sprite* spell;
 	Sprite* spellLanded;
-	Sprite* moneyDrop;
 	Size getHitFrameSize;
 	Player* ppp;
 	Animate* idleAnim;

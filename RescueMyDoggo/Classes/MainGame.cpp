@@ -671,10 +671,6 @@ void MainGame::allEnemyInit()
 	auto line4 = oj->getObject("Line4");
 	for (int i = 0; i < 4; i++) {
 		Enemy* wave = Enemy::create(2, 1, 0);
-		wave->moneyDrop = Sprite::create();
-		wave->moneyDrop->setVisible(false);
-		this->addChild(wave->moneyDrop, 9);
-
 		//wave->setScale(1.6f);
 		wave->skillDamage = 11;
 		wave->visionRange = 310;
@@ -708,9 +704,6 @@ void MainGame::allEnemyInit()
 
 	{	//boss 1
 		this->boss1m1 = Enemy::create(1, 0, 1);
-		boss1m1->moneyDrop = Sprite::create();
-		boss1m1->moneyDrop->setVisible(false);
-		this->addChild(boss1m1->moneyDrop, 9);
 		boss1m1->visionRange = 420;
 		boss1m1->skillDamage = 150;
 		//boss1m1->setScale(1.6f);
@@ -744,9 +737,6 @@ void MainGame::allEnemyInit()
 
 	for (int i = 0; i < 4; i++) {
 		Enemy* wave = Enemy::create(1, 2, 0);
-		wave->moneyDrop = Sprite::create();
-		wave->moneyDrop->setVisible(false);
-		this->addChild(wave->moneyDrop, 9);
 		//wave->setScale(1.6f);
 		wave->skillDamage = 96;
 		wave->visionRange = 350;
@@ -778,10 +768,7 @@ void MainGame::allEnemyInit()
 
 	{	//boss2
 		this->boss2m1 = Enemy::create(1, 0, 2);
-		boss2m1->moneyDrop = Sprite::create();
-		boss2m1->moneyDrop->setVisible(false);
-		this->addChild(boss2m1->moneyDrop, 9);
-		//boss2m1->setScale(1.6f);
+     	//boss2m1->setScale(1.6f);
 		boss2m1->skillDamage = 200;
 		boss2m1->visionRange = 450;
 		boss2m1->moveSpeed = 420;
@@ -813,9 +800,6 @@ void MainGame::allEnemyInit()
 
 	{	//boss3
 		this->bossfm1 = Enemy::create(1, 0, 3);
-		bossfm1->moneyDrop = Sprite::create();
-		bossfm1->moneyDrop->setVisible(false);
-		this->addChild(bossfm1->moneyDrop, 9);
 		bossfm1->norAtkDmgAfterF = 1;
 		bossfm1->doneAtkAfterF = 4;
 		bossfm1->skillDamage = 169;
@@ -979,63 +963,58 @@ void MainGame::restartGame()
 
 void MainGame::dropMoneyInit()
 {
-	for (auto item : allEnemy) {
-		if (item->canDrop) {
-			item->moneyDrop->setVisible(true);
-			item->canDrop = false;
-			item->moneyDrop->setPosition(item->getPosition());
-			if (item->moneyRank == 1) {
-				listDrops.pushBack(item->moneyDrop);
-				item->moneyDrop->runAction(RepeatForever::create(makeAnimation("silver",0.15f)));
-			}
-			if (item->moneyRank == 2) {
-				listDrops.pushBack(item->moneyDrop);
-				item->moneyDrop->runAction(RepeatForever::create(makeAnimation("gold", 0.15f)));
-			}
-			if (item->moneyRank == 3) {
-				listDrops.pushBack(item->moneyDrop);
-				item->moneyDrop->runAction(RepeatForever::create(makeAnimation("money", 0.15f)));
-			}
-			if (item->moneyRank == 4) {
-				listDrops.pushBack(item->moneyDrop);
-				item->moneyDrop->runAction(RepeatForever::create(makeAnimation("treasure", 0.15f)));
-			}
-			auto jumpAction = JumpBy::create(0.5, Vec2(0, 15), 100, 1);
-			item->moneyDrop->runAction(jumpAction);
+		for (auto item : allEnemy) {
+			if (item->canDrop) {
+				auto moneyDrop = Sprite::create();
+				moneyDrop->setPosition(item->getPosition());			
+				this->addChild(moneyDrop, 9);
+				item->canDrop = false;
+				if (item->moneyRank == 1) {
+					listDrops.pushBack(moneyDrop);
+					moneyDrop->runAction(RepeatForever::create(makeAnimation("silver", 0.12f)));
+				}
+				if (item->moneyRank == 2) {
+					listDrops.pushBack(moneyDrop);
+					moneyDrop->runAction(RepeatForever::create(makeAnimation("goldcoin", 0.15f)));
+				}
+				if (item->moneyRank == 3) {
+					listDrops.pushBack(moneyDrop);
+					moneyDrop->runAction(RepeatForever::create(makeAnimation("money", 0.15f)));
+				}
+				if (item->moneyRank == 4) {
+					listDrops.pushBack(moneyDrop);
+					moneyDrop->runAction(RepeatForever::create(makeAnimation("treasure", 0.15f)));
+				}
+				auto jumpAction = JumpBy::create(0.5, Vec2(0, 15), 100, 1);
+				moneyDrop->runAction(jumpAction);			
 		}
 	}
 }
 void MainGame::collectMoney() {
 	Rect  rectPlay = ppp->getBoundingBox();
-	for (auto item : allEnemy) {
-		if (item->moneyDrop->isVisible()) {
-			Rect moneyRect = item->moneyDrop->getBoundingBox();
-			if (rectPlay.intersectsRect(moneyRect)) {
-				if (item->moneyRank == 1) {
-					auto fadeOutAction = FadeOut::create(0.2);
-					item->moneyDrop->runAction(fadeOutAction);
-					ppp->score += 10;
-					item->moneyDrop->setVisible(false);
+	for (auto item : listDrops) {
+		for (auto eItem : allEnemy) {
+			if (item->isVisible()) {
+				Rect moneyRect = item->getBoundingBox();
+				if (rectPlay.intersectsRect(moneyRect)) {
+					if (eItem->moneyRank == 1) {
+						ppp->score += 10;	
+						item->setVisible(false);
+					}
+					if (eItem->moneyRank == 2) {
+						ppp->score += 20;
+						item->setVisible(false);
+					}
+					if (eItem->moneyRank == 3) {
+						ppp->score += 100;
+						item->setVisible(false);
+											}
+					if (eItem->moneyRank == 4) {
+						ppp->score += 500;
+						item->setVisible(false);
+  				    }		
 				}
-				if (item->moneyRank == 2) {
-					auto fadeOutAction = FadeOut::create(0.2);
-					item->moneyDrop->runAction(fadeOutAction);
-					ppp->score += 20;
-					item->moneyDrop->setVisible(false);
-				}
-				if (item->moneyRank == 3) {
-					auto fadeOutAction = FadeOut::create(0.2);
-					item->moneyDrop->runAction(fadeOutAction);
-					ppp->score += 100;
-					item->moneyDrop->setVisible(false);
-				}
-				if (item->moneyRank == 4) {
-					auto fadeOutAction = FadeOut::create(0.2);
-					item->moneyDrop->runAction(fadeOutAction);
-					ppp->score += 500;
-					item->moneyDrop->setVisible(false);
-				}
-			}
+		    }	
 		}
 	}
 }

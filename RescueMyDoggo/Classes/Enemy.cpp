@@ -414,7 +414,6 @@ void Enemy::dead() {
 		this->isSpawned = false;
 		this->canRespawn = true;
 		this->canDrop = true;
-
 		//this->stopAllActions();
 		this->forbidAllAction();
 		if(this->checkFrame("Dead"))
@@ -450,8 +449,6 @@ void Enemy::dead() {
 			moneyRank = 3;
 			ppp->currentEXP += 300;
 		}
-		this->canDrop = true;
-		this->moneyDrop->setVisible(true);
 }
 
 void Enemy::forbidAllAction()
