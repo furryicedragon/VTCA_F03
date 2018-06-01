@@ -1015,15 +1015,8 @@ void MainGame::collectMoney() {
 				}
 				item->setTag(69);
 				item->runAction(Sequence::create(DelayTime::create(0.2f), FadeOut::create(0.5f), 
-					CallFunc::create([=]() {this->removeChild(item, true); item->setName("deletethisshit"); }), nullptr));
-				
+					CallFunc::create([=]() {this->removeChild(item, true); listDrops.eraseObject(item, false);}), nullptr));
 			}
-		}
-		else
-		{
-			if (item->getName() == "deletethisshit");
-			listDrops.eraseObject(item, false);
-			break;
 		}
 	}
 }
