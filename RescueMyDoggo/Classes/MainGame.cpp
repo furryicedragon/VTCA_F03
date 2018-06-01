@@ -337,7 +337,10 @@ void MainGame::update(float elapsed)
 		this->nothingBar->setPosition(pos);
 		hud_layer()->scoreLabel->setString(std::to_string(ppp->score));
 
-		if (doneAddingEnemy) this->dropMoneyInit();
+		if (doneAddingEnemy) {
+			this->dropMoneyInit();
+			this->collectMoney();
+		}
 
 		if (ppp->lastSeenLife != std::stoi(ppp->hp->getString()) / ppp->baseHP * 100) {
 			ppp->lastSeenLife = std::stoi(ppp->hp->getString()) / ppp->baseHP * 100;
@@ -671,6 +674,7 @@ void MainGame::allEnemyInit()
 		wave->moneyDrop = Sprite::create();
 		wave->moneyDrop->setVisible(false);
 		this->addChild(wave->moneyDrop, 9);
+
 		//wave->setScale(1.6f);
 		wave->skillDamage = 11;
 		wave->visionRange = 310;
@@ -973,28 +977,104 @@ void MainGame::restartGame()
 	
 }
 
-void MainGame::dropMoneyInit() //viet them 1 ham(collect Money) dat vao update check tat ca sprite moneyDrop trong vector listDrops
+void MainGame::dropMoneyInit()
 {
 	for (auto item : allEnemy) {
-		if (item->moneyDrop->isVisible() && item->canDrop) {
+		if (item->canDrop) {
+			item->moneyDrop->setVisible(true);
 			item->canDrop = false;
+			item->moneyDrop->setPosition(item->getPosition());
 			if (item->moneyRank == 1) {
 				listDrops.pushBack(item->moneyDrop);
-				item->moneyDrop->runAction(RepeatForever::create(makeAnimation("silver", 0.1234)));
-				//run Animation cua silver(moneyRank1)
-
-
-
-				//them hieu ung jumpby lam cho tien nay ra tu ng quai
+				Vector<SpriteFrame*> animFrames(4);
+				animFrames.pushBack(SpriteFrameCache::getInstance()->getSpriteFrameByName("silver0.png"));
+				animFrames.pushBack(SpriteFrameCache::getInstance()->getSpriteFrameByName("silver1.png"));
+				animFrames.pushBack(SpriteFrameCache::getInstance()->getSpriteFrameByName("silver2.png"));
+				animFrames.pushBack(SpriteFrameCache::getInstance()->getSpriteFrameByName("silver3.png"));
+				Animation* animation = Animation::createWithSpriteFrames(animFrames, 0.15f);
+				Animate * animate = Animate::create(animation);
+				item->moneyDrop->runAction(RepeatForever::create(animate));
+				
+				auto jumpAction = JumpBy::create(0.5, Vec2(0, 15),100,1);
+				item->moneyDrop->runAction(jumpAction);
 			}
-			
-			
-			// lam tuong tu voi moneyRank2(gold)
 			if (item->moneyRank == 2) {
+				listDrops.pushBack(item->moneyDrop);
+				Vector<SpriteFrame*> animFrames(4);
+				animFrames.pushBack(SpriteFrameCache::getInstance()->getSpriteFrameByName("goldcoin0.png"));
+				animFrames.pushBack(SpriteFrameCache::getInstance()->getSpriteFrameByName("goldcoin1.png"));
+				animFrames.pushBack(SpriteFrameCache::getInstance()->getSpriteFrameByName("goldcoin2.png"));
+				animFrames.pushBack(SpriteFrameCache::getInstance()->getSpriteFrameByName("goldcoin3.png"));
+				Animation* animation = Animation::createWithSpriteFrames(animFrames, 0.15f);
+				Animate * animate = Animate::create(animation);
+				item->moneyDrop->runAction(RepeatForever::create(animate));	
+
+				auto jumpAction = JumpBy::create(0.5, Vec2(0, 15), 100, 1);
+				item->moneyDrop->runAction(jumpAction);
 
 			}
+			if (item->moneyRank == 3) {
+				listDrops.pushBack(item->moneyDrop);
+				Vector<SpriteFrame*> animFrames(4);
+				animFrames.pushBack(SpriteFrameCache::getInstance()->getSpriteFrameByName("treasure0.png"));
+				animFrames.pushBack(SpriteFrameCache::getInstance()->getSpriteFrameByName("treasure1.png"));
+				animFrames.pushBack(SpriteFrameCache::getInstance()->getSpriteFrameByName("treasure2.png"));
+				animFrames.pushBack(SpriteFrameCache::getInstance()->getSpriteFrameByName("treasure3.png"));
+				Animation* animation = Animation::createWithSpriteFrames(animFrames, 0.15f);
+				Animate * animate = Animate::create(animation);
+				item->moneyDrop->runAction(RepeatForever::create(animate));
 
+				auto jumpAction = JumpBy::create(0.5, Vec2(0, 15), 100, 1);
+				item->moneyDrop->runAction(jumpAction);
+			}
+			if (item->moneyRank == 4) {
+				listDrops.pushBack(item->moneyDrop);
+				Vector<SpriteFrame*> animFrames(4);
+				animFrames.pushBack(SpriteFrameCache::getInstance()->getSpriteFrameByName("money0.png"));
+				animFrames.pushBack(SpriteFrameCache::getInstance()->getSpriteFrameByName("money1.png"));
+				animFrames.pushBack(SpriteFrameCache::getInstance()->getSpriteFrameByName("money2.png"));
+				animFrames.pushBack(SpriteFrameCache::getInstance()->getSpriteFrameByName("money3.png"));
+				Animation* animation = Animation::createWithSpriteFrames(animFrames, 0.15f);
+				Animate * animate = Animate::create(animation);
+				item->moneyDrop->runAction(RepeatForever::create(animate));
 
+				auto jumpAction = JumpBy::create(0.5, Vec2(0, 15), 100, 1);
+				item->moneyDrop->runAction(jumpAction);
+			}
+		}
+	}
+}
+void MainGame::collectMoney() {
+	Rect  rectPlay = ppp->getBoundingBox();
+	for (auto item : allEnemy) {
+		if (item->moneyDrop->isVisible()) {
+			Rect moneyRect = item->moneyDrop->getBoundingBox();
+			if (rectPlay.intersectsRect(moneyRect)) {
+				if (item->moneyRank == 1) {
+					auto fadeOutAction = FadeOut::create(0.2);
+					item->moneyDrop->runAction(fadeOutAction);
+					ppp->score += 10;
+					item->moneyDrop->setVisible(false);
+				}
+				if (item->moneyRank == 2) {
+					auto fadeOutAction = FadeOut::create(0.2);
+					item->moneyDrop->runAction(fadeOutAction);
+					ppp->score += 20;
+					item->moneyDrop->setVisible(false);
+				}
+				if (item->moneyRank == 3) {
+					auto fadeOutAction = FadeOut::create(0.2);
+					item->moneyDrop->runAction(fadeOutAction);
+					ppp->score += 100;
+					item->moneyDrop->setVisible(false);
+				}
+				if (item->moneyRank == 4) {
+					auto fadeOutAction = FadeOut::create(0.2);
+					item->moneyDrop->runAction(fadeOutAction);
+					ppp->score += 500;
+					item->moneyDrop->setVisible(false);
+				}
+			}
 		}
 	}
 }

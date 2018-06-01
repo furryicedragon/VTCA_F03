@@ -413,7 +413,7 @@ void Enemy::dead() {
 		this->isDead = true;
 		this->isSpawned = false;
 		this->canRespawn = true;
-
+		this->canDrop = true;
 
 		//this->stopAllActions();
 		this->forbidAllAction();
@@ -447,7 +447,7 @@ void Enemy::dead() {
 		}		
 		if (this->bossNumber == 2) 
 		{
-			moneyRank = 2;
+			moneyRank = 3;
 			ppp->currentEXP += 300;
 		}
 		this->canDrop = true;

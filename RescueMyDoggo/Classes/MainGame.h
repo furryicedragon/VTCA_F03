@@ -93,6 +93,7 @@ public:
 	//Menu
 	void restartGame();
 	void dropMoneyInit();
+	void collectMoney();
 
 	Label* scoreLabel;
 	static HUDLayer* hud_layer();
