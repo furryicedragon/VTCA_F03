@@ -986,61 +986,22 @@ void MainGame::dropMoneyInit()
 			item->moneyDrop->setPosition(item->getPosition());
 			if (item->moneyRank == 1) {
 				listDrops.pushBack(item->moneyDrop);
-				Vector<SpriteFrame*> animFrames(4);
-				animFrames.pushBack(SpriteFrameCache::getInstance()->getSpriteFrameByName("silver0.png"));
-				animFrames.pushBack(SpriteFrameCache::getInstance()->getSpriteFrameByName("silver1.png"));
-				animFrames.pushBack(SpriteFrameCache::getInstance()->getSpriteFrameByName("silver2.png"));
-				animFrames.pushBack(SpriteFrameCache::getInstance()->getSpriteFrameByName("silver3.png"));
-				Animation* animation = Animation::createWithSpriteFrames(animFrames, 0.15f);
-				Animate * animate = Animate::create(animation);
-				item->moneyDrop->runAction(RepeatForever::create(animate));
-				
-				auto jumpAction = JumpBy::create(0.5, Vec2(0, 15),100,1);
-				item->moneyDrop->runAction(jumpAction);
+				item->moneyDrop->runAction(RepeatForever::create(makeAnimation("silver",0.15f)));
 			}
 			if (item->moneyRank == 2) {
 				listDrops.pushBack(item->moneyDrop);
-				Vector<SpriteFrame*> animFrames(4);
-				animFrames.pushBack(SpriteFrameCache::getInstance()->getSpriteFrameByName("goldcoin0.png"));
-				animFrames.pushBack(SpriteFrameCache::getInstance()->getSpriteFrameByName("goldcoin1.png"));
-				animFrames.pushBack(SpriteFrameCache::getInstance()->getSpriteFrameByName("goldcoin2.png"));
-				animFrames.pushBack(SpriteFrameCache::getInstance()->getSpriteFrameByName("goldcoin3.png"));
-				Animation* animation = Animation::createWithSpriteFrames(animFrames, 0.15f);
-				Animate * animate = Animate::create(animation);
-				item->moneyDrop->runAction(RepeatForever::create(animate));	
-
-				auto jumpAction = JumpBy::create(0.5, Vec2(0, 15), 100, 1);
-				item->moneyDrop->runAction(jumpAction);
-
+				item->moneyDrop->runAction(RepeatForever::create(makeAnimation("gold", 0.15f)));
 			}
 			if (item->moneyRank == 3) {
 				listDrops.pushBack(item->moneyDrop);
-				Vector<SpriteFrame*> animFrames(4);
-				animFrames.pushBack(SpriteFrameCache::getInstance()->getSpriteFrameByName("treasure0.png"));
-				animFrames.pushBack(SpriteFrameCache::getInstance()->getSpriteFrameByName("treasure1.png"));
-				animFrames.pushBack(SpriteFrameCache::getInstance()->getSpriteFrameByName("treasure2.png"));
-				animFrames.pushBack(SpriteFrameCache::getInstance()->getSpriteFrameByName("treasure3.png"));
-				Animation* animation = Animation::createWithSpriteFrames(animFrames, 0.15f);
-				Animate * animate = Animate::create(animation);
-				item->moneyDrop->runAction(RepeatForever::create(animate));
-
-				auto jumpAction = JumpBy::create(0.5, Vec2(0, 15), 100, 1);
-				item->moneyDrop->runAction(jumpAction);
+				item->moneyDrop->runAction(RepeatForever::create(makeAnimation("money", 0.15f)));
 			}
 			if (item->moneyRank == 4) {
 				listDrops.pushBack(item->moneyDrop);
-				Vector<SpriteFrame*> animFrames(4);
-				animFrames.pushBack(SpriteFrameCache::getInstance()->getSpriteFrameByName("money0.png"));
-				animFrames.pushBack(SpriteFrameCache::getInstance()->getSpriteFrameByName("money1.png"));
-				animFrames.pushBack(SpriteFrameCache::getInstance()->getSpriteFrameByName("money2.png"));
-				animFrames.pushBack(SpriteFrameCache::getInstance()->getSpriteFrameByName("money3.png"));
-				Animation* animation = Animation::createWithSpriteFrames(animFrames, 0.15f);
-				Animate * animate = Animate::create(animation);
-				item->moneyDrop->runAction(RepeatForever::create(animate));
-
-				auto jumpAction = JumpBy::create(0.5, Vec2(0, 15), 100, 1);
-				item->moneyDrop->runAction(jumpAction);
+				item->moneyDrop->runAction(RepeatForever::create(makeAnimation("treasure", 0.15f)));
 			}
+			auto jumpAction = JumpBy::create(0.5, Vec2(0, 15), 100, 1);
+			item->moneyDrop->runAction(jumpAction);
 		}
 	}
 }
