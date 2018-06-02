@@ -971,24 +971,21 @@ void MainGame::dropMoneyInit()
 				item->canDrop = false;
 				if (item->moneyRank == 1) {
 					listDrops.pushBack(moneyDrop);
-					moneyDrop->runAction(RepeatForever::create(makeAnimation("silver", 0.12f)));
-					moneyDrop->setTag(1);
+					moneyDrop->runAction(RepeatForever::create(makeAnimation("silvercoin", 0.12f)));
 				}
 				if (item->moneyRank == 2) {
 					listDrops.pushBack(moneyDrop);
 					moneyDrop->runAction(RepeatForever::create(makeAnimation("goldcoin", 0.15f)));
-					moneyDrop->setTag(2);
 				}
 				if (item->moneyRank == 3) {
 					listDrops.pushBack(moneyDrop);
 					moneyDrop->runAction(RepeatForever::create(makeAnimation("money", 0.15f)));
-					moneyDrop->setTag(3);
 				}
 				if (item->moneyRank == 4) {
 					listDrops.pushBack(moneyDrop);
 					moneyDrop->runAction(RepeatForever::create(makeAnimation("treasure", 0.15f)));
-					moneyDrop->setTag(4);
 				}
+				moneyDrop->setTag(item->moneyRank);
 				auto jumpAction = JumpBy::create(0.5, Vec2(0, 15), 100, 1);
 				moneyDrop->runAction(jumpAction);			
 		}
