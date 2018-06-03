@@ -335,8 +335,10 @@ void MainGame::update(float elapsed)
 		this->HPonHead->setPosition(pos);
 		this->HitDame->setPosition(pos);
 		this->nothingBar->setPosition(pos);
-		hud_layer()->scoreLabel->setString(std::to_string(ppp->score));
-
+		if (lastScore != ppp->score) {
+			hud_layer()->scoreLabel->setString(std::to_string(ppp->score));
+			lastScore = ppp->score;
+		}
 		if (doneAddingEnemy) {
 			this->dropMoneyInit();
 			this->collectMoney();
@@ -681,11 +683,11 @@ void MainGame::allEnemyInit()
 		wave->skillCD = 4;
 		wave->skillRange = 300;
 		wave->setHP(100);
-		wave->initOption();
 		wave->line1X = line1["x"].asFloat() *map1->getScale();
 		wave->line2X = line2["x"].asFloat() *map1->getScale();
 		wave->line3X = line3["x"].asFloat() *map1->getScale();
 		wave->line4X = line4["x"].asFloat() *map1->getScale();
+		wave->initOption();
 		wave->setPosition(RandomHelper::random_real(wave->line1X, wave->line2X), line1["y"].asFloat());
 		wave->ppp = ppp;
 		//wave->isSpawned = true;

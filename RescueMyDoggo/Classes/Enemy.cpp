@@ -25,6 +25,10 @@ Enemy* Enemy::create(int xMapNumber, int xWaveNumber, int xBossNumber)
 
 void Enemy::initOption()
 {
+	if (this->waveNumber == 1 || this->bossNumber == 1)
+		spotPlayerLine = line1X - visionRange;
+	if (this->waveNumber == 2 || this->bossNumber > 1)
+		spotPlayerLine = line3X;
 	this->canDrop = false;
 	this->canChase = true;
 	this->canRespawn = true;
@@ -219,14 +223,9 @@ void Enemy::randomMoving() {
 }
 void Enemy::moving() {
 	float howFar = std::fabsf(ppp->getPosition().x - (this->getPosition().x + this->getContentSize().width / 2));
-	if (this->waveNumber == 1 || this->bossNumber == 1) 
-		spotPlayerLine = line1X-visionRange;
-	if (this->waveNumber == 2 || this->bossNumber > 1) 
-		spotPlayerLine = line3X;
 	if (howFar < skillRange && !this->isAttacking && !this->isOnCD 
 		&& std::fabsf(ppp->getPosition().y - this->getPosition().y) < 145 && ppp->getPositionY()-this->getPositionY()>0  && ppp->getPositionX() > spotPlayerLine) {
 		this->attack();
-		this->isAttacking = true;
 	}
 	if (ppp->getPosition().y - this->getPosition().y > 145 || ppp->getPositionX() < spotPlayerLine)
 		this->isChasing = false;

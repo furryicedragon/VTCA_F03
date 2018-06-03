@@ -214,7 +214,7 @@ void HUDLayer::DisplayScore()
 	scoreSprite->setPosition(ScorePosition);
 	scoreSprite->setScale(0.6f);
 
-	scoreLabel = Label::createWithSystemFont("0", "fonts/SF Atarian System.ttf", 40.0f, Size::ZERO, TextHAlignment::CENTER, TextVAlignment::CENTER);
+	scoreLabel = Label::createWithSystemFont("0", "Arial", 40.0f, Size::ZERO, TextHAlignment::CENTER, TextVAlignment::CENTER);
 	scoreLabel->setColor(Color3B(255, 255, 255));
 	scoreLabel->setPosition(scoreSprite->getPosition().x, scoreSprite->getPosition().y + 2);
 	this->addChild(scoreSprite, 0);
