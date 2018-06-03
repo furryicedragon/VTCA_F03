@@ -970,22 +970,25 @@ void MainGame::dropMoneyInit()
 				this->addChild(moneyDrop, 9);
 				item->canDrop = false;
 				if (item->moneyRank == 1) {
+					moneyDrop->setTag(1);
 					listDrops.pushBack(moneyDrop);
-					moneyDrop->runAction(RepeatForever::create(makeAnimation("silvercoin", 0.12f)));
+					moneyDrop->runAction(RepeatForever::create(makeAnimation("silvercoin", 0.15f)));
 				}
 				if (item->moneyRank == 2) {
+					moneyDrop->setTag(2);
 					listDrops.pushBack(moneyDrop);
 					moneyDrop->runAction(RepeatForever::create(makeAnimation("goldcoin", 0.15f)));
 				}
 				if (item->moneyRank == 3) {
+					moneyDrop->setTag(3);
 					listDrops.pushBack(moneyDrop);
 					moneyDrop->runAction(RepeatForever::create(makeAnimation("money", 0.15f)));
 				}
 				if (item->moneyRank == 4) {
+					moneyDrop->setTag(4);
 					listDrops.pushBack(moneyDrop);
 					moneyDrop->runAction(RepeatForever::create(makeAnimation("treasure", 0.15f)));
 				}
-				moneyDrop->setTag(item->moneyRank);
 				auto jumpAction = JumpBy::create(0.5, Vec2(0, 15), 100, 1);
 				moneyDrop->runAction(jumpAction);			
 		}
@@ -1011,7 +1014,7 @@ void MainGame::collectMoney() {
 					ppp->score += 500;
 				}
 				item->setTag(69);
-				item->runAction(Sequence::create(DelayTime::create(0.2f), FadeOut::create(0.5f), 
+				item->runAction(Sequence::create(DelayTime::create(0.2f),MoveBy::create(0.2, Vec2(0, 30)), FadeOut::create(0.5f), 
 					CallFunc::create([=]() {this->removeChild(item, true); }), nullptr));
 			}
 		}
