@@ -33,9 +33,18 @@ USING_NS_CC;
 #define BT_pauseNomal "UIUX/pauseHUDLayer.png"
 #define BT_pauseClick "UIUX/pauseHUDLayer1.png"
 
-#define GUI_menupause "UIUX/bgMenu.png"
+#define GUI_menupause "UIUX/optionMenuinGame.png"
 #define GUI_startnomal "UIUX/buttonStartnomal.png"
 #define GUI_startclick "UIUX/buttonStartclick.png"
+
+#define BT_resumenomal "UIUX/resumnomal.png"
+#define BT_resumeclick "UIUX/resumeclick.png"
+#define BT_restartnomal "UIUX/restartnomal.png"
+#define BT_restartclick "UIUX/restartclick.png"
+#define BT_optionnomal "UIUX/setingnomal.png"
+#define BT_optionclick "UIUX/setingclick.png"
+#define BT_exitnomal "UIUX/exitnomal.png"
+#define BT_exitclick "UIUX/exitclick.png"
 
 
 class MainMenuScene : public cocos2d::Layer
