@@ -133,19 +133,19 @@ void MainScene::setupGameOverLayer()
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	auto gameOverLayer = Layer::create();
 
-	auto gameover_bg = Sprite::create(GUI_backMainmenu);
-	gameover_bg->setScale(4);
+	auto gameover_bg = Sprite::create(GUI_backDead);
+	gameover_bg->setScale(0.8);
 	gameover_bg->setPosition(Vec2(visibleSize.width * 0.5, visibleSize.height * 0.5));
 
 
 	Size _bgOptionDead = gameover_bg->getContentSize();
 
 	////show button ra menu hay chơi lại khi chết dưới cái back
-	auto btMenu = ui::Button::create(BT_HomeGame);
+	auto btMenu = ui::Button::create(BT_homenomal, BT_homeclick);
 
 
-	btMenu->setPosition(Vec2(_bgOptionDead.width * 0.8, _bgOptionDead.height * 0.5));
-	btMenu->setScale(0.2f);
+	btMenu->setPosition(Vec2(_bgOptionDead.width * 0.7, _bgOptionDead.height * 0.2));
+	btMenu->setScale(0.5f);
 	btMenu->addTouchEventListener([&](Ref* sender, ui::Widget::TouchEventType type)
 	{
 		switch (type)
@@ -164,15 +164,18 @@ void MainScene::setupGameOverLayer()
 			
 			auto layer = static_cast<Layer*>(this->getChildByTag(9900));
 			layer->setVisible(false);
+
+			auto layerPause = static_cast<Layer*>(this->getChildByTag(9902));
+			layerPause->setVisible(false);
 			break;
 		}
 	});
 	gameover_bg->addChild(btMenu);
 
-	auto btRetry = ui::Button::create(BT_RetryGame);
+	auto btRetry = ui::Button::create(BT_restartnomal, BT_restartclick);
 
-	btRetry->setPosition(Vec2(_bgOptionDead.width * 0.2, _bgOptionDead.height * 0.5));
-	btRetry->setScale(0.2f);
+	btRetry->setPosition(Vec2(_bgOptionDead.width * 0.3, _bgOptionDead.height * 0.2));
+	btRetry->setScale(0.5f);
 	btRetry->addTouchEventListener([&](Ref* sender, ui::Widget::TouchEventType type)
 	{
 		switch (type)
