@@ -12,10 +12,6 @@
 
 USING_NS_CC;
 
-#define GUI_backMainmenu "UIUX/bgMenu.png"
-#define BT_HomeGame "UIUX/button_start.png"
-#define BT_RetryGame "UIUX/retry_button.png"
-
 class MainGame : public cocos2d::Node
 {
 public:

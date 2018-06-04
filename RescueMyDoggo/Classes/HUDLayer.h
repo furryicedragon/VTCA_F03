@@ -16,6 +16,8 @@ public:
 
 	virtual bool init() override;
 
+	void setupPause();
+
 	Joystick *movementStick;
 	void setupStick();
 

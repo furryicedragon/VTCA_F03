@@ -1,4 +1,8 @@
 ﻿#include <HUDLayer.h>
+#include "ui\CocosGUI.h"
+#include "MainMenuScene.h"
+#include "MainScene.h"
+
 USING_NS_CC;
 
 bool HUDLayer::init()
@@ -8,12 +12,35 @@ bool HUDLayer::init()
 		return false;
 	}
 
+	this->setupPause();
 	this->setupStick();
 	this->setupButtons();
 	this->setupStat();
 	this->DisplayScore();
 	this->setVisible(false);
 	return true;
+}
+
+void HUDLayer::setupPause()
+{
+	auto visibleSize = Director::getInstance()->getVisibleSize();
+
+	auto btPause = ui::Button::create(BT_pauseNomal, BT_pauseClick);
+	btPause->setPosition(Vec2(visibleSize.width * 0.95f, visibleSize.height * 0.93f));
+	btPause->setScale(0.5);
+	btPause->addTouchEventListener([&](Ref* sender, ui::Widget::TouchEventType type)
+	{
+		switch (type)
+		{
+		case ui::Widget::TouchEventType::ENDED:
+			/*this->setVisible(false);
+			Director::getInstance()->pause();
+			auto gamepauseLayer = static_cast<Layer*> (Director::getInstance()->getRunningScene()->getChildByTag(9902));
+			gamepauseLayer->setVisible(true);*/
+			break;
+		}
+	});
+	this->addChild(btPause);
 }
 
 void HUDLayer::setupStick()
