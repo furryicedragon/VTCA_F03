@@ -103,7 +103,7 @@ void MainScene::setupMenuPause()
 	gamePause_bg->addChild(btResume);
 	auto btExitGame = ui::Button::create(BT_exitnomal, BT_exitclick);
 
-	btExitGame->setPosition(Vec2(_bgOptionPause.width * 0.5f, _bgOptionPause.height * 0.15f));
+	btExitGame->setPosition(Vec2(_bgOptionPause.width * 0.5f, _bgOptionPause.height * 0.17f));
 	//btExitGame->setScale(0.2f);
 	btExitGame->addTouchEventListener([&](Ref* sender, ui::Widget::TouchEventType type)
 	{
