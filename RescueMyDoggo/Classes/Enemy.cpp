@@ -211,7 +211,6 @@ void Enemy::moving() {
 	if (howFar < skillRange && !this->isAttacking && !this->isOnCD 
 		&& std::fabsf(ppp->getPosition().y - this->getPosition().y) < 145 && ppp->getPositionY()-this->getPositionY()>0  && ppp->getPositionX() > spotPlayerLine) {
 		this->attack();
-		this->isAttacking = true;
 	}
 	if (ppp->getPosition().y - this->getPosition().y > 145 || ppp->getPositionX() < spotPlayerLine)
 		this->isChasing = false;
