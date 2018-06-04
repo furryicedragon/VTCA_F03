@@ -587,7 +587,7 @@ void MainGame::checkAttackRange(Enemy * eee, int index)
 		}
 
 
-		if (eee->isCaster && !ppp->isRolling && !eee->canDamage && std::fabsf(eee->spell->getPosition().x - ppp->getPosition().x) < 22 && std::fabsf(eee->spell->getPositionY() - ppp->getPositionY())<40 && eee->mapNumber==2) {
+		if (eee->isCaster && !ppp->isRolling && !eee->canDamage && std::fabsf(eee->spell->getPosition().x - ppp->getPosition().x) < 22 && std::fabsf(eee->spell->getPositionY() - ppp->getPositionY())<40 && eee->mapNumber==1) {
 			eee->spell->setPosition(0, 0);
 			eee->spell->setVisible(false);
 			eee->spell->stopAllActions();
@@ -672,7 +672,7 @@ void MainGame::allEnemyInit()
 	auto line3 = oj->getObject("Line3");
 	auto line4 = oj->getObject("Line4");
 	for (int i = 0; i < 4; i++) {
-		Enemy* wave = Enemy::create(2, 1, 0);
+		Enemy* wave = Enemy::create(1, 1, 0);
 		//wave->setScale(1.6f);
 		wave->line1X = line1["x"].asFloat();
 		wave->line2X = line2["x"].asFloat();
@@ -800,34 +800,34 @@ void MainGame::allEnemyInit()
 		}
 	}
 
-	{	//boss3
-		this->bossfm1 = Enemy::create(1, 0, 3);
-		bossfm1->line1X = line1["x"].asFloat();
-		bossfm1->line2X = line2["x"].asFloat();
-		bossfm1->line3X = line3["x"].asFloat();
-		bossfm1->line4X = line4["x"].asFloat();
-		bossfm1->norAtkDmgAfterF = 1;
-		bossfm1->doneAtkAfterF = 4;
-		bossfm1->skillDamage = 169;
-		bossfm1->visionRange = 500;
-		//bossfm1->setScale(3);
-		bossfm1->moveSpeed = 555;
-		bossfm1->castSpeed = 0.08f;
-		bossfm1->skillCD = 2;
-		bossfm1->skillRange = 120;
-		bossfm1->setHP(500);
-		bossfm1->initOption();
-		auto boss3Pos = oj->getObject("Boss3");
-		bossfm1->setPosition(Vec2(boss3Pos["x"].asFloat(), boss3Pos["y"].asFloat()));
-		if (bossfm1->spell) this->addChild(bossfm1->spell, 9);
-		if (bossfm1->spellLanded) this->addChild(bossfm1->spellLanded, 9);
-		bossfm1->ppp = ppp;
-		bossfm1->setVisible(false);
-		bossfm1->isSpawned = false;
-		bossfm1->setAnchorPoint(Vec2(0, 0));
-		if(bossfm1)
-		this->addChild(bossfm1, 1);
-	}
+	//{	//boss3
+	//	this->bossfm1 = Enemy::create(1, 0, 3);
+	//	bossfm1->line1X = line1["x"].asFloat();
+	//	bossfm1->line2X = line2["x"].asFloat();
+	//	bossfm1->line3X = line3["x"].asFloat();
+	//	bossfm1->line4X = line4["x"].asFloat();
+	//	bossfm1->norAtkDmgAfterF = 1;
+	//	bossfm1->doneAtkAfterF = 4;
+	//	bossfm1->skillDamage = 169;
+	//	bossfm1->visionRange = 500;
+	//	//bossfm1->setScale(3);
+	//	bossfm1->moveSpeed = 555;
+	//	bossfm1->castSpeed = 0.08f;
+	//	bossfm1->skillCD = 2;
+	//	bossfm1->skillRange = 120;
+	//	bossfm1->setHP(500);
+	//	bossfm1->initOption();
+	//	auto boss3Pos = oj->getObject("Boss3");
+	//	bossfm1->setPosition(Vec2(boss3Pos["x"].asFloat(), boss3Pos["y"].asFloat()));
+	//	if (bossfm1->spell) this->addChild(bossfm1->spell, 9);
+	//	if (bossfm1->spellLanded) this->addChild(bossfm1->spellLanded, 9);
+	//	bossfm1->ppp = ppp;
+	//	bossfm1->setVisible(false);
+	//	bossfm1->isSpawned = false;
+	//	bossfm1->setAnchorPoint(Vec2(0, 0));
+	//	if(bossfm1)
+	//	this->addChild(bossfm1, 1);
+	//}
 
 	ppp->canAADamage.resize(allEnemy.size(),true);
 

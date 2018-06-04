@@ -4,13 +4,10 @@ using namespace std;
 Enemy* Enemy::create(int xMapNumber, int xWaveNumber, int xBossNumber)
 {
 	Enemy* pSprite = new Enemy();
-
-	string xFile2Init = "Enemies/Map" + std::to_string(xMapNumber);
-	string xBossOrWave = "";
-	if (xBossNumber == 0) xBossOrWave = "/Wave" + std::to_string(xWaveNumber) + "/Moving/0.png";
-	else xBossOrWave = "/Boss" + std::to_string(xBossNumber) + "/Moving/0.png";
-	string xCombination = xFile2Init + xBossOrWave;
-	if (pSprite && pSprite->initWithFile(xCombination))
+	pSprite->eeeFrames = SpriteFrameCache::getInstance();
+	pSprite->eeeFrames->addSpriteFramesWithFile("map1.plist");
+	if (pSprite && pSprite->initWithSpriteFrame(pSprite->eeeFrames->getSpriteFrameByName
+	(std::to_string(xMapNumber) + std::to_string(xWaveNumber) + std::to_string(xBossNumber) + "_idle0.png")))
 	{
 		pSprite->autorelease();
 		pSprite->mapNumber = xMapNumber;
@@ -35,12 +32,13 @@ void Enemy::initOption()
 	if (this->bossNumber == 2) inviTime = 8;
 	if (this->bossNumber == 3) inviTime = 10;
 	this->isDead = false;
-	this->getFolderName();
+	this->getLastFrameNumberOf("attack");
+	this->getLastFrameNumberOf("projectile");
 	spell = Sprite::create();
 	spell->setAnchorPoint(Vec2(0.5, 0));
-	if (this->waveNumber > 0 && this->mapNumber == 1) spell->setAnchorPoint(Vec2(-0.5, 0));
+	if (this->waveNumber == 2 && this->mapNumber == 1) spell->setAnchorPoint(Vec2(0, 0));
 	spellLanded = Sprite::create();
-	spellLanded->setAnchorPoint(Vec2(0.5, 0));
+	spellLanded->setAnchorPoint(Vec2(0.5, 0.3));
 	spellLanded->setScale(2);
 	spell->setScale(2);
 
@@ -59,9 +57,6 @@ void Enemy::initOption()
 
 	this->hp->setVisible(false);
 
-	auto getHitFrame = Sprite::create(combination + "/GetHit/0.png");
-	if(getHitFrame)
-	this->getHitFrameSize = getHitFrame->getContentSize();
 	this->idleStatus();
 	this->scheduleUpdate();
 }
@@ -92,63 +87,55 @@ void Enemy::setHP(int HP)
 	}
 }
 
-void Enemy::getFolderName()
-{
-	string file2Init = "Enemies/Map" + std::to_string(this->mapNumber);
-	string bossOrWave = "";
-	if (bossNumber == 0) bossOrWave = "/Wave" + std::to_string(this->waveNumber);
-	else bossOrWave = "/Boss" + std::to_string(this->bossNumber);
-	combination = file2Init + bossOrWave;
-	this->getLastFrameNumberOf("SkillUsing");
-	this->getLastFrameNumberOf("Spell");
-}
 
 void Enemy::getLastFrameNumberOf(std::string actionName)
 {
 	for (int i = 0; i < 99; i++) {
-		auto frameName = combination + "/" + actionName + "/" + to_string(i) + ".png";
-		Sprite* getSize = Sprite::create(frameName);
-		if (!getSize) {
-			if (actionName == "SkillUsing")
+		auto frameName = 
+			std::to_string(mapNumber) + std::to_string(waveNumber) + std::to_string(bossNumber) +"_" + actionName + std::to_string(i) + ".png";
+		SpriteFrame* test = eeeFrames->getSpriteFrameByName(frameName);
+		if (!test) {
+			if (actionName == "attack")
 				useSkillLastFN = i;
-			if (actionName == "Spell")
+			if (actionName == "projectile")
 				skillLastFN = i;
 			break;
 		}
 	}
 }
 
-Animate* Enemy::animation(std::string actionName, float timeEachFrame) 
-{
-	Animate* anim = listAnimations.at(actionName);
-
-	if (anim == nullptr)
-	{
-		Vector<SpriteFrame *> runningFrames;
-		for (int i = 0; i < 99; i++) {
-			auto frameName = combination + "/" + actionName + "/" + to_string(i) + ".png";
-			Sprite* getSize = Sprite::create(frameName);
-			if (!getSize)
-				break;
-
-			Size theSize = getSize->getContentSize();
-			auto frame = SpriteFrame::create(frameName, Rect(0, 0, theSize.width, theSize.height));
-			runningFrames.pushBack(frame);
-		}
-		Animation* runningAnimation = Animation::createWithSpriteFrames(runningFrames, timeEachFrame);
-		anim = Animate::create(runningAnimation);
-
-		listAnimations.insert(actionName, anim);
-	}
-
-	return anim;
-}
+//Animate* Enemy::animation(std::string actionName, float timeEachFrame) 
+//{
+//	Animate* anim = listAnimations.at(actionName);
+//
+//	if (anim == nullptr)
+//	{
+//		Vector<SpriteFrame *> runningFrames;
+//		for (int i = 0; i < 99; i++) {
+//			auto frameName = combination + "/" + actionName + "/" + to_string(i) + ".png";
+//			Sprite* getSize = Sprite::create(frameName);
+//			if (!getSize)
+//				break;
+//
+//			Size theSize = getSize->getContentSize();
+//			auto frame = SpriteFrame::create(frameName, Rect(0, 0, theSize.width, theSize.height));
+//			runningFrames.pushBack(frame);
+//		}
+//		Animation* runningAnimation = Animation::createWithSpriteFrames(runningFrames, timeEachFrame);
+//		anim = Animate::create(runningAnimation);
+//
+//		listAnimations.insert(actionName, anim);
+//	}
+//
+//	return anim;
+//}
 
 void Enemy::idleStatus() {
 	if (!this->isIdle &&( !this->isDead || this->canRespawn)) {
 		this->stopAllActionsByTag(1);
 		this->stopAllActionsByTag(3);
-		auto idleState = RepeatForever::create(animation("Idle", 0.12f));
+		//auto idleState = RepeatForever::create(animation("Idle", 0.12f));
+		auto idleState = RepeatForever::create(makeAnimation("idle", 0.12f));
 		idleState->setTag(1);
 		this->runAction(idleState);
 		this->isIdle = true;
@@ -161,7 +148,8 @@ void Enemy::movingAnimation()
 {
 	if (this->canMove) {
 		this->stopAllActionsByTag(1);
-		auto anim = RepeatForever::create(animation("Moving", 0.12f));
+		//auto anim = RepeatForever::create(animation("Moving", 0.12f));
+		auto anim = RepeatForever::create(makeAnimation("moving", 0.12f));
 		anim->setTag(3);
 		this->runAction(anim);
 		this->isMoving = true;
@@ -223,6 +211,7 @@ void Enemy::moving() {
 	if (howFar < skillRange && !this->isAttacking && !this->isOnCD 
 		&& std::fabsf(ppp->getPosition().y - this->getPosition().y) < 145 && ppp->getPositionY()-this->getPositionY()>0  && ppp->getPositionX() > spotPlayerLine) {
 		this->attack();
+		this->isAttacking = true;
 	}
 	if (ppp->getPosition().y - this->getPosition().y > 145 || ppp->getPositionX() < spotPlayerLine)
 		this->isChasing = false;
@@ -251,7 +240,7 @@ void Enemy::attack() {
 		float howFar = ppp->getPosition().x - (this->getPosition().x + this->getContentSize().width / 2);
 		if (howFar < 0) this->setFlippedX(true);
 		else this->setFlippedX(false);
-		if (checkFrame("Spell"))
+		if (checkFrame("projectile"))
 			this->spell->setFlippedX(this->isFlippedX());
 		this->stopAllActions();
 		this->isIdle = false;
@@ -261,7 +250,8 @@ void Enemy::attack() {
 		this->canMove = true;
 		this->breakTime = false;
 
-		this->runAction(Sequence::create(animation("SkillUsing", castSpeed),
+		//this->runAction(Sequence::create(animation("SkillUsing", castSpeed),
+		this->runAction(Sequence::create(makeAnimation("attack", castSpeed),
 			CallFunc::create([=]() {this->canDamage = false; this->isAttacking = false; this->idleStatus(); }), nullptr));
 		if (this->isCaster) {
 			this->casterSpell();
@@ -286,20 +276,21 @@ void Enemy::casterSpell()
 	if (this->isFlippedX()) {
 		move2X -= this->getContentSize().width;
 	}
-	if(this->mapNumber==1)
+	if(this->waveNumber==2 && this->mapNumber == 1)
 	this->spell->runAction(Sequence::create(
 		MoveTo::create(0, Vec2(move2X, this->getPosition().y)),
 		CallFunc::create([=]() {this->spell->setVisible(true); }),
-		animation("Spell", castSpeed), CallFunc::create([=]() {this->spell->setVisible(false); this->attackLandedEffect(); }), nullptr));
-	if (this->mapNumber == 2)
+		makeAnimation("projectile", castSpeed), CallFunc::create([=]() {this->spell->setVisible(false); this->attackLandedEffect(); }), nullptr));
+	
+	if (this->waveNumber == 1 && this->mapNumber == 1)
 		this->spell->runAction(Sequence::create(
 			CallFunc::create([=]() {this->interuptable=true; }),
 			DelayTime::create(castSpeed * 8),
 			CallFunc::create([=]() {
 		this->interuptable = false;
-		this->spell->setPosition(this->getPosition().x+this->getContentSize().width/2, this->getPosition().y+40);
+		this->spell->setPosition(this->getPosition().x+this->getContentSize().width/2, this->getPosition().y+10);
 		this->spell->setVisible(true); 
-		this->spell->runAction(RepeatForever::create(animation("Spell", castSpeed)));
+		this->spell->runAction(RepeatForever::create(makeAnimation("projectile", castSpeed)));
 	}),
 			MoveBy::create(0.69f, Vec2(range, 0)),
 		CallFunc::create([=]() {this->spell->setVisible(false);  this->spell->setPosition(0, 0); }), nullptr));
@@ -325,10 +316,11 @@ void Enemy::mobilitySS()
 			
 }
 void Enemy::attackLandedEffect() {
-	if (this->checkFrame("SkillLanded")) {
+	if (this->checkFrame("impact")) {
 		this->spellLanded->setPosition(Vec2(ppp->getPosition().x, ppp->getPosition().y));
 		this->spellLanded->runAction(Sequence::create(
-			CallFunc::create([=]() {this->canDamage = true; this->spellLanded->setVisible(true); }), animation("SkillLanded", 0.12f), CallFunc::create([=]() {this->canDamage = false; this->spellLanded->setVisible(false); this->spellLanded->setPosition(0, 0); }), nullptr));
+			//CallFunc::create([=]() {this->canDamage = true; this->spellLanded->setVisible(true); }), animation("SkillLanded", 0.12f), CallFunc::create([=]() {this->canDamage = false; this->spellLanded->setVisible(false); this->spellLanded->setPosition(0, 0); }), nullptr));
+		CallFunc::create([=]() {this->canDamage = true; this->spellLanded->setVisible(true); }), makeAnimation("impact", 0.12f), CallFunc::create([=]() {this->canDamage = false; this->spellLanded->setVisible(false); this->spellLanded->setPosition(0, 0); }), nullptr));
 	}
 }
 
@@ -352,7 +344,8 @@ void Enemy::getHit(int damage) {
 			this->movementHelper->runAction(doIt);
 		}
 
-		SpriteFrame * hit = SpriteFrame::create(combination + "/GetHit/0.png", Rect(0, 0, this->getHitFrameSize.width,this->getHitFrameSize.height));
+		SpriteFrame * hit = eeeFrames->getSpriteFrameByName(std::to_string(mapNumber) + std::to_string(waveNumber) 
+			+ std::to_string(bossNumber) + "_hurt0.png");
 		if(hit)
 		this->setSpriteFrame(hit);
 		int x = -16;
@@ -412,8 +405,8 @@ void Enemy::dead() {
 		this->canDrop = true;
 		//this->stopAllActions();
 		this->forbidAllAction();
-		if(this->checkFrame("Dead"))
-			this->runAction(Sequence::create(animation("Dead", 0.12f), FadeOut::create(0), CallFunc::create([=]() {this->autoRespawn(); }), nullptr));
+		if(this->checkFrame("die"))
+			this->runAction(Sequence::create(makeAnimation("die", 0.12f), FadeOut::create(0), CallFunc::create([=]() {this->autoRespawn(); }), nullptr));
 
 		
 
@@ -461,8 +454,10 @@ void Enemy::forbidAllAction()
 
 bool Enemy::checkFrame(std::string action)
 {
-	action += "/0.png";
-	auto checkSprite = Sprite::create(combination +"/"+ action);
+	action = "_" + action + "0.png";
+	//auto checkSprite = Sprite::create(combination +"/"+ action);
+	auto checkSprite = eeeFrames->getSpriteFrameByName
+	(std::to_string(this->mapNumber) + std::to_string(this->waveNumber) + std::to_string(this->bossNumber) + action);
 	if (checkSprite) return true;
 	else return false;
 }
@@ -500,4 +495,30 @@ void Enemy::update(float elapsed)
 			spotPlayerLine = line3X;
 		this->doneSetup = true;
 	}
+}
+
+Animate* Enemy::makeAnimation(std::string actionName, float timeEachFrame)
+{
+	std::string key = std::to_string(this->mapNumber) + std::to_string(this->waveNumber) + std::to_string(this->bossNumber) + "_" + actionName;
+
+	Animate* anim = listAnimations.at(key);
+
+	if (anim == nullptr)
+	{
+		Vector<SpriteFrame*> runningFrames;
+		for (int i = 0; i < 99; i++)
+		{
+			auto frameName = key + std::to_string(i) + ".png";
+			SpriteFrame* frame = eeeFrames->getSpriteFrameByName(frameName);
+			if (!frame)
+				break;
+			runningFrames.pushBack(frame);
+		}
+		Animation* runningAnimation = Animation::createWithSpriteFrames(runningFrames, timeEachFrame);
+
+		anim = Animate::create(runningAnimation);
+
+		listAnimations.insert(key, anim);
+	}
+	return anim;
 }

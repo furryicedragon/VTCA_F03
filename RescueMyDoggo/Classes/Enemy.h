@@ -13,10 +13,10 @@ public:
 	Sprite* movementHelper;
 	Sprite* spell;
 	Sprite* spellLanded;
-	Size getHitFrameSize;
 	Player* ppp;
 	Animate* idleAnim;
-	std::string combination;
+	//std::string combination;
+	SpriteFrameCache* eeeFrames;
 	float skillDamage;
 	int moneyRank;
 	int mapNumber;
@@ -77,7 +77,7 @@ public:
 	void dead();
 	void initOption();
 	void setHP(int HP);
-	void getFolderName();
+	//void getFolderName();
 	void getLastFrameNumberOf(std::string actionName);
 	void attackLandedEffect();
 	void forbidAllAction();
@@ -86,7 +86,8 @@ public:
 	//void spawnEffect();
 
 	Map<std::string, Animate*> listAnimations;
-	Animate* animation(std::string actionName, float timeEachFrame);
+	//Animate* animation(std::string actionName, float timeEachFrame);
+	Animate * makeAnimation(std::string actionName, float timeEachFrame);
 private:
 	virtual void update(float elapsed) override;
 };
