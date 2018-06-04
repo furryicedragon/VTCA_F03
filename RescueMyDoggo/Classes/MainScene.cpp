@@ -50,7 +50,16 @@ void MainScene::setupMenuPause()
 		switch (type)
 		{
 		case ui::Widget::TouchEventType::ENDED:
-			//this->removeAllChildren();
+			Director::getInstance()->resume();
+			auto hud_layer = static_cast<HUDLayer*> (this->getChildByTag(9999));
+			hud_layer->resetHUDstate();
+
+			auto mainGame = static_cast<MainGame*>(this->getChildByTag(8888));
+			mainGame->delAll();
+			mainGame->gameStarto();
+
+			auto pause_layer = static_cast<Layer*> (this->getChildByTag(9902));
+			pause_layer->setVisible(false);
 
 			break;
 		}
@@ -81,10 +90,12 @@ void MainScene::setupMenuPause()
 		switch (type)
 		{
 		case ui::Widget::TouchEventType::ENDED:
-			/*Director::getInstance()->resume();
+			Director::getInstance()->resume();
 			auto hud_layer = static_cast<HUDLayer*> (this->getChildByTag(9999));
 			hud_layer->setVisible(true);
-			gamePauseLayer->setVisible(false);*/
+
+			auto pause_layer = static_cast<Layer*> (this->getChildByTag(9902));
+			pause_layer->setVisible(false);
 			break;
 
 		}
@@ -103,9 +114,9 @@ void MainScene::setupMenuPause()
 
 			Director::getInstance()->end();
 
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-			exit(0);
-#endif
+			#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+				exit(0);
+			#endif
 			break;
 
 		}

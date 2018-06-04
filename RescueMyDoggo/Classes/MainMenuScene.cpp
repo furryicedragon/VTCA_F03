@@ -43,7 +43,7 @@ void MainMenuScene::showBackGround()
 
 void MainMenuScene::setupMenuGame()
 {
-	Size bgSize = _background->getContentSize();
+	Size visibleSize = Director::getInstance()->getVisibleSize();
 
 	auto startItem = MenuItemImage::create(GUI_startnomal, GUI_startclick, [&](Ref* sender)
 	{
@@ -63,39 +63,35 @@ void MainMenuScene::setupMenuGame()
 			experimental::AudioEngine::setVolume(bg_music_main, 0.0f);
 		}
 	});
-	startItem->setPosition(Vec2(bgSize.width / 2, bgSize.height / 2 * 1.2));
 
-	auto restartItem = MenuItemImage::create(GUI_start, GUI_start, [&](Ref* sender)
-	{
-		//Tiếp tục chơi game. save
-		//Code nhẩy vào chơi tiếp!
-	});
-	restartItem->setPosition(Vec2(bgSize.width / 2, bgSize.height / 2 * 1.05));
+	//auto restartItem = MenuItemImage::create(GUI_start, GUI_start, [&](Ref* sender)
+	//{
+	//	//Tiếp tục chơi game. save
+	//	//Code nhẩy vào chơi tiếp!
+	//});
 
-	auto optionItem = MenuItemImage::create(GUI_start, GUI_start, [&](Ref* sender)
+	auto optionItem = MenuItemImage::create(BT_optionnomal, BT_optionclick, [&](Ref* sender)
 	{
 		//Code nhẩy vào tùy chỉnh game!
 		_menuGame->setVisible(false);
 		_bgOption->setVisible(true);
 	});
-	optionItem->setPosition(Vec2(bgSize.width / 2, bgSize.height / 2 * 0.9));
 
-	auto masterItem = MenuItemImage::create(GUI_start, GUI_start, [&](Ref* sender)
-	{
-		//Code nhẩy vào master!
-		//Show tác giả!
-	});
-	masterItem->setPosition(Vec2(bgSize.width / 2, bgSize.height / 2 * 0.75));
+	//auto masterItem = MenuItemImage::create(GUI_start, GUI_start, [&](Ref* sender)
+	//{
+	//	//Code nhẩy vào master!
+	//	//Show tác giả!
+	//});
 
-	auto exitItem = MenuItemImage::create(GUI_start, GUI_start, [&](Ref* sender)
+	auto exitItem = MenuItemImage::create(BT_exitnomal, BT_exitclick, [&](Ref* sender)
 	{
 		//Code để thoát game!
 		exitGame();
 	});
-	exitItem->setPosition(Vec2(bgSize.width / 2, bgSize.height / 2 * 0.6));
 
-	_menuGame = Menu::create(startItem, restartItem, optionItem, masterItem, exitItem, nullptr);
-	_menuGame->setPosition(Vec2::ZERO);
+	_menuGame = Menu::create(startItem, /*restartItem,*/ optionItem, /*masterItem,*/ exitItem, nullptr);
+	_menuGame->setPosition(Vec2(visibleSize.width / 2 , visibleSize.height * 0.35f));
+	_menuGame->alignItemsVerticallyWithPadding(5.0f);
 	_menuGame->setVisible(false);
 	_background->addChild(_menuGame);
 }
