@@ -674,6 +674,10 @@ void MainGame::allEnemyInit()
 	for (int i = 0; i < 4; i++) {
 		Enemy* wave = Enemy::create(2, 1, 0);
 		//wave->setScale(1.6f);
+		wave->line1X = line1["x"].asFloat();
+		wave->line2X = line2["x"].asFloat();
+		wave->line3X = line3["x"].asFloat();
+		wave->line4X = line4["x"].asFloat();
 		wave->skillDamage = 11;
 		wave->visionRange = 310;
 		wave->moveSpeed = 120;
@@ -683,10 +687,6 @@ void MainGame::allEnemyInit()
 		wave->skillCD = 4;
 		wave->skillRange = 300;
 		wave->setHP(100);
-		wave->line1X = line1["x"].asFloat() *map1->getScale();
-		wave->line2X = line2["x"].asFloat() *map1->getScale();
-		wave->line3X = line3["x"].asFloat() *map1->getScale();
-		wave->line4X = line4["x"].asFloat() *map1->getScale();
 		wave->initOption();
 		wave->setPosition(RandomHelper::random_real(wave->line1X, wave->line2X), line1["y"].asFloat());
 		wave->ppp = ppp;

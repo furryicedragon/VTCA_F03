@@ -25,10 +25,7 @@ Enemy* Enemy::create(int xMapNumber, int xWaveNumber, int xBossNumber)
 
 void Enemy::initOption()
 {
-	if (this->waveNumber == 1 || this->bossNumber == 1)
-		spotPlayerLine = line1X - visionRange;
-	if (this->waveNumber == 2 || this->bossNumber > 1)
-		spotPlayerLine = line3X;
+	this->doneSetup = false;
 	this->canDrop = false;
 	this->canChase = true;
 	this->canRespawn = true;
@@ -495,5 +492,12 @@ void Enemy::update(float elapsed)
 			this->isMoving = false;
 			this->idleStatus();
 		}
+	}
+	if (this->isSpawned && !this->doneSetup) {
+		if (this->waveNumber == 1 || this->bossNumber == 1)
+			spotPlayerLine = line1X - visionRange;
+		if (this->waveNumber == 2 || this->bossNumber > 1)
+			spotPlayerLine = line3X;
+		this->doneSetup = true;
 	}
 }

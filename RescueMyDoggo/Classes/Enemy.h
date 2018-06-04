@@ -44,6 +44,7 @@ public:
 	float randomY;
 	float spotPlayerLine;
 
+	bool doneSetup;
 	bool canDrop;
 	bool mobilityUsing;
 	bool canRespawn;
