@@ -706,6 +706,10 @@ void MainGame::allEnemyInit()
 
 	{	//boss 1
 		this->boss1m1 = Enemy::create(1, 0, 1);
+		boss1m1->line1X = line1["x"].asFloat();
+		boss1m1->line2X = line2["x"].asFloat();
+		boss1m1->line3X = line3["x"].asFloat();
+		boss1m1->line4X = line4["x"].asFloat();
 		boss1m1->visionRange = 420;
 		boss1m1->skillDamage = 150;
 		//boss1m1->setScale(1.6f);
@@ -719,13 +723,9 @@ void MainGame::allEnemyInit()
 		boss1m1->setHP(300);
 		boss1m1->initOption();
 		auto boss1Pos = oj->getObject("Boss1");
-		boss1m1->setPosition(Vec2(boss1Pos["x"].asFloat() *map1->getScale(), boss1Pos["y"].asFloat() *map1->getScale()));
+		boss1m1->setPosition(Vec2(boss1Pos["x"].asFloat(), boss1Pos["y"].asFloat()));
 		if (boss1m1->spell) this->addChild(boss1m1->spell, 9);
 		if (boss1m1->spellLanded) this->addChild(boss1m1->spellLanded, 9);
-		boss1m1->line1X = line1["x"].asFloat() *map1->getScale();
-		boss1m1->line2X = line2["x"].asFloat() *map1->getScale();
-		boss1m1->line3X = line3["x"].asFloat() *map1->getScale();
-		boss1m1->line4X = line4["x"].asFloat() *map1->getScale();
 		boss1m1->ppp = ppp;
 		boss1m1->setVisible(false);
 		boss1m1->isSpawned = false;
@@ -739,6 +739,10 @@ void MainGame::allEnemyInit()
 
 	for (int i = 0; i < 4; i++) {
 		Enemy* wave = Enemy::create(1, 2, 0);
+		wave->line1X = line1["x"].asFloat();
+		wave->line2X = line2["x"].asFloat();
+		wave->line3X = line3["x"].asFloat();
+		wave->line4X = line4["x"].asFloat();
 		//wave->setScale(1.6f);
 		wave->skillDamage = 96;
 		wave->visionRange = 350;
@@ -750,10 +754,6 @@ void MainGame::allEnemyInit()
 		wave->skillRange = 400;
 		wave->setHP(175);
 		wave->initOption();
-		wave->line1X = line1["x"].asFloat() *map1->getScale();
-		wave->line2X = line2["x"].asFloat() *map1->getScale();
-		wave->line3X = line3["x"].asFloat() *map1->getScale();
-		wave->line4X = line4["x"].asFloat() *map1->getScale();
 		wave->setPosition(RandomHelper::random_real(wave->line3X, wave->line4X), line3["y"].asFloat());
 		wave->ppp = ppp;
 		wave->setVisible(false);
@@ -770,6 +770,10 @@ void MainGame::allEnemyInit()
 
 	{	//boss2
 		this->boss2m1 = Enemy::create(1, 0, 2);
+		boss2m1->line1X = line1["x"].asFloat();
+		boss2m1->line2X = line2["x"].asFloat();
+		boss2m1->line3X = line3["x"].asFloat();
+		boss2m1->line4X = line4["x"].asFloat();
      	//boss2m1->setScale(1.6f);
 		boss2m1->skillDamage = 200;
 		boss2m1->visionRange = 450;
@@ -783,13 +787,9 @@ void MainGame::allEnemyInit()
 		boss2m1->setHP(200);
 		boss2m1->initOption();
 		auto boss2Pos = oj->getObject("Boss2");
-		boss2m1->setPosition(Vec2(boss2Pos["x"].asFloat() *map1->getScale(), boss2Pos["y"].asFloat() *map1->getScale()));
+		boss2m1->setPosition(Vec2(boss2Pos["x"].asFloat(), boss2Pos["y"].asFloat()));
 		if (boss2m1->spell) this->addChild(boss2m1->spell, 9);
 		if (boss2m1->spellLanded) this->addChild(boss2m1->spellLanded, 9);
-		boss2m1->line1X = line1["x"].asFloat() *map1->getScale();
-		boss2m1->line2X = line2["x"].asFloat() *map1->getScale();
-		boss2m1->line3X = line3["x"].asFloat() *map1->getScale();
-		boss2m1->line4X = line4["x"].asFloat() *map1->getScale();
 		boss2m1->ppp = ppp;
 		boss2m1->setVisible(false);
 		boss2m1->isSpawned = false;
@@ -802,6 +802,10 @@ void MainGame::allEnemyInit()
 
 	{	//boss3
 		this->bossfm1 = Enemy::create(1, 0, 3);
+		bossfm1->line1X = line1["x"].asFloat();
+		bossfm1->line2X = line2["x"].asFloat();
+		bossfm1->line3X = line3["x"].asFloat();
+		bossfm1->line4X = line4["x"].asFloat();
 		bossfm1->norAtkDmgAfterF = 1;
 		bossfm1->doneAtkAfterF = 4;
 		bossfm1->skillDamage = 169;
@@ -814,13 +818,9 @@ void MainGame::allEnemyInit()
 		bossfm1->setHP(500);
 		bossfm1->initOption();
 		auto boss3Pos = oj->getObject("Boss3");
-		bossfm1->setPosition(Vec2(boss3Pos["x"].asFloat() *map1->getScale(), boss3Pos["y"].asFloat() *map1->getScale()));
+		bossfm1->setPosition(Vec2(boss3Pos["x"].asFloat(), boss3Pos["y"].asFloat()));
 		if (bossfm1->spell) this->addChild(bossfm1->spell, 9);
 		if (bossfm1->spellLanded) this->addChild(bossfm1->spellLanded, 9);
-		bossfm1->line1X = line1["x"].asFloat() *map1->getScale();
-		bossfm1->line2X = line2["x"].asFloat() *map1->getScale();
-		bossfm1->line3X = line3["x"].asFloat() *map1->getScale();
-		bossfm1->line4X = line4["x"].asFloat() *map1->getScale();
 		bossfm1->ppp = ppp;
 		bossfm1->setVisible(false);
 		bossfm1->isSpawned = false;
