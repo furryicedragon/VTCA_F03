@@ -45,7 +45,7 @@ void MainMenuScene::setupMenuGame()
 {
 	Size bgSize = _background->getContentSize();
 
-	auto startItem = MenuItemImage::create(GUI_start, GUI_start, [&](Ref* sender)
+	auto startItem = MenuItemImage::create(GUI_startnomal, GUI_startclick, [&](Ref* sender)
 	{
 		/*thg thi ng ta de 
 			auto mainScene chang han

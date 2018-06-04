@@ -28,11 +28,14 @@ USING_NS_CC;
 #define UI_barbg "UIUX/LoadingBarFile.png"
 #define BG_audio "UIUX/Polyphia-The_Worst.mp3"
 
-#define GUI_backMainmenu "UIUX/bgMenu.png"
 #define BT_HomeGame "UIUX/button_start.png"
 #define BT_RetryGame "UIUX/retry_button.png"
 #define BT_pauseNomal "UIUX/pauseHUDLayer.png"
 #define BT_pauseClick "UIUX/pauseHUDLayer1.png"
+
+#define GUI_menupause "UIUX/bgMenu.png"
+#define GUI_startnomal "UIUX/buttonStartnomal.png"
+#define GUI_startclick "UIUX/buttonStartclick.png"
 
 
 class MainMenuScene : public cocos2d::Layer

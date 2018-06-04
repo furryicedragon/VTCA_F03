@@ -18,6 +18,10 @@ public:
 	CREATE_FUNC(MainScene);
 	virtual bool init() override;
 
+
+	void setupMenuPause();
+
+	Layer* gamePauseLayer;
 	void setupGameOverLayer();
 };
 #endif // !MainScene_hpp

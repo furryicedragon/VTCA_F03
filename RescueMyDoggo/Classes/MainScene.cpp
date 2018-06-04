@@ -22,9 +22,99 @@ bool MainScene::init()
 	if (mainGame) {
 	this->addChild(mainGame, 1, 8888);
 	}
+
+	setupMenuPause();
 	setupGameOverLayer();
 
 	return true;
+}
+
+void MainScene::setupMenuPause()
+{
+	auto visibleSize = Director::getInstance()->getVisibleSize();
+	this->gamePauseLayer = Layer::create();
+
+	auto gamePause_bg = Sprite::create(GUI_backMainmenu);
+	gamePause_bg->setScale(4);
+	gamePause_bg->setPosition(Vec2(visibleSize.width * 0.5, visibleSize.height * 0.5));
+
+	Size _bgOptionPause = gamePause_bg->getContentSize();
+
+	////show button ra menu hay chơi lại khi chết dưới cái back
+	auto btHome = ui::Button::create(BT_HomeGame);
+
+	btHome->setPosition(Vec2(_bgOptionPause.width * 0.9f, _bgOptionPause.height * 0.9f));
+	btHome->setScale(0.2f);
+	btHome->addTouchEventListener([&](Ref* sender, ui::Widget::TouchEventType type)
+	{
+		switch (type)
+		{
+		case ui::Widget::TouchEventType::ENDED:
+			//this->removeAllChildren();
+
+			break;
+		}
+	});
+	gamePause_bg->addChild(btHome);
+
+	auto btOption = ui::Button::create(BT_HomeGame);
+
+	btOption->setPosition(Vec2(_bgOptionPause.width * 0.1f, _bgOptionPause.height * 0.1f));
+	btOption->setScale(0.2f);
+	btOption->addTouchEventListener([&](Ref* sender, ui::Widget::TouchEventType type)
+	{
+		switch (type)
+		{
+		case ui::Widget::TouchEventType::ENDED:
+
+			break;
+		}
+	});
+	gamePause_bg->addChild(btOption);
+
+	auto btResume = ui::Button::create(BT_RetryGame);
+
+	btResume->setPosition(Vec2(_bgOptionPause.width * 0.1f, _bgOptionPause.height * 0.9f));
+	btResume->setScale(0.2f);
+	btResume->addTouchEventListener([&](Ref* sender, ui::Widget::TouchEventType type)
+	{
+		switch (type)
+		{
+		case ui::Widget::TouchEventType::ENDED:
+			/*Director::getInstance()->resume();
+			auto hud_layer = static_cast<HUDLayer*> (this->getChildByTag(9999));
+			hud_layer->setVisible(true);
+			gamePauseLayer->setVisible(false);*/
+			break;
+
+		}
+	});
+	gamePause_bg->addChild(btResume);
+	auto btExitGame = ui::Button::create(BT_RetryGame);
+
+	btExitGame->setPosition(Vec2(_bgOptionPause.width * 0.9f, _bgOptionPause.height * 0.1f));
+	btExitGame->setScale(0.2f);
+	btExitGame->addTouchEventListener([&](Ref* sender, ui::Widget::TouchEventType type)
+	{
+		switch (type)
+		{
+		case ui::Widget::TouchEventType::ENDED:
+			this->removeAllChildren();
+
+			Director::getInstance()->end();
+
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+			exit(0);
+#endif
+			break;
+
+		}
+	});
+	gamePause_bg->addChild(btExitGame);
+
+	gamePauseLayer->addChild(gamePause_bg);
+	gamePauseLayer->setVisible(false);
+	this->addChild(gamePauseLayer, 12, 9902);
 }
 
 void MainScene::setupGameOverLayer()
