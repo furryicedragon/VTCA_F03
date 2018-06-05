@@ -1,12 +1,15 @@
 #include"Player.h"
 USING_NS_CC;
 using namespace std;
+
+#define GodMode 1
+
 Player* Player::create()
 {
 	Player* pSprite = new Player();
 	if (pSprite && pSprite->initWithFile("0idle0.png"))
 	{
-		pSprite->setAnchorPoint(Vec2(0.70930, 0.41095));
+		pSprite->setAnchorPoint(Vec2(0.70930f, 0.41095f));
 		pSprite->autorelease();
 		pSprite->initOption();
 		return pSprite;
@@ -21,7 +24,6 @@ void Player::initOption()
 	timePassedInSecond = 1;
 	this->setFlippedX(false);
 	pppFrames = SpriteFrameCache::getInstance();
-	pppFrames->addSpriteFramesWithFile("ppp.plist");
 
 	this->lastSeenLife = 100;
 	this->isSpawning = true;
@@ -71,7 +73,7 @@ void Player::initOption()
 	isAttacking = false;
 	this->idleStatus();
 
-	this->makeAnimation("walk",0.1);
+	this->makeAnimation("walk",0.1f);
 
 	this->state = 0;
 
@@ -235,7 +237,7 @@ void Player::attack() {
 				this->isAttacking = false;
 				this->idleStatus();  
 		}),	nullptr));
-		this->runAction(Sequence::create(DelayTime::create(0.1), DelayTime::create(this->animationDelay - 0.1), CallFunc::create([=]() {
+		this->runAction(Sequence::create(DelayTime::create(0.1f), DelayTime::create(this->animationDelay - 0.1f), CallFunc::create([=]() {
 			std::fill(canAADamage.begin(), canAADamage.end(), true); }), nullptr));
 		//this->attackCount(); //dung de tang them 1 don vi moi khi attack (**)
 	}
@@ -289,7 +291,7 @@ void Player::knockback(float eeePosX)
 }
 
 void Player::getHit(int damage, float eeePosX) {
-	if (!this->isDead && this->state != 1) 
+	if (!this->isDead && this->state != 1 && !GodMode)
 	{
 		this->doneWalking = true;
 		tester = true;
@@ -355,7 +357,7 @@ void Player::roll() {
 		//this->runAction(Sequence::create(DelayTime::create(attackSpeed),JumpBy::create(attackSpeed * 2, Vec2(theX, 80),0/*33*/,1),nullptr));
 		//auto a = pppFrames->getSpriteFrameByName(std::to_string(direction) + "jump.png");
 		//this->setSpriteFrame(pppFrames->getSpriteFrameByName(std::to_string(direction)+"jump0.png"));
-		this->runAction(Sequence::create(JumpBy::create(0.2, Vec2(theX, 109), 0/*33*/, 1), CallFunc::create([=]() {this->isRolling = false; this->isFalling = true; }), nullptr));
+		this->runAction(Sequence::create(JumpBy::create(0.2f, Vec2(theX, 109), 0/*33*/, 1), CallFunc::create([=]() {this->isRolling = false; this->isFalling = true; }), nullptr));
 		//this->runAction(Sequence::create(animation("Roll", attackSpeed), CallFunc::create([=]() {this->isRolling = false; this->idleStatus(); }), nullptr));
 		//this->runAction(Sequence::create(makeAnimation("evade", attackSpeed), CallFunc::create([=]() {this->isRolling = false; this->idleStatus(); }), nullptr));
 	}

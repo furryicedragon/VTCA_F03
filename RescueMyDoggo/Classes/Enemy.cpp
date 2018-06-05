@@ -5,7 +5,6 @@ Enemy* Enemy::create(int xMapNumber, int xWaveNumber, int xBossNumber)
 {
 	Enemy* pSprite = new Enemy();
 	pSprite->eeeFrames = SpriteFrameCache::getInstance();
-	pSprite->eeeFrames->addSpriteFramesWithFile("map1.plist");
 	if (pSprite && pSprite->initWithSpriteFrame(pSprite->eeeFrames->getSpriteFrameByName
 	(std::to_string(xMapNumber) + std::to_string(xWaveNumber) + std::to_string(xBossNumber) + "_idle0.png")))
 	{
@@ -37,7 +36,7 @@ void Enemy::initOption()
 	spell->setAnchorPoint(Vec2(0.5, 0));
 	if (this->waveNumber == 2 && this->mapNumber == 1) spell->setAnchorPoint(Vec2(0, 0));
 	spellLanded = Sprite::create();
-	spellLanded->setAnchorPoint(Vec2(0.5, 0.3));
+	spellLanded->setAnchorPoint(Vec2(0.5f, 0.3f));
 	spellLanded->setScale(2);
 	spell->setScale(2);
 

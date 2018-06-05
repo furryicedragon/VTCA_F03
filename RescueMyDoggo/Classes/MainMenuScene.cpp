@@ -98,7 +98,7 @@ void MainMenuScene::setupOption()
 	this->setupSeting = Layer::create();
 	
 	_bgOption = Sprite::create(GUI_backsetingpause);
-	_bgOption->setScale(0.85);
+	_bgOption->setScale(0.85f);
 	_bgOption->setPosition(Vec2(bgSize.width / 2, bgSize.height / 2));
 
 	Size _bgOptionSize = _bgOption->getContentSize();

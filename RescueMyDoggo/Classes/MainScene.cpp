@@ -36,8 +36,8 @@ void MainScene::setupMenuPause()
 	this->gamePauseLayer = Layer::create();
 
 	auto gamePause_bg = Sprite::create(GUI_menupause);
-	gamePause_bg->setScale(0.8);
-	gamePause_bg->setPosition(Vec2(visibleSize.width * 0.5, visibleSize.height * 0.5));
+	gamePause_bg->setScale(0.8f);
+	gamePause_bg->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 2));
 
 	Size _bgOptionPause = gamePause_bg->getContentSize();
 
@@ -56,7 +56,7 @@ void MainScene::setupMenuPause()
 			hud_layer->resetHUDstate();
 
 			auto mainGame = static_cast<MainGame*>(this->getChildByTag(8888));
-			mainGame->delAll();
+			mainGame->delAll(mainGame->currentMap);
 			mainGame->gameStarto();
 
 			auto pause_layer = static_cast<Layer*> (this->getChildByTag(9902));
@@ -140,8 +140,8 @@ void MainScene::setupGameOverLayer()
 	auto gameOverLayer = Layer::create();
 
 	auto gameover_bg = Sprite::create(GUI_backDead);
-	gameover_bg->setScale(0.8);
-	gameover_bg->setPosition(Vec2(visibleSize.width * 0.5, visibleSize.height * 0.5));
+	gameover_bg->setScale(0.8f);
+	gameover_bg->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 2));
 
 
 	Size _bgOptionDead = gameover_bg->getContentSize();

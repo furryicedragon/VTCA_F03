@@ -46,7 +46,7 @@ public:
 	cocos2d::Vector<Sprite*> listDrops;
 	std::vector<Rect> grounds;
 	TMXLayer* meta;
-	TMXTiledMap* map1;
+	TMXTiledMap* map;
 	Vec2 lastMovePos; //for retrieving last y
 	Point tileCoordForPosition(Point position);
 	std::vector<EventKeyboard::KeyCode> repeatedKeys;
@@ -86,6 +86,7 @@ public:
 	Animate * makeAnimation(std::string actionName, float timeEachFrame);
 	void displayDamage(int damage, std::string color, Vec2 where, Size sizes);
 	void delAll();
+	void delAll(int map);
 	void gameStarto();
 	//Menu
 	void restartGame();
@@ -94,6 +95,8 @@ public:
 
 	Label* scoreLabel;
 	static HUDLayer* hud_layer();
+
+	void changeMap(int map);
 private:
 	virtual void update(float elapsed) override;
 	bool checkCollision(Player* pPlayer);
