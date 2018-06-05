@@ -84,6 +84,16 @@ bool MainGame::init()
 		this->ppp->addChild(ppp->statPlus);
 		ppp->statPlus->setVisible(false);
 	}
+	this->ppp->level = Label::create();
+	if (this->ppp->level) {
+		//this->ppp->level->setScale(2.8f);
+		//this->ppp->level->setAnchorPoint(Vec2(0.5, 0));
+		this->ppp->level->setString("1");
+		this->ppp->level->setColor(Color3B(255, 255, 255));
+		this->ppp->level->setSystemFontSize(16);
+		//this->ppp->level->setPosition(this->ppp->getContentSize().width/2.7, ppp->getContentSize().height-69);
+		this->ppp->addChild(ppp->level);
+	}
 
 	this->HPonHead = ppp->HPonHead;
 	this->HitDame = ppp->HitDame;
@@ -1119,6 +1129,16 @@ void MainGame::changeMap(int level)
 	if (ppp->statPlus) {
 		this->ppp->addChild(ppp->statPlus);
 		ppp->statPlus->setVisible(false);
+	}
+	this->ppp->level = Label::create();
+	if (this->ppp->level) {
+		//this->ppp->level->setScale(2.8f);
+		//this->ppp->level->setAnchorPoint(Vec2(0.5, 0));
+		this->ppp->level->setString("1");
+		this->ppp->level->setColor(Color3B(255, 255, 255));
+		this->ppp->level->setSystemFontSize(16);
+		//this->ppp->level->setPosition(this->ppp->getContentSize().width/2.7, ppp->getContentSize().height-69);
+		this->ppp->addChild(ppp->level);
 	}
 
 	this->HPonHead = ppp->HPonHead;
