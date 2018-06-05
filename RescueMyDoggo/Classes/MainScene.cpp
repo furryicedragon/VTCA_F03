@@ -1,4 +1,5 @@
 ﻿#include "MainScene.h"
+#include "MainMenuScene.h"
 
 USING_NS_CC;
 
@@ -75,7 +76,9 @@ void MainScene::setupMenuPause()
 		switch (type)
 		{
 		case ui::Widget::TouchEventType::ENDED:
-
+			/*auto setingMenuLayer = static_cast<Layer*> (Director::getInstance()->getRunningScene()->getChildByTag(9981));
+			setingMenuLayer->setVisible(true);*/
+			gamePauseLayer->setVisible(false);
 			break;
 		}
 	});
@@ -126,6 +129,11 @@ void MainScene::setupMenuPause()
 	gamePauseLayer->addChild(gamePause_bg);
 	gamePauseLayer->setVisible(false);
 	this->addChild(gamePauseLayer, 12, 9902);
+}
+
+void MainScene::setingPause()
+{
+
 }
 
 void MainScene::setupGameOverLayer()

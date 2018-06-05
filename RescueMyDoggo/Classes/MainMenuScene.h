@@ -12,11 +12,6 @@ USING_NS_CC;
 #define GUI_background "UIUX/backgorund.png"
 #define GUi_nameGame
 #define GUI_backMainmenu "UIUX/bgMenu.png"
-#define GUI_start "UIUX/shadedDark42.png"
-#define GUI_restart "UIUX/shadedDark42.png"
-#define GUI_option "UIUX/shadedDark42.png"
-#define GUI_master "UIUX/shadedDark42.png"
-#define GUI_exit "UIUX/shadedDark42.png"
 #define GUI_menupause "UIUX/optionMenuinGame.png"
 #define GUI_startnomal "UIUX/buttonStartnomal.png"
 #define GUI_startclick "UIUX/buttonStartclick.png"
@@ -57,11 +52,11 @@ public:
 
 	virtual bool init() override;
 	cocos2d::Sprite* _background, *_bgOption;
-	void showBackGround();
 	void setupMenuGame();
 	void setupOption();
 
 	Menu* _menuGame;
+	Layer* setupSeting;
 
 	float bgMusic = 0.3f, gameMusic = 0.3f;
 
