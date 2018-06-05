@@ -57,7 +57,10 @@ void MainScene::setupMenuPause()
 			HUDLayer::GetInstance()->resetHUDstate();
 
 			auto mainGame = static_cast<MainGame*>(this->getChildByTag(8888));
-			mainGame->delAll(mainGame->currentMap);
+			if (mainGame->currentMap == 1)
+				mainGame->delAll();
+			else
+				mainGame->delAll(mainGame->currentMap);
 			mainGame->gameStarto();
 
 			auto pause_layer = static_cast<Layer*> (this->getChildByTag(9902));

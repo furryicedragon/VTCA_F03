@@ -71,7 +71,6 @@ public:
 	int currentBoss;
 	int howManyKeyPressed;
 	int count;
-	int lastScore;
 	void setupPressedKeyHandling();
 	void setupTouchHandling();
 	void whatYouWant(EventKeyboard::KeyCode keyCode,int yourStatus); //yourStatus = 1-idle,2-move,3-attack
@@ -95,6 +94,10 @@ public:
 
 	Label* scoreLabel;
 	//static HUDLayer* hud_layer();
+	int lastScore;
+	int lastLevel;
+	int lastHP;
+	float lastExp;
 
 	void changeMap(int map);
 private:

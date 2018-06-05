@@ -33,7 +33,10 @@ void Player::initOption()
 	this->setHP(100);
 	this->baseHP = 100;
 	this->baseEXP = 100;
-	this->damageCurrent = 16;
+	if (!GodMode)
+		this->damageCurrent = 16;
+	else
+		this->damageCurrent = 9000;
 	this->score = 0;
 
 	canAADamage.resize(8, false);

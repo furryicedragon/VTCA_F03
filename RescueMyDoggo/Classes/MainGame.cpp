@@ -46,7 +46,7 @@ bool MainGame::init()
 	howManyKeyPressed = 0;
 	visibleSize = Director::getInstance()->getVisibleSize();
 	//while(map1==nullptr)
-	map = TMXTiledMap::create("map2.tmx");
+	map = TMXTiledMap::create("map" + std::to_string(currentMap) + ".tmx");
 	auto theTest = map->getContentSize();
 	//map1->setScale(1.6f);
 	//map1->setContentSize(map1->getContentSize()); //do nothing but helping *2 that's all
@@ -330,7 +330,6 @@ void MainGame::update(float elapsed)
 		this->nothingBar->setPosition(pos);
 		if (lastScore != ppp->score) {
 			HUDLayer::GetInstance()->scoreLabel->setString(std::to_string(ppp->score));
-			lastScore = ppp->score;
 		}
 		if (doneAddingEnemy) {
 			this->dropMoneyInit();
@@ -458,12 +457,16 @@ void MainGame::update(float elapsed)
 
 					if (currentMap + 1 <= MaxMap)
 					{
+						this->lastLevel = std::stoi( ppp->level->getString() );
+						this->lastHP = ppp->baseHP;
+						this->lastExp = ppp->lastSeenExp;
+						this->lastScore = ppp->score;
 						this->delAll(++currentMap);
 						this->gameStarto();
 					}
 					else
 					{
-
+						// congrats scene?
 					}
 				}
 			}
@@ -863,7 +866,7 @@ void MainGame::allEnemyInit()
 		ppp->listSkill.at(1)->setAnchorPoint(Vec2(0.5, 0.5));
 		ppp->listSkill.at(1)->setScale(0.4f);
 		if(ppp->listSkill.at(1))
-		this->addChild(ppp->listSkill.at(1));
+		this->addChild(ppp->listSkill.at(1), 3);
 		ppp->listSkill.at(1)->setVisible(false);
 
 	}
@@ -950,6 +953,8 @@ void MainGame::displayDamage(int damage, std::string color, Vec2 where,Size size
 void MainGame::delAll() 
 {
 	this->allEnemy.clear();
+	this->listDrops.clear();
+	this->grounds.clear();
 	this->removeAllChildrenWithCleanup(true);
 
 	this->init();
@@ -962,13 +967,21 @@ void MainGame::delAll()
 void MainGame::delAll(int level)
 {
 	this->allEnemy.clear();
+	this->listDrops.clear();
+	this->grounds.clear();
 	this->removeAllChildrenWithCleanup(true);
 
+	this->isGameStart = false;
 	this->changeMap(level);
 
 	this->updatePlayerPosition();
 
-	HUDLayer::GetInstance()->resetHUDstate();
+	auto hud_layer = HUDLayer::GetInstance();
+	hud_layer->resetHUDstate();
+	hud_layer->statPlayer->level->setString(ppp->level->getString());
+	hud_layer->statPlayer->HPplayer->setPercentage(100);
+	hud_layer->statPlayer->EXPplayer->setPercentage(lastExp);
+	hud_layer->scoreLabel->setString(std::to_string(lastScore));
 }
 
 void MainGame::gameStarto()
@@ -1119,6 +1132,12 @@ void MainGame::changeMap(int level)
 	ppp->mapScale = map->getScale();
 	ppp->setPosition(sPx, sPy);
 
+	ppp->damageCurrent = 16 * lastLevel;
+	ppp->baseHP = lastHP;
+	ppp->hp->setString(std::to_string(lastHP));
+	ppp->attackSpeed = 0.14f - ((0.14f / 20)*lastLevel);
+	ppp->score = this->lastScore;
+
 	if (ppp)
 		this->addChild(ppp, 2);
 	this->ppp->w1kills = 0;
@@ -1134,7 +1153,7 @@ void MainGame::changeMap(int level)
 	if (this->ppp->level) {
 		//this->ppp->level->setScale(2.8f);
 		//this->ppp->level->setAnchorPoint(Vec2(0.5, 0));
-		this->ppp->level->setString("1");
+		this->ppp->level->setString(std::to_string(this->lastLevel));
 		this->ppp->level->setColor(Color3B(255, 255, 255));
 		this->ppp->level->setSystemFontSize(16);
 		//this->ppp->level->setPosition(this->ppp->getContentSize().width/2.7, ppp->getContentSize().height-69);
@@ -1171,10 +1190,8 @@ void MainGame::changeMap(int level)
 	finishPortal->setPosition(Vec2(finishPoint["x"].asFloat()*this->map->getScale(), 0));
 	finishPortal->setVisible(false);
 
-	this->isGameStart = false;
-
-	this->setupPressedKeyHandling();
+	/*this->setupPressedKeyHandling();
 	this->setupTouchHandling();
 
-	this->scheduleUpdate();
+	this->scheduleUpdate();*/
 }

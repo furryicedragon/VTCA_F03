@@ -218,6 +218,9 @@ void HUDLayer::resetHUDstate()
 	// reset stat bar
 	this->statPlayer->removeFromParentAndCleanup(true);
 	this->setupStat();
+
+	//reset score label
+	this->scoreLabel->setString("0");
 }
 
 void HUDLayer::toggleVisiblity()
