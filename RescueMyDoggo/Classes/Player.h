@@ -97,6 +97,11 @@ public:
 
 	float animationDelay;
 
+	float movespeed;
+	float dashingSpeed;
+	bool isDashing;
+	void usingMobility(Skill* skill);
+
 private:
 	void initOption();
 	virtual void update(float elapsed) override;

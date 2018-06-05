@@ -173,27 +173,27 @@ void Player::moving(float dt) {
 		//&& !this->isRolling 
 		&& !this->isAttacking 
 		&& !this->isDead 
-		&& this->isMoving) 
+		&& !this->isDashing
+		&& this->isMoving)
 	{
 		this->stopAllActionsByTag(1);
-		float speed;
 		if (lastDirection == "Left") {
 			this->direction = 0;
-			speed = 275 * dt * -1;
+			movespeed = 275 * dt * -1;
 		}
 		if (lastDirection == "Right") {
 			this->direction = 1;
-			speed = 275 * dt;
+			movespeed = 275 * dt;
 		}
 
 		if (!this->canMoveDirections[1]) {
-			if (speed > 0) speed = 0;
+			if (movespeed > 0) movespeed = 0;
 		}
 		if (!this->canMoveDirections[3]) {
-			if (speed < 0) speed = 0;
+			if (movespeed < 0) movespeed = 0;
 		}
 
-		this->setPositionX(this->getPositionX() + speed);
+		this->setPositionX(this->getPositionX() + movespeed);
 		smootherMove();
 		secondLastDirection = lastDirection;
 		//this->isMoving = true;
@@ -455,6 +455,21 @@ void Player::update(float elapsed)
 		this->currentEXP = 0 + currentEXP - baseEXP;
 		this->levelUp();
 	}
+	if (this->isDashing)
+	{
+		if (!this->canMoveDirections[1] || !this->canMoveDirections[3])
+		{
+			this->dashingSpeed = 0;
+		}
+		else if (this->direction == 0)
+		{
+			this->setPositionX(this->getPositionX() - dashingSpeed);
+		}
+		else if (this->direction == 1)
+		{
+			this->setPositionX(this->getPositionX() + dashingSpeed);
+		}
+	}
 	//if (isFalling || isRolling) 
 	//	this->setSpriteFrame(pppFrames->getSpriteFrameByName(std::to_string(direction) + "jump0.png"));
 }
@@ -493,10 +508,9 @@ void Player::useSkill(int skillID, Button* button)
 			CallFunc::create([=]() 
 			{this->usingSkill = false; this->idleStatus(); }), nullptr));
 
-		if(skillID!=1)
-		this->runAction(Sequence::create(
-			DelayTime::create(skill->mobilityDelayTime*attackSpeed), 
-			MoveBy::create(skill->mobilityTime*attackSpeed, Vec2(range, 0)),nullptr));
+		if (skillID != 1)
+			this->usingMobility(skill);
+		
 
 		if(skillID!=1)
 		skill->setPosition(skill->skillPosition);
@@ -522,6 +536,20 @@ void Player::useSkill(int skillID, Button* button)
 			listSkill.at(skillID)->runAction(Sequence::create(DelayTime::create(skill->skillAppearTime*attackSpeed),MoveTo::create(0,Vec2(this->getPosition().x, this->getPosition().y)),MoveBy::create(0.5, Vec2(moveRange, 0)),nullptr));
 		}
 	}
+}
+
+void Player::usingMobility(Skill* skill)
+{
+	this->dashingSpeed = 35;
+
+	float delay1 = skill->mobilityDelayTime*attackSpeed;
+	float delay2 = skill->mobilityTime*attackSpeed;
+
+	movementHelper->runAction(Sequence::create(
+		DelayTime::create(delay1),
+		CallFunc::create([=]() {this->isDashing = true; }),
+		DelayTime::create(delay2),
+		CallFunc::create([=]() {this->isDashing = false; }), nullptr));
 }
 
 

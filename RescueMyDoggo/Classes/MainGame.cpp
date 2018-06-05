@@ -65,6 +65,7 @@ bool MainGame::init()
 	}
 	//auto test = ground0["width"].asFloat();
 	meta = map->getLayer("meta");
+	//meta->setVisible(false);
 	//Sprite* abc = Sprite::create()
 	ppp = Player::create();
 	ppp->mapWidth = map->getContentSize().width;
@@ -260,7 +261,6 @@ bool MainGame::checkCollision(Player* pPlayer)
 }
 void MainGame::check4Directions(Point posDirection, int directionClock) {
 	int tileGID = meta->getTileGIDAt(this->tileCoordForPosition(posDirection));
-	CCLOG("%d", tileGID);
 	if (tileGID) {
 		auto properties = map->getPropertiesForGID(tileGID).asValueMap();
 
@@ -1113,6 +1113,7 @@ void MainGame::changeMap(int level)
 	}
 	//auto test = ground0["width"].asFloat();
 	meta = map->getLayer("meta");
+	meta->setVisible(false);
 	//Sprite* abc = Sprite::create()
 	ppp = Player::create();
 	ppp->mapWidth = map->getContentSize().width;
