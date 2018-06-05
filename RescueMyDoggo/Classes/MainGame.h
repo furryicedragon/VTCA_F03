@@ -94,7 +94,7 @@ public:
 	void collectMoney();
 
 	Label* scoreLabel;
-	static HUDLayer* hud_layer();
+	//static HUDLayer* hud_layer();
 
 	void changeMap(int map);
 private:

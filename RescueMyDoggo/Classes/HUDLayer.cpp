@@ -5,6 +5,8 @@
 
 USING_NS_CC;
 
+HUDLayer * HUDLayer::instance = NULL;
+
 bool HUDLayer::init()
 {
 	if (!Layer::init())
@@ -18,7 +20,13 @@ bool HUDLayer::init()
 	this->setupStat();
 	this->DisplayScore();
 	this->setVisible(false);
+
+	HUDLayer::instance = this;
 	return true;
+}
+
+HUDLayer * HUDLayer::GetInstance() {
+	return HUDLayer::instance;
 }
 
 void HUDLayer::setupPause()

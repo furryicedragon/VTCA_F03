@@ -52,8 +52,9 @@ void MainScene::setupMenuPause()
 		{
 		case ui::Widget::TouchEventType::ENDED:
 			Director::getInstance()->resume();
-			auto hud_layer = static_cast<HUDLayer*> (this->getChildByTag(9999));
-			hud_layer->resetHUDstate();
+			//auto hud_layer = static_cast<HUDLayer*> (this->getChildByTag(9999));
+			//hud_layer->resetHUDstate();
+			HUDLayer::GetInstance()->resetHUDstate();
 
 			auto mainGame = static_cast<MainGame*>(this->getChildByTag(8888));
 			mainGame->delAll(mainGame->currentMap);

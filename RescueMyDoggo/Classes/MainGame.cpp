@@ -329,7 +329,7 @@ void MainGame::update(float elapsed)
 		this->HitDame->setPosition(pos);
 		this->nothingBar->setPosition(pos);
 		if (lastScore != ppp->score) {
-			hud_layer()->scoreLabel->setString(std::to_string(ppp->score));
+			HUDLayer::GetInstance()->scoreLabel->setString(std::to_string(ppp->score));
 			lastScore = ppp->score;
 		}
 		if (doneAddingEnemy) {
@@ -339,26 +339,26 @@ void MainGame::update(float elapsed)
 
 		if (ppp->lastSeenLife != std::stoi(ppp->hp->getString()) / ppp->baseHP * 100) {
 			ppp->lastSeenLife = std::stoi(ppp->hp->getString()) / ppp->baseHP * 100;
-			hud_layer()->statPlayer->DameHit->runAction(ProgressTo::create(1.0f, ppp->lastSeenLife));
+			HUDLayer::GetInstance()->statPlayer->DameHit->runAction(ProgressTo::create(1.0f, ppp->lastSeenLife));
 			this->HitDame->runAction(ProgressTo::create(0.5f, ppp->lastSeenLife));
 
-			hud_layer()->statPlayer->DameHit->setPercentage(ppp->lastSeenLife);
-			hud_layer()->statPlayer->HPplayer->setPercentage(ppp->lastSeenLife);
+			HUDLayer::GetInstance()->statPlayer->DameHit->setPercentage(ppp->lastSeenLife);
+			HUDLayer::GetInstance()->statPlayer->HPplayer->setPercentage(ppp->lastSeenLife);
 
 			this->HPonHead->setPercentage(ppp->lastSeenLife);
 			this->HitDame->setPercentage(ppp->lastSeenLife);
 		}
 		if (ppp->lastSeenExp != ppp->currentEXP / ppp->baseEXP * 100) {
 			ppp->lastSeenExp = ppp->currentEXP / ppp->baseEXP * 100;
-			hud_layer()->statPlayer->EXPplayer->runAction(ProgressTo::create(0.3f, ppp->lastSeenExp));
-			//hud_layer()->statPlayer->EXPplayer->setPercentage(ppp->lastSeenExp);
+			HUDLayer::GetInstance()->statPlayer->EXPplayer->runAction(ProgressTo::create(0.3f, ppp->lastSeenExp));
+			//HUDLayer::GetInstance()->statPlayer->EXPplayer->setPercentage(ppp->lastSeenExp);
 		}
 		if (ppp->isDead && this->isGameOver) {
 			this->HPonHead->setVisible(false);
 			this->HitDame->setVisible(false);
 
-			hud_layer()->statPlayer->DameHit->setPercentage(100);
-			hud_layer()->statPlayer->HPplayer->setPercentage(100);
+			HUDLayer::GetInstance()->statPlayer->DameHit->setPercentage(100);
+			HUDLayer::GetInstance()->statPlayer->HPplayer->setPercentage(100);
 			this->HPonHead->setPercentage(100);
 			this->HitDame->setPercentage(100);
 		}
@@ -369,19 +369,19 @@ void MainGame::update(float elapsed)
 		if (ppp->isSpawn && !ppp->isDead)
 		{
 			// joystick
-			if (hud_layer()->movementStick->getVelocity().x > 0)
+			if (HUDLayer::GetInstance()->movementStick->getVelocity().x > 0)
 			{
 				whatYouWant(EventKeyboard::KeyCode::KEY_D, 2);
 				this->canIdle = true;
 				ppp->isHoldingKey = true;
 			}
-			if (hud_layer()->movementStick->getVelocity().x < 0)
+			if (HUDLayer::GetInstance()->movementStick->getVelocity().x < 0)
 			{
 				this->canIdle = true;
 				whatYouWant(EventKeyboard::KeyCode::KEY_A, 2);
 				ppp->isHoldingKey = true;
 			}
-			if (hud_layer()->movementStick->getVelocity().x == 0)
+			if (HUDLayer::GetInstance()->movementStick->getVelocity().x == 0)
 			{
 				if (canIdle) {
 					canIdle = false;
@@ -392,21 +392,21 @@ void MainGame::update(float elapsed)
 			}
 			
 			//HUD buttons
-			if (hud_layer()->attackBtn->getValue() && !ppp->usingSkill)
+			if (HUDLayer::GetInstance()->attackBtn->getValue() && !ppp->usingSkill)
 			{
 				ppp->attack();
 			}
-			if (hud_layer()->rollBtn->getValue() && !ppp->usingSkill)
+			if (HUDLayer::GetInstance()->rollBtn->getValue() && !ppp->usingSkill)
 			{
 				ppp->roll();
 			}
-			if (hud_layer()->skill1Btn->getValue() && !ppp->usingSkill)
+			if (HUDLayer::GetInstance()->skill1Btn->getValue() && !ppp->usingSkill)
 			{
-				ppp->useSkill(1, hud_layer()->skill1Btn);
+				ppp->useSkill(1, HUDLayer::GetInstance()->skill1Btn);
 			}
-			if (hud_layer()->skill2Btn->getValue() && !ppp->usingSkill)
+			if (HUDLayer::GetInstance()->skill2Btn->getValue() && !ppp->usingSkill)
 			{
-				ppp->useSkill(0, hud_layer()->skill2Btn);
+				ppp->useSkill(0, HUDLayer::GetInstance()->skill2Btn);
 			}
 		}
 		if (this->enemyAdded) {
@@ -454,7 +454,7 @@ void MainGame::update(float elapsed)
 					/*this->congratulation->setPosition(Vec2(this->getPosition().x*-1,0));
 					this->congratulation->runAction(FadeIn::create(1.6f));*/
 					congratz = false;
-					hud_layer()->setVisible(false);
+					HUDLayer::GetInstance()->setVisible(false);
 
 					if (currentMap + 1 <= MaxMap)
 					{
@@ -475,7 +475,7 @@ void MainGame::update(float elapsed)
 			/*this->gameOver->setPosition(Vec2(where2Put,0));
 			this->gameOver->runAction(FadeIn::create(2.0f));*/
 			this->isGameOver = true;
-			hud_layer()->setVisible(false);
+			HUDLayer::GetInstance()->setVisible(false);
 
 			auto gameOverLayer = static_cast<Layer*> (Director::getInstance()->getRunningScene()->getChildByTag(9900) );
 			gameOverLayer->setVisible(true);
@@ -525,11 +525,6 @@ void MainGame::spawnPlayer()
 		CallFunc::create([=]() {this->removeChild(zap, true); }), nullptr));
 }
 
-
-HUDLayer* MainGame::hud_layer()
-{
-	return static_cast<HUDLayer*> (Director::getInstance()->getRunningScene()->getChildByTag(9999));
-}
 
 bool MainGame::checkRange(Enemy* enemy2Check, int theRange) {
 
@@ -961,7 +956,7 @@ void MainGame::delAll()
 
 	this->updatePlayerPosition();
 	
-	hud_layer()->resetHUDstate();
+	HUDLayer::GetInstance()->resetHUDstate();
 }
 
 void MainGame::delAll(int level)
@@ -973,18 +968,18 @@ void MainGame::delAll(int level)
 
 	this->updatePlayerPosition();
 
-	hud_layer()->resetHUDstate();
+	HUDLayer::GetInstance()->resetHUDstate();
 }
 
 void MainGame::gameStarto()
 {
 	if (!ppp->statPlayer)
-		ppp->statPlayer = hud_layer()->statPlayer;
+		ppp->statPlayer = HUDLayer::GetInstance()->statPlayer;
 	if (!this->isGameStart) 
 	{
 		isGameStart = true;
 		this->spawnPlayer();
-		hud_layer()->toggleVisiblity();
+		HUDLayer::GetInstance()->toggleVisiblity();
 	}
 }
 

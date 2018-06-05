@@ -15,7 +15,9 @@ public:
 	CREATE_FUNC(HUDLayer);
 
 	virtual bool init() override;
-
+	 
+	static HUDLayer * instance;
+	static HUDLayer * GetInstance();
 	void setupPause();
 
 	Joystick *movementStick;
