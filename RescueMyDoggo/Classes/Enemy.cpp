@@ -22,7 +22,6 @@ Enemy* Enemy::create(int xMapNumber, int xWaveNumber, int xBossNumber)
 
 void Enemy::initOption()
 {
-	this->doneSetup = false;
 	this->canDrop = false;
 	this->canChase = true;
 	this->canRespawn = true;
