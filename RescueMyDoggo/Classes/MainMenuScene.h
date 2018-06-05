@@ -13,8 +13,7 @@ USING_NS_CC;
 #define GUi_nameGame
 #define GUI_backMainmenu "UIUX/bgMenu.png"
 #define GUI_menupause "UIUX/optionMenuinGame.png"
-#define GUI_startnomal "UIUX/buttonStartnomal.png"
-#define GUI_startclick "UIUX/buttonStartclick.png"
+#define GUI_backsetingpause "UIUX/optionbg.png"
 #define GUI_backDead "UIUX/backDead.png"
 
 #define SLI_bg "UIUX/Slider_Back.png"
@@ -40,10 +39,14 @@ USING_NS_CC;
 #define BT_optionclick "UIUX/setingclick.png"
 #define BT_exitnomal "UIUX/exitnomal.png"
 #define BT_exitclick "UIUX/exitclick.png"
-#define BT_back "UIUX/shadedDark21.png"
-#define BT_accept "UIUX/shadedDark23.png"
+#define BT_back "UIUX/X.png"
+#define BT_backclick "UIUX/Xclick.png"
+#define BT_accept "UIUX/V.png"
+#define BT_acceptclick "UIUX/Vclick.png"
 #define BT_homenomal "UIUX/resumnomal.png"
 #define BT_homeclick "UIUX/resumeclick.png"
+#define GUI_startnomal "UIUX/buttonStartnomal.png"
+#define GUI_startclick "UIUX/buttonStartclick.png"
 
 
 class MainMenuScene : public cocos2d::Layer

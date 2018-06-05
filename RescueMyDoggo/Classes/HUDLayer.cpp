@@ -27,7 +27,7 @@ void HUDLayer::setupPause()
 
 	auto btPause = ui::Button::create(BT_pauseNomal, BT_pauseClick);
 	btPause->setPosition(Vec2(visibleSize.width * 0.95f, visibleSize.height * 0.93f));
-	btPause->setScale(0.5);
+	btPause->setScale(0.59);
 	btPause->addTouchEventListener([&](Ref* sender, ui::Widget::TouchEventType type)
 	{
 		switch (type)

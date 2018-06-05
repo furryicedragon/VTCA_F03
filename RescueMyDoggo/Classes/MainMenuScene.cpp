@@ -97,8 +97,8 @@ void MainMenuScene::setupOption()
 
 	this->setupSeting = Layer::create();
 	
-	_bgOption = Sprite::create(GUI_backMainmenu);
-	_bgOption->setScale(3);
+	_bgOption = Sprite::create(GUI_backsetingpause);
+	_bgOption->setScale(0.85);
 	_bgOption->setPosition(Vec2(bgSize.width / 2, bgSize.height / 2));
 
 	Size _bgOptionSize = _bgOption->getContentSize();
@@ -107,8 +107,8 @@ void MainMenuScene::setupOption()
 	sliderbgMusic->loadBarTexture(SLI_bg);
 	sliderbgMusic->loadSlidBallTextures(SLI_normal, SLI_press, SLI_disable);
 	sliderbgMusic->loadProgressBarTexture(SLI_pressbar);
-	sliderbgMusic->setScale(0.5);
-	sliderbgMusic->setPosition(Vec2(_bgOptionSize.width / 2, _bgOptionSize.height / 2 * 1.5));
+	sliderbgMusic->setScale(1.5);
+	sliderbgMusic->setPosition(Vec2(_bgOptionSize.width * 0.5, _bgOptionSize.height * 0.5));
 
 	sliderbgMusic->addEventListener([&](Ref* sender, ui::Slider::EventType type) {
 		switch (type)
@@ -129,8 +129,8 @@ void MainMenuScene::setupOption()
 	slidergameMusic->loadBarTexture(SLI_bg);
 	slidergameMusic->loadSlidBallTextures(SLI_normal, SLI_press, SLI_disable);
 	slidergameMusic->loadProgressBarTexture(SLI_pressbar);
-	slidergameMusic->setScale(0.5);
-	slidergameMusic->setPosition(Vec2(_bgOptionSize.width / 2, _bgOptionSize.height / 2 * 0.5));
+	slidergameMusic->setScale(1.5);
+	slidergameMusic->setPosition(Vec2(_bgOptionSize.width * 0.5, _bgOptionSize.height * 0.3));
 	slidergameMusic->setPercent(gameMusic);
 
 	slidergameMusic->addEventListener([&](Ref* sender, ui::Slider::EventType type) {
@@ -143,9 +143,9 @@ void MainMenuScene::setupOption()
 	});
 	_bgOption->addChild(slidergameMusic);
 
-	auto btBack = ui::Button::create(BT_back);
+	auto btBack = ui::Button::create(BT_back, BT_backclick);
 	btBack->setScale(0.5f);
-	btBack->setPosition(Vec2(10, -20));
+	btBack->setPosition(Vec2(_bgOptionSize.width * 0.2, _bgOptionSize.height * 0.1));
 	btBack->addTouchEventListener([&](Ref* sender, ui::Widget::TouchEventType type)
 	{
 		switch (type)
@@ -163,9 +163,9 @@ void MainMenuScene::setupOption()
 	});
 	_bgOption->addChild(btBack);
 
-	auto btAccept = ui::Button::create(BT_accept);
+	auto btAccept = ui::Button::create(BT_accept, BT_acceptclick);
 	btAccept->setScale(0.5f);
-	btAccept->setPosition(Vec2(_bgOptionSize.width - 10, -20));
+	btAccept->setPosition(Vec2(_bgOptionSize.width * 0.8, _bgOptionSize.height * 0.1));
 	btAccept->addTouchEventListener([&](Ref* sender, ui::Widget::TouchEventType type)
 	{
 		switch (type)

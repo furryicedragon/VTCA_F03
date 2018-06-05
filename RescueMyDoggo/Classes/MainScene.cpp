@@ -76,9 +76,7 @@ void MainScene::setupMenuPause()
 		switch (type)
 		{
 		case ui::Widget::TouchEventType::ENDED:
-			/*auto setingMenuLayer = static_cast<Layer*> (Director::getInstance()->getRunningScene()->getChildByTag(9981));
-			setingMenuLayer->setVisible(true);*/
-			gamePauseLayer->setVisible(false);
+			
 			break;
 		}
 	});
@@ -133,7 +131,7 @@ void MainScene::setupMenuPause()
 
 void MainScene::setingPause()
 {
-
+	
 }
 
 void MainScene::setupGameOverLayer()
