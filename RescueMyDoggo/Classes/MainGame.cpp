@@ -812,10 +812,14 @@ void MainGame::allEnemyInit()
 
 	for (auto eee : allEnemy)
 	{
-		if ((eee->waveNumber == 1 || eee->bossNumber == 1) && eee->mapNumber == 1)
-			eee->spotPlayerLine = eee->listLineX.at(0);
-		if ((eee->waveNumber == 2 || eee->bossNumber > 1) && eee->mapNumber == 1)
-			eee->spotPlayerLine = eee->listLineX.at(2);
+		if ((eee->waveNumber == 1 || eee->bossNumber == 1) && eee->mapNumber == 1) {
+			eee->spotPlayerLineLeft = eee->listLineX.at(0);
+			eee->spotPlayerLineRight = eee->listLineX.at(1);
+		}
+		if ((eee->waveNumber == 2 || eee->bossNumber > 1) && eee->mapNumber == 1) {
+			eee->spotPlayerLineLeft = eee->listLineX.at(2);
+			eee->spotPlayerLineRight = eee->listLineX.at(3);
+		}
 	}
 	//{	//boss3
 	//	this->bossfm1 = Enemy::create(1, 0, 3);

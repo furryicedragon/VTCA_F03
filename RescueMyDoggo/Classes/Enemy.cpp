@@ -207,13 +207,13 @@ void Enemy::randomMoving() {
 void Enemy::moving() {
 	float howFar = std::fabsf(ppp->getPosition().x - (this->getPosition().x + this->getContentSize().width / 2));
 	if (howFar < skillRange && !this->isAttacking && !this->isOnCD 
-		&& std::fabsf(ppp->getPosition().y - this->getPosition().y) < 145 && ppp->getPositionY()-this->getPositionY()>0  && ppp->getPositionX() > spotPlayerLine) {
+		&& std::fabsf(ppp->getPosition().y - this->getPosition().y) < 145 && ppp->getPositionY()-this->getPositionY()>0  && ppp->getPositionX() > spotPlayerLineLeft && ppp->getPositionX()<spotPlayerLineRight) {
 		this->attack();
 	}
-	if (ppp->getPosition().y - this->getPosition().y > 145 || ppp->getPositionX() < spotPlayerLine)
+	if (ppp->getPosition().y - this->getPosition().y > 145 || ppp->getPositionX() < spotPlayerLineLeft || ppp->getPositionX() > spotPlayerLineRight)
 		this->isChasing = false;
 
-	if (howFar < visionRange && !this->isChasing && !this->isAttacking && std::fabsf(ppp->getPosition().y - this->getPosition().y) < 145 && ppp->getPositionY() - this->getPositionY()>0 && ppp->getPositionX() > spotPlayerLine) {
+	if (howFar < visionRange && !this->isChasing && !this->isAttacking && std::fabsf(ppp->getPosition().y - this->getPosition().y) < 145 && ppp->getPositionY() - this->getPositionY()>0 && ppp->getPositionX() > spotPlayerLineLeft && ppp->getPositionX()<spotPlayerLineRight) {
 		this->isChasing = true;
 	}
 	else {

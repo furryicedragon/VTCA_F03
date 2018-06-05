@@ -39,7 +39,8 @@ public:
 	std::vector<float> listLineX;
 	float randomX;
 	float randomY;
-	float spotPlayerLine;
+	float spotPlayerLineLeft;
+	float spotPlayerLineRight;
 
 	bool canDrop;
 	bool mobilityUsing;
