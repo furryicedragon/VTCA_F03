@@ -161,10 +161,10 @@ void Enemy::chasing()
 
 	if (this->canChase && !this->isMoving && !this->isAttacking &&this->isChasing && howFar>skillRange-69) {
 		float pppX = ppp->getPosition().x; 
-		if (this->waveNumber == 1 || this->bossNumber == 1) if (pppX < listLineX.at(0) - visionRange) 
-			pppX = listLineX.at(0);
-		if (this->waveNumber == 2 || this->bossNumber > 1) if (pppX < listLineX.at(2))
-			pppX= listLineX.at(2);
+		//if (this->waveNumber == 1 || this->bossNumber == 1) if (pppX < listLineX.at(0) - visionRange) 
+		//	pppX = listLineX.at(0);
+		//if (this->waveNumber == 2 || this->bossNumber > 1) if (pppX < listLineX.at(2))
+		//	pppX= listLineX.at(2);
 		this->canChase = false;
 		this->isIdle = false;
 		this->isMoving = true;

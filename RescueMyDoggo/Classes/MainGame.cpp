@@ -46,7 +46,7 @@ bool MainGame::init()
 	howManyKeyPressed = 0;
 	visibleSize = Director::getInstance()->getVisibleSize();
 	//while(map1==nullptr)
-	map = TMXTiledMap::create("map1.tmx");
+	map = TMXTiledMap::create("map2.tmx");
 	auto theTest = map->getContentSize();
 	//map1->setScale(1.6f);
 	//map1->setContentSize(map1->getContentSize()); //do nothing but helping *2 that's all
@@ -588,7 +588,7 @@ void MainGame::checkAttackRange(Enemy * eee, int index)
 		}
 
 
-		if (eee->isCaster && !ppp->isRolling && !eee->canDamage && std::fabsf(eee->spell->getPosition().x - ppp->getPosition().x) < 22 && std::fabsf(eee->spell->getPositionY() - ppp->getPositionY())<40 && eee->mapNumber==1) {
+		if (eee->isCaster && !ppp->isRolling && !eee->canDamage && std::fabsf(eee->spell->getPosition().x - ppp->getPosition().x) < 22 && std::fabsf(eee->spell->getPositionY() - ppp->getPositionY())<40 && (eee->mapNumber==1 && eee->waveNumber==1)) {
 			eee->spell->setPosition(0, 0);
 			eee->spell->setVisible(false);
 			eee->spell->stopAllActions();
