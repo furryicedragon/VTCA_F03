@@ -36,10 +36,7 @@ public:
 	float skillRange;
 	float skillSpeed;
 	float castSpeed;
-	float line1X;
-	float line2X;
-	float line3X;
-	float line4X;
+	std::vector<float> listLineX;
 	float randomX;
 	float randomY;
 	float spotPlayerLine;

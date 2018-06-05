@@ -162,10 +162,10 @@ void Enemy::chasing()
 
 	if (this->canChase && !this->isMoving && !this->isAttacking &&this->isChasing && howFar>skillRange-69) {
 		float pppX = ppp->getPosition().x; 
-		if (this->waveNumber == 1 || this->bossNumber == 1) if (pppX < line1X - visionRange) 
-			pppX = line1X;
-		if (this->waveNumber == 2 || this->bossNumber > 1) if (pppX<line3X)
-			pppX=line3X;
+		if (this->waveNumber == 1 || this->bossNumber == 1) if (pppX < listLineX.at(0) - visionRange) 
+			pppX = listLineX.at(0);
+		if (this->waveNumber == 2 || this->bossNumber > 1) if (pppX < listLineX.at(2))
+			pppX= listLineX.at(2);
 		this->canChase = false;
 		this->isIdle = false;
 		this->isMoving = true;
@@ -187,8 +187,8 @@ void Enemy::chasing()
 }
 void Enemy::randomMoving() {
 	if(this->waveNumber==1 || this->bossNumber==1)
-	randomX = RandomHelper::random_real(line1X, line2X); //di chuyen trong 1 khoang giua line1 va line2 trong tiledMap
-	if(this->waveNumber==2 || this->bossNumber>1) randomX = RandomHelper::random_real(line3X, line4X);
+	randomX = RandomHelper::random_real(listLineX.at(0), listLineX.at(1)); //di chuyen trong 1 khoang giua line1 va line2 trong tiledMap
+	if(this->waveNumber==2 || this->bossNumber>1) randomX = RandomHelper::random_real(listLineX.at(2), listLineX.at(3));
 	float eX = this->getPosition().x;
 	float moveByX = randomX - eX;
 	this->isIdle = false;

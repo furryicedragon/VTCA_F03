@@ -667,17 +667,26 @@ void MainGame::spawnEffect(Enemy* enemy2Spawn,int index)
 void MainGame::allEnemyInit()
 {
 	auto oj = map1->getObjectGroup("Objects");
-	auto line1 = oj->getObject("Line1");
-	auto line2 = oj->getObject("Line2");
-	auto line3 = oj->getObject("Line3");
-	auto line4 = oj->getObject("Line4");
+
+	std::vector<ValueMap> listLine;
+	
+	for (int i = 0; i < 99; i++)
+	{
+		auto line = oj->getObject("Line" + std::to_string(i + 1));
+
+		if (line.empty())
+			break;
+
+		listLine.push_back(line);
+	}
+
 	for (int i = 0; i < 4; i++) {
 		Enemy* wave = Enemy::create(1, 1, 0);
 		//wave->setScale(1.6f);
-		wave->line1X = line1["x"].asFloat();
-		wave->line2X = line2["x"].asFloat();
-		wave->line3X = line3["x"].asFloat();
-		wave->line4X = line4["x"].asFloat();
+		for (auto line : listLine)
+		{
+			wave->listLineX.push_back(line["x"].asFloat());
+		}
 		wave->skillDamage = 11;
 		wave->visionRange = 310;
 		wave->moveSpeed = 120;
@@ -688,7 +697,7 @@ void MainGame::allEnemyInit()
 		wave->skillRange = 300;
 		wave->setHP(100);
 		wave->initOption();
-		wave->setPosition(RandomHelper::random_real(wave->line1X, wave->line2X), line1["y"].asFloat());
+		wave->setPosition(RandomHelper::random_real(wave->listLineX.at(0), wave->listLineX.at(1)), listLine.at(0)["y"].asFloat());
 		wave->ppp = ppp;
 		//wave->isSpawned = true;
 		wave->setVisible(false);
@@ -706,10 +715,10 @@ void MainGame::allEnemyInit()
 
 	{	//boss 1
 		this->boss1m1 = Enemy::create(1, 0, 1);
-		boss1m1->line1X = line1["x"].asFloat();
-		boss1m1->line2X = line2["x"].asFloat();
-		boss1m1->line3X = line3["x"].asFloat();
-		boss1m1->line4X = line4["x"].asFloat();
+		for (auto line : listLine)
+		{
+			boss1m1->listLineX.push_back(line["x"].asFloat());
+		}
 		boss1m1->visionRange = 420;
 		boss1m1->skillDamage = 150;
 		//boss1m1->setScale(1.6f);
@@ -739,10 +748,10 @@ void MainGame::allEnemyInit()
 
 	for (int i = 0; i < 4; i++) {
 		Enemy* wave = Enemy::create(1, 2, 0);
-		wave->line1X = line1["x"].asFloat();
-		wave->line2X = line2["x"].asFloat();
-		wave->line3X = line3["x"].asFloat();
-		wave->line4X = line4["x"].asFloat();
+		for (auto line : listLine)
+		{
+			wave->listLineX.push_back(line["x"].asFloat());
+		}
 		//wave->setScale(1.6f);
 		wave->skillDamage = 96;
 		wave->visionRange = 350;
@@ -754,7 +763,7 @@ void MainGame::allEnemyInit()
 		wave->skillRange = 400;
 		wave->setHP(175);
 		wave->initOption();
-		wave->setPosition(RandomHelper::random_real(wave->line3X, wave->line4X), line3["y"].asFloat());
+		wave->setPosition(RandomHelper::random_real(wave->listLineX.at(2), wave->listLineX.at(3)), listLine.at(2)["y"].asFloat());
 		wave->ppp = ppp;
 		wave->setVisible(false);
 		wave->isSpawned = false;
@@ -770,10 +779,10 @@ void MainGame::allEnemyInit()
 
 	{	//boss2
 		this->boss2m1 = Enemy::create(1, 0, 2);
-		boss2m1->line1X = line1["x"].asFloat();
-		boss2m1->line2X = line2["x"].asFloat();
-		boss2m1->line3X = line3["x"].asFloat();
-		boss2m1->line4X = line4["x"].asFloat();
+		for (auto line : listLine)
+		{
+			boss2m1->listLineX.push_back(line["x"].asFloat());
+		}
      	//boss2m1->setScale(1.6f);
 		boss2m1->skillDamage = 200;
 		boss2m1->visionRange = 450;
@@ -803,9 +812,9 @@ void MainGame::allEnemyInit()
 	for (auto eee : allEnemy)
 	{
 		if ((eee->waveNumber == 1 || eee->bossNumber == 1) && eee->mapNumber == 1)
-			eee->spotPlayerLine = eee->line1X;
+			eee->spotPlayerLine = eee->listLineX.at(0);
 		if ((eee->waveNumber == 2 || eee->bossNumber > 1) && eee->mapNumber == 1)
-			eee->spotPlayerLine = eee->line3X;
+			eee->spotPlayerLine = eee->listLineX.at(2);
 	}
 	//{	//boss3
 	//	this->bossfm1 = Enemy::create(1, 0, 3);
@@ -1023,7 +1032,7 @@ void MainGame::collectMoney() {
 					ppp->score += 500;
 				}
 				item->setTag(69);
-				item->runAction(Sequence::create(DelayTime::create(0.2f),MoveBy::create(0.2, Vec2(0, 30)), FadeOut::create(0.5f), 
+				item->runAction(Sequence::create(DelayTime::create(0.2f),MoveBy::create(0.2f, Vec2(0, 30)), FadeOut::create(0.5f), 
 					CallFunc::create([=]() {this->removeChild(item, true); }), nullptr));
 			}
 		}
