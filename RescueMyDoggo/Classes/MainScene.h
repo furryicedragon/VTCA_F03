@@ -20,6 +20,8 @@ public:
 
 
 	void setupMenuPause();
+	void setingPause();
+	void setupSetingPause();
 
 	Layer* gamePauseLayer;
 	void setupGameOverLayer();

@@ -28,17 +28,12 @@ bool MainMenuScene::init()
 	_background->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 2));
 	this->addChild(_background);
 
-	showBackGround();
-
-	return true;
-}
-
-void MainMenuScene::showBackGround()
-{
 	bgAudio();
 	setupMenuGame();
 	setupOption();
 	loadbar();
+
+	return true;
 }
 
 void MainMenuScene::setupMenuGame()
@@ -74,7 +69,7 @@ void MainMenuScene::setupMenuGame()
 	{
 		//Code nhẩy vào tùy chỉnh game!
 		_menuGame->setVisible(false);
-		_bgOption->setVisible(true);
+		setupSeting->setVisible(true);
 	});
 
 	//auto masterItem = MenuItemImage::create(GUI_start, GUI_start, [&](Ref* sender)
@@ -99,6 +94,8 @@ void MainMenuScene::setupMenuGame()
 void MainMenuScene::setupOption()
 {
 	Size bgSize = _background->getContentSize();
+
+	this->setupSeting = Layer::create();
 	
 	_bgOption = Sprite::create(GUI_backMainmenu);
 	_bgOption->setScale(3);
@@ -154,8 +151,12 @@ void MainMenuScene::setupOption()
 		switch (type)
 		{
 		case ui::Widget::TouchEventType::ENDED:
-			_bgOption->setVisible(false);
-			_menuGame->setVisible(true);
+			setupSeting->setVisible(false);
+			auto gamepauseLayer = static_cast<Layer*> (Director::getInstance()->getRunningScene()->getChildByTag(9902));
+			bool a = gamepauseLayer->isVisible();
+			if(a == false) _menuGame->setVisible(true);
+			else { }
+
 			bgMusic = experimental::AudioEngine::getVolume(bg_music_main);
 			break;
 		}
@@ -170,16 +171,20 @@ void MainMenuScene::setupOption()
 		switch (type)
 		{
 		case ui::Widget::TouchEventType::ENDED:
-			_bgOption->setVisible(false);
-			_menuGame->setVisible(true);
+			setupSeting->setVisible(false);
+			auto gamepauseLayer = static_cast<Layer*> (Director::getInstance()->getRunningScene()->getChildByTag(9902));
+			bool a = gamepauseLayer->isVisible();
+			if (a == false) _menuGame->setVisible(true);
+			else { }
+
 			bgMusic = experimental::AudioEngine::getVolume(bg_music_main);
 			break;
 		}
 	});
 	_bgOption->addChild(btAccept);
-	
-	_bgOption->setVisible(false);
-	_background->addChild(_bgOption);
+	setupSeting->addChild(_bgOption);
+	setupSeting->setVisible(false);
+	_background->addChild(setupSeting, 19, 9981);
 }
 
 void MainMenuScene::bgAudio()
