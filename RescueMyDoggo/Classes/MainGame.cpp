@@ -48,7 +48,7 @@ bool MainGame::init()
 	howManyKeyPressed = 0;
 	visibleSize = Director::getInstance()->getVisibleSize();
 	//while(map1==nullptr)
-	map1 = TMXTiledMap::create("map1.tmx");
+	map1 = TMXTiledMap::create("map2.tmx");
 	auto theTest = map1->getContentSize();
 	//map1->setScale(1.6f);
 	//map1->setContentSize(map1->getContentSize()); //do nothing but helping *2 that's all
@@ -800,6 +800,13 @@ void MainGame::allEnemyInit()
 		}
 	}
 
+	for (auto eee : allEnemy)
+	{
+		if ((eee->waveNumber == 1 || eee->bossNumber == 1) && eee->mapNumber == 1)
+			eee->spotPlayerLine = eee->line1X;
+		if ((eee->waveNumber == 2 || eee->bossNumber > 1) && eee->mapNumber == 1)
+			eee->spotPlayerLine = eee->line3X;
+	}
 	//{	//boss3
 	//	this->bossfm1 = Enemy::create(1, 0, 3);
 	//	bossfm1->line1X = line1["x"].asFloat();

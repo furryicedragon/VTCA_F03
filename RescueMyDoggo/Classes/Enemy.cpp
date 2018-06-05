@@ -487,13 +487,6 @@ void Enemy::update(float elapsed)
 			this->idleStatus();
 		}
 	}
-	if (this->isSpawned && !this->doneSetup) {
-		if (this->waveNumber == 1 || this->bossNumber == 1)
-			spotPlayerLine = line1X - visionRange;
-		if (this->waveNumber == 2 || this->bossNumber > 1)
-			spotPlayerLine = line3X;
-		this->doneSetup = true;
-	}
 }
 
 Animate* Enemy::makeAnimation(std::string actionName, float timeEachFrame)
