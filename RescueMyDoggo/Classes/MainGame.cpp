@@ -430,7 +430,7 @@ void MainGame::update(float elapsed)
 			checkCollision(ppp);
 			if(currentWave!=0)
 			this->waveXMapXInit();
-			if (allEnemy[9]->isDead && allEnemy[4]->isDead && !congratz) {
+			if (!congratz) {
 				for (auto item : allEnemy)
 				{
 					congratz = true;
@@ -974,7 +974,6 @@ void MainGame::delAll(int level)
 	this->isGameStart = false;
 	this->changeMap(level);
 
-	this->updatePlayerPosition();
 
 	auto hud_layer = HUDLayer::GetInstance();
 	hud_layer->resetHUDstate();
