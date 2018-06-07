@@ -377,7 +377,7 @@ void MainGame::update(float elapsed)
 			checkCollision(ppp);
 			if(currentWave!=0)
 			this->waveXMapXInit();
-			if (allEnemy[9]->isDead && allEnemy[4]->isDead && !congratz) {
+			if (!congratz) {
 				for (auto item : allEnemy)
 				{
 					congratz = true;
@@ -592,7 +592,7 @@ void MainGame::spawnEffect(Enemy* enemy2Spawn,int index)
 
 	auto spawnGate = Sprite::create();
 	spawnGate->setScale(enemy2Spawn->getScale());
-	spawnGate->setPosition(Vec2(enemy2Spawn->getPosition().x + enemy2Spawn->getContentSize().width*enemy2Spawn->getScale() / 2, enemy2Spawn->getPosition().y + enemy2Spawn->getContentSize().height*enemy2Spawn->getScale() / 2));
+	spawnGate->setPosition(Vec2(enemy2Spawn->getPosition().x , enemy2Spawn->getPosition().y));
 	if(spawnGate)
 	this->addChild(spawnGate, 4);
 
@@ -618,7 +618,6 @@ void MainGame::allEnemyInit()
 
 	for (int i = 0; i < 4; i++) {
 		Enemy* wave = Enemy::create(currentMap, 1, 0);
-		//wave->setScale(1.6f);
 		for (auto line : listLine)
 		{
 			wave->listLineX.push_back(line["x"].asFloat());
@@ -633,14 +632,13 @@ void MainGame::allEnemyInit()
 		wave->skillRange = 300;
 		wave->setHP(100);
 		wave->initOption();
-		wave->setPosition(RandomHelper::random_real(wave->listLineX.at(0), wave->listLineX.at(1)), listLine.at(0)["y"].asFloat());
+		wave->setPosition(RandomHelper::random_real(wave->listLineX.at(0), wave->listLineX.at(1)), listLine.at(0)["y"].asFloat()+43);
 		wave->ppp = ppp;
-		//wave->isSpawned = true;
 		wave->setVisible(false);
 		wave->isSpawned = false;
 		if (wave->spell) this->addChild(wave->spell, 9);
 		if (wave->spellLanded) this->addChild(wave->spellLanded, 9);
-		wave->setAnchorPoint(Vec2(0, 0));
+		//wave->setAnchorPoint(Vec2(0, 0));
 		allEnemy.push_back(wave);
 		if (allEnemy[i]) {
 			this->addChild(allEnemy[i], 0);
@@ -668,13 +666,13 @@ void MainGame::allEnemyInit()
 		boss1m1->setHP(300);
 		boss1m1->initOption();
 		auto boss1Pos = oj->getObject("Boss1");
-		boss1m1->setPosition(Vec2(boss1Pos["x"].asFloat(), boss1Pos["y"].asFloat()));
+		boss1m1->setPosition(Vec2(boss1Pos["x"].asFloat(), boss1Pos["y"].asFloat()+43));
 		if (boss1m1->spell) this->addChild(boss1m1->spell, 9);
 		if (boss1m1->spellLanded) this->addChild(boss1m1->spellLanded, 9);
 		boss1m1->ppp = ppp;
 		boss1m1->setVisible(false);
 		boss1m1->isSpawned = false;
-		boss1m1->setAnchorPoint(Vec2(0, 0));
+		//boss1m1->setAnchorPoint(Vec2(0, 0));
 		if (boss1m1) {
 			allEnemy.push_back(boss1m1);
 			this->addChild(allEnemy[4], 1);
@@ -688,7 +686,6 @@ void MainGame::allEnemyInit()
 		{
 			wave->listLineX.push_back(line["x"].asFloat());
 		}
-		//wave->setScale(1.6f);
 		wave->skillDamage = 96;
 		wave->visionRange = 350;
 		wave->moveSpeed = 100;
@@ -699,13 +696,13 @@ void MainGame::allEnemyInit()
 		wave->skillRange = 400;
 		wave->setHP(175);
 		wave->initOption();
-		wave->setPosition(RandomHelper::random_real(wave->listLineX.at(2), wave->listLineX.at(3)), listLine.at(2)["y"].asFloat());
+		wave->setPosition(RandomHelper::random_real(wave->listLineX.at(2), wave->listLineX.at(3)), listLine.at(2)["y"].asFloat()+43);
 		wave->ppp = ppp;
 		wave->setVisible(false);
 		wave->isSpawned = false;
 		if (wave->spell) this->addChild(wave->spell, 9);
 		if (wave->spellLanded) this->addChild(wave->spellLanded, 9);
-		wave->setAnchorPoint(Vec2(0, 0));
+		//wave->setAnchorPoint(Vec2(0, 0));
 		allEnemy.push_back(wave);
 		if (allEnemy[i + 5]) {
 			this->addChild(allEnemy[i + 5], 0);
@@ -732,13 +729,13 @@ void MainGame::allEnemyInit()
 		boss2m1->setHP(200);
 		boss2m1->initOption();
 		auto boss2Pos = oj->getObject("Boss2");
-		boss2m1->setPosition(Vec2(boss2Pos["x"].asFloat(), boss2Pos["y"].asFloat()));
+		boss2m1->setPosition(Vec2(boss2Pos["x"].asFloat(), boss2Pos["y"].asFloat()+43));
 		if (boss2m1->spell) this->addChild(boss2m1->spell, 9);
 		if (boss2m1->spellLanded) this->addChild(boss2m1->spellLanded, 9);
 		boss2m1->ppp = ppp;
 		boss2m1->setVisible(false);
 		boss2m1->isSpawned = false;
-		boss2m1->setAnchorPoint(Vec2(0, 0));
+		//boss2m1->setAnchorPoint(Vec2(0, 0));
 		if (boss2m1) {
 			allEnemy.push_back(boss2m1);
 			this->addChild(allEnemy[9], 1);
@@ -756,34 +753,6 @@ void MainGame::allEnemyInit()
 			eee->spotPlayerLineRight = eee->listLineX.at(3);
 		}
 	}
-	//{	//boss3
-	//	this->bossfm1 = Enemy::create(1, 0, 3);
-	//	bossfm1->line1X = line1["x"].asFloat();
-	//	bossfm1->line2X = line2["x"].asFloat();
-	//	bossfm1->line3X = line3["x"].asFloat();
-	//	bossfm1->line4X = line4["x"].asFloat();
-	//	bossfm1->norAtkDmgAfterF = 1;
-	//	bossfm1->doneAtkAfterF = 4;
-	//	bossfm1->skillDamage = 169;
-	//	bossfm1->visionRange = 500;
-	//	//bossfm1->setScale(3);
-	//	bossfm1->moveSpeed = 555;
-	//	bossfm1->castSpeed = 0.08f;
-	//	bossfm1->skillCD = 2;
-	//	bossfm1->skillRange = 120;
-	//	bossfm1->setHP(500);
-	//	bossfm1->initOption();
-	//	auto boss3Pos = oj->getObject("Boss3");
-	//	bossfm1->setPosition(Vec2(boss3Pos["x"].asFloat(), boss3Pos["y"].asFloat()));
-	//	if (bossfm1->spell) this->addChild(bossfm1->spell, 9);
-	//	if (bossfm1->spellLanded) this->addChild(bossfm1->spellLanded, 9);
-	//	bossfm1->ppp = ppp;
-	//	bossfm1->setVisible(false);
-	//	bossfm1->isSpawned = false;
-	//	bossfm1->setAnchorPoint(Vec2(0, 0));
-	//	if(bossfm1)
-	//	this->addChild(bossfm1, 1);
-	//}
 
 	ppp->canAADamage.resize(allEnemy.size(),true);
 
@@ -900,6 +869,9 @@ void MainGame::delAll(int level)
 	this->isGameStart = false;
 	this->changeMap(level);
 
+	auto followPlayer = Follow::create(ppp, Rect(0, 0, map->getContentSize().width, map->getContentSize().height));
+	followPlayer->setTag(99);
+	this->runAction(followPlayer);
 
 	auto hud_layer = HUDLayer::GetInstance();
 	hud_layer->resetHUDstate();
@@ -1097,9 +1069,4 @@ void MainGame::changeMap(int level)
 	finishPortal->runAction(RepeatForever::create(animation("Enemies/Effect/Gate", 0.06f)));
 	finishPortal->setPosition(Vec2(finishPoint["x"].asFloat()*this->map->getScale(), 0));
 	finishPortal->setVisible(false);
-
-	/*this->setupPressedKeyHandling();
-	this->setupTouchHandling();
-
-	this->scheduleUpdate();*/
 }

@@ -33,8 +33,8 @@ void Enemy::initOption()
 	this->getLastFrameNumberOf("attack");
 	this->getLastFrameNumberOf("projectile");
 	spell = Sprite::create();
-	spell->setAnchorPoint(Vec2(0.5, 0));
-	if (this->waveNumber == 2 && this->mapNumber == 1) spell->setAnchorPoint(Vec2(0, 0));
+	//spell->setAnchorPoint(Vec2(0.5, 0));
+	//if (this->waveNumber == 2 && this->mapNumber == 1) spell->setAnchorPoint(Vec2(0, 0));
 	spellLanded = Sprite::create();
 	spellLanded->setAnchorPoint(Vec2(0.5f, 0.3f));
 	spellLanded->setScale(2);
@@ -102,31 +102,6 @@ void Enemy::getLastFrameNumberOf(std::string actionName)
 	}
 }
 
-//Animate* Enemy::animation(std::string actionName, float timeEachFrame) 
-//{
-//	Animate* anim = listAnimations.at(actionName);
-//
-//	if (anim == nullptr)
-//	{
-//		Vector<SpriteFrame *> runningFrames;
-//		for (int i = 0; i < 99; i++) {
-//			auto frameName = combination + "/" + actionName + "/" + to_string(i) + ".png";
-//			Sprite* getSize = Sprite::create(frameName);
-//			if (!getSize)
-//				break;
-//
-//			Size theSize = getSize->getContentSize();
-//			auto frame = SpriteFrame::create(frameName, Rect(0, 0, theSize.width, theSize.height));
-//			runningFrames.pushBack(frame);
-//		}
-//		Animation* runningAnimation = Animation::createWithSpriteFrames(runningFrames, timeEachFrame);
-//		anim = Animate::create(runningAnimation);
-//
-//		listAnimations.insert(actionName, anim);
-//	}
-//
-//	return anim;
-//}
 
 void Enemy::idleStatus() {
 	if (!this->isIdle &&( !this->isDead || this->canRespawn)) {
@@ -160,18 +135,14 @@ void Enemy::chasing()
 	float howFar = std::fabsf(ppp->getPosition().x - (this->getPosition().x + this->getContentSize().width / 2));
 
 	if (this->canChase && !this->isMoving && !this->isAttacking &&this->isChasing && howFar>skillRange-69) {
-		float pppX = ppp->getPosition().x; 
-		//if (this->waveNumber == 1 || this->bossNumber == 1) if (pppX < listLineX.at(0) - visionRange) 
-		//	pppX = listLineX.at(0);
-		//if (this->waveNumber == 2 || this->bossNumber > 1) if (pppX < listLineX.at(2))
-		//	pppX= listLineX.at(2);
+		float pppX = ppp->getPosition().x;
 		this->canChase = false;
 		this->isIdle = false;
 		this->isMoving = true;
 		this->breakTime = false;
 		float moveByX = pppX - (this->getPosition().x + this->getContentSize().width / 2);
-		if (moveByX < 0)  this->setFlippedX(true);
-		else this->setFlippedX(false);
+		if (moveByX < 0)  this->setFlippedX(false);
+		else this->setFlippedX(true);
 		this->movingAnimation();
 		this->stopAllActionsByTag(4);
 
@@ -194,10 +165,10 @@ void Enemy::randomMoving() {
 	this->stopAllActionsByTag(4);
 
 	this->movingAnimation();
-	if (moveByX > 0) this->setFlippedX(false); //done
+	if (moveByX > 0) this->setFlippedX(true); //done
 	else {
 		moveByX *= -1;
-		this->setFlippedX(true);
+		this->setFlippedX(false);
 	}
 	auto seq = Sequence::create(MoveTo::create(moveByX/moveSpeed, Vec2(randomX, this->getPosition().y)),
 		CallFunc::create([=]() {this->isMoving = false; this->breakTime = false; }), /*DelayTime::create(1),*/ nullptr);
@@ -207,13 +178,13 @@ void Enemy::randomMoving() {
 void Enemy::moving() {
 	float howFar = std::fabsf(ppp->getPosition().x - (this->getPosition().x + this->getContentSize().width / 2));
 	if (howFar < skillRange && !this->isAttacking && !this->isOnCD 
-		&& std::fabsf(ppp->getPosition().y - this->getPosition().y) < 145 && ppp->getPositionY()-this->getPositionY()>0  && ppp->getPositionX() > spotPlayerLineLeft && ppp->getPositionX()<spotPlayerLineRight) {
+		&& std::fabsf(ppp->getPosition().y - this->getPosition().y) < 145 && (ppp->getPositionY() - (this->getPositionY() - 43))>0 && ppp->getPositionX() > spotPlayerLineLeft && ppp->getPositionX()<spotPlayerLineRight) {
 		this->attack();
 	}
 	if (ppp->getPosition().y - this->getPosition().y > 145 || ppp->getPositionX() < spotPlayerLineLeft || ppp->getPositionX() > spotPlayerLineRight)
 		this->isChasing = false;
 
-	if (howFar < visionRange && !this->isChasing && !this->isAttacking && std::fabsf(ppp->getPosition().y - this->getPosition().y) < 145 && ppp->getPositionY() - this->getPositionY()>0 && ppp->getPositionX() > spotPlayerLineLeft && ppp->getPositionX()<spotPlayerLineRight) {
+	if (howFar < visionRange && !this->isChasing && !this->isAttacking && std::fabsf(ppp->getPosition().y - this->getPosition().y) < 145 && (ppp->getPositionY() - (this->getPositionY() - 43))>0 && ppp->getPositionX() > spotPlayerLineLeft && ppp->getPositionX()<spotPlayerLineRight) {
 		this->isChasing = true;
 	}
 	else {
@@ -235,8 +206,8 @@ void Enemy::moving() {
 void Enemy::attack() {
 	if (this->isSpawned) {
 		float howFar = ppp->getPosition().x - (this->getPosition().x + this->getContentSize().width / 2);
-		if (howFar < 0) this->setFlippedX(true);
-		else this->setFlippedX(false);
+		if (howFar < 0) this->setFlippedX(false);
+		else this->setFlippedX(true);
 		if (checkFrame("projectile"))
 			this->spell->setFlippedX(this->isFlippedX());
 		this->stopAllActions();
@@ -268,29 +239,32 @@ void Enemy::attack() {
 void Enemy::casterSpell()
 	{
 	float range = 500.f;
-	if (this->isFlippedX()) range *= -1;
+	if (!this->isFlippedX()) range *= -1;
 	float move2X = this->getPosition().x;
 	if (this->isFlippedX()) {
-		move2X -= this->getContentSize().width;
+		move2X += this->getContentSize().width/2;
 	}
+	else move2X -= this->getContentSize().width / 2;
 	if(this->waveNumber==2 && this->mapNumber == 1)
 	this->spell->runAction(Sequence::create(
-		MoveTo::create(0, Vec2(move2X, this->getPosition().y)),
+		MoveTo::create(0, Vec2(move2X, this->getPosition().y+this->getContentSize().height/2)),
 		CallFunc::create([=]() {this->spell->setVisible(true); }),
 		makeAnimation("projectile", castSpeed), CallFunc::create([=]() {this->spell->setVisible(false); this->attackLandedEffect(); }), nullptr));
 	
-	if (this->waveNumber == 1 && this->mapNumber == 1)
-		this->spell->runAction(Sequence::create(
-			CallFunc::create([=]() {this->interuptable=true; }),
-			DelayTime::create(castSpeed * 8),
-			CallFunc::create([=]() {
-		this->interuptable = false;
-		this->spell->setPosition(this->getPosition().x+this->getContentSize().width/2, this->getPosition().y+10);
-		this->spell->setVisible(true); 
-		this->spell->runAction(RepeatForever::create(makeAnimation("projectile", castSpeed)));
-	}),
-			MoveBy::create(0.69f, Vec2(range, 0)),
-		CallFunc::create([=]() {this->spell->setVisible(false);  this->spell->setPosition(0, 0); }), nullptr));
+	if (this->waveNumber == 1 && this->mapNumber == 1) {
+			this->spell->runAction(Sequence::create(
+				CallFunc::create([=]() {this->interuptable=true; }),
+				DelayTime::create(castSpeed * 8),
+				CallFunc::create([=]() {
+			this->interuptable = false;
+			this->spell->setPosition(move2X, this->getPosition().y+10);
+			this->spell->setVisible(true); 
+			this->spell->runAction(RepeatForever::create(makeAnimation("projectile", castSpeed)));
+		}),
+				MoveBy::create(0.69f, Vec2(range, 0)),
+			CallFunc::create([=]() {this->spell->setVisible(false);  this->spell->setPosition(0, 0); }), nullptr));
+	}
+
 
 		//this->spell->runAction(RepeatForever::create(animation("Spell", castSpeed)));
 
@@ -349,9 +323,9 @@ void Enemy::getHit(int damage) {
 		if (ppp->getPositionX() - ppp->getContentSize().width / 2 < this->getPositionX()) 
 		{
 			x *= -1;
-			this->setFlippedX(true);
+			this->setFlippedX(false);
 		}
-		else this->setFlippedX(false);
+		else this->setFlippedX(true);
 		this->runAction(MoveBy::create(0.33f,Vec2(x, 0)));
 		int healthP = std::stoi(this->hp->getString());
 		healthP -= damage;
@@ -465,21 +439,21 @@ void Enemy::update(float elapsed)
 	if(!this->isDead && this->isSpawned)
 	moving();
 	if (this->isChasing && !this->canChase) {
-		if (this->isFlippedX() && ppp->getPositionX() > this->getPositionX()+this->getContentSize().width)
+		if (!this->isFlippedX() && ppp->getPositionX() > this->getPositionX()+this->getContentSize().width)
 		{
 			this->stopAllActionsByTag(3);
 			this->stopAllActionsByTag(4);
 			if(!this->mobilityUsing)
-			this->setFlippedX(false);
+			this->setFlippedX(true);
 			this->canChase = true;
 			this->isMoving = false;
 			this->idleStatus();
 		}
-		else if (!this->isFlippedX() && ppp->getPositionX() < this->getPositionX() - this->getContentSize().width) {
+		else if (this->isFlippedX() && ppp->getPositionX() < this->getPositionX() - this->getContentSize().width) {
 			this->stopAllActionsByTag(3);
 			this->stopAllActionsByTag(4);
 			if(!this->mobilityUsing)
-			this->setFlippedX(true);
+			this->setFlippedX(false);
 			this->canChase = true;
 			this->isMoving = false;
 			this->idleStatus();
