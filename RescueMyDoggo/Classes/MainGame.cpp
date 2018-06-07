@@ -471,9 +471,9 @@ bool MainGame::checkRange(Enemy* enemy2Check, int theRange) {
 	auto itemWidth = enemy2Check->getContentSize().width*enemy2Check->getScale();
 	auto calculateIt = 40;
 	if (enemy2Check->bossNumber == 1) calculateIt = 150;
-	auto howfarX = (enemy2Check->getPosition().x + itemWidth / 2) - ppp->getPosition().x;
+	auto howfarX = enemy2Check->getPosition().x - ppp->getPosition().x;
 		if (((howfarX < 69 && ppp->direction==0 && howfarX>-itemWidth / 2 - theRange)
-			|| (howfarX < itemWidth / 2 + theRange && howfarX>-69 && ppp->direction==1))&& ppp->getPosition().y - enemy2Check->getPosition().y<calculateIt && ppp->getPositionY()-enemy2Check->getPositionY()>0)
+			|| (howfarX < itemWidth / 2 + theRange && howfarX>-69 && ppp->direction==1))&& ppp->getPosition().y - (enemy2Check->getPositionY()-43)<calculateIt && ppp->getPositionY()-(enemy2Check->getPositionY()-43)>0)
 			return true;
 		else
 			return false;
@@ -751,6 +751,18 @@ void MainGame::allEnemyInit()
 		if ((eee->waveNumber == 2 || eee->bossNumber > 1) && eee->mapNumber == 1) {
 			eee->spotPlayerLineLeft = eee->listLineX.at(2);
 			eee->spotPlayerLineRight = eee->listLineX.at(3);
+		}
+		if (eee->waveNumber == 1 && eee->mapNumber == 2) {
+			eee->spotPlayerLineLeft = eee->listLineX.at(0);
+			eee->spotPlayerLineRight = eee->listLineX.at(1);
+		}
+		if(eee->waveNumber==2 && eee->mapNumber ==2){
+			eee->spotPlayerLineLeft = eee->listLineX.at(2);
+			eee->spotPlayerLineRight = eee->listLineX.at(3);
+		}
+		if (eee->bossNumber > 0 && eee->mapNumber == 2) {
+			eee->spotPlayerLineLeft = eee->listLineX.at(4);
+			eee->spotPlayerLineRight = eee->listLineX.at(5);
 		}
 	}
 

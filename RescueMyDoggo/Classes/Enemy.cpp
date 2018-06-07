@@ -119,7 +119,10 @@ void Enemy::idleStatus() {
 
 void Enemy::movingAnimation()
 {
-	if (this->canMove) {
+	if (this->mapNumber == 2 && this->waveNumber == 1) {
+		//what does the tree do?
+	}
+	else if (this->canMove) {
 		this->stopAllActionsByTag(1);
 		//auto anim = RepeatForever::create(animation("Moving", 0.12f));
 		auto anim = RepeatForever::create(makeAnimation("moving", 0.12f));
@@ -146,16 +149,23 @@ void Enemy::chasing()
 		this->movingAnimation();
 		this->stopAllActionsByTag(4);
 
-		auto move2 = Sequence::create(MoveTo::create(std::fabsf(moveByX)/moveSpeed, Vec2(ppp->getPosition().x, this->getPosition().y)),
-			CallFunc::create([=]() 
-		{this->canChase = true; this->isMoving = false; if (ppp->getPosition().x - (this->getPosition().x + this->getContentSize().width*this->getScale() / 2) > visionRange + 200) this->isChasing = false; else this->idleStatus(); }), nullptr);
-		//could need some fix?! nah
-		move2->setTag(4);
-		this->runAction(move2);
-		//this->movementHelper->runAction(Sequence::create(DelayTime::create(calculateDuration(moveByX, 0)), CallFunc::create([=]() {this->isMoving = false; }), nullptr));
+		if (this->mapNumber == 2 && this->waveNumber == 1) {
+			//what a tree should do
+		}
+		else
+		{
+			auto move2 = Sequence::create(MoveTo::create(std::fabsf(moveByX)/moveSpeed, Vec2(ppp->getPosition().x, this->getPosition().y)),
+				CallFunc::create([=]() 
+			{this->canChase = true; this->isMoving = false; if (ppp->getPosition().x - (this->getPosition().x + this->getContentSize().width*this->getScale() / 2) > visionRange + 200) this->isChasing = false; else this->idleStatus(); }), nullptr);
+			//could need some fix?! nah
+			move2->setTag(4);
+			this->runAction(move2);
+		}
+
 	}
 }
 void Enemy::randomMoving() {
+
 	if(this->waveNumber==1 || this->bossNumber==1)
 	randomX = RandomHelper::random_real(listLineX.at(0), listLineX.at(1)); //di chuyen trong 1 khoang giua line1 va line2 trong tiledMap
 	if(this->waveNumber==2 || this->bossNumber>1) randomX = RandomHelper::random_real(listLineX.at(2), listLineX.at(3));
@@ -170,10 +180,17 @@ void Enemy::randomMoving() {
 		moveByX *= -1;
 		this->setFlippedX(false);
 	}
-	auto seq = Sequence::create(MoveTo::create(moveByX/moveSpeed, Vec2(randomX, this->getPosition().y)),
-		CallFunc::create([=]() {this->isMoving = false; this->breakTime = false; }), /*DelayTime::create(1),*/ nullptr);
-	seq->setTag(4);
-	this->runAction(seq);
+	if (this->mapNumber == 2 && this->waveNumber == 1) {
+		//wat a tree shoud do
+	}
+	else
+	{
+		auto seq = Sequence::create(MoveTo::create(moveByX/moveSpeed, Vec2(randomX, this->getPosition().y)),
+			CallFunc::create([=]() {this->isMoving = false; this->breakTime = false; }), /*DelayTime::create(1),*/ nullptr);
+		seq->setTag(4);
+		this->runAction(seq);
+	}
+
 }
 void Enemy::moving() {
 	float howFar = std::fabsf(ppp->getPosition().x - (this->getPosition().x + this->getContentSize().width / 2));

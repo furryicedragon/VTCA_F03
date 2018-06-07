@@ -154,7 +154,7 @@
   <object id="5" name="Line4" x="655" y="97" width="8" height="152"/>
   <object id="6" name="Line3" x="47" y="81" width="7" height="168"/>
   <object id="7" name="Line2" x="927" y="722" width="11" height="159"/>
-  <object id="8" name="Line1" x="262" y="738" width="10" height="142"/>
+  <object id="8" name="Line1" x="259.5" y="723.5" width="10" height="142"/>
   <object id="9" name="Boss1" x="1584" y="657" width="32" height="36"/>
   <object id="10" name="Boss2" x="1664" y="655" width="31" height="39"/>
   <object id="11" name="FinishPoint" x="1795" y="638" width="61" height="65"/>
