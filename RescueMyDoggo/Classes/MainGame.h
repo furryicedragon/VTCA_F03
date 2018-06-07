@@ -29,8 +29,6 @@ public:
 	Sprite* nothingBar;
 	ProgressTimer* HPonHead;
 	ProgressTimer* HitDame;
-
-	Sprite* pppPositionHelper;
 	Sprite* dashHelper;
 	Sprite* gameOver;
 	Sprite* startGame;
@@ -74,7 +72,6 @@ public:
 	void setupPressedKeyHandling();
 	void setupTouchHandling();
 	void whatYouWant(EventKeyboard::KeyCode keyCode,int yourStatus); //yourStatus = 1-idle,2-move,3-attack
-	void updatePlayerPosition();
 	void check4Directions(Point posDirection,int directionClock);
 	void waveXMapXInit();
 	void allEnemyInit();

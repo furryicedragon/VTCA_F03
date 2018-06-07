@@ -45,11 +45,7 @@ bool MainGame::init()
 	isRepeated = false;
 	howManyKeyPressed = 0;
 	visibleSize = Director::getInstance()->getVisibleSize();
-	//while(map1==nullptr)
 	map = TMXTiledMap::create("map" + std::to_string(currentMap) + ".tmx");
-	auto theTest = map->getContentSize();
-	//map1->setScale(1.6f);
-	//map1->setContentSize(map1->getContentSize()); //do nothing but helping *2 that's all
 	if(map)
 	this->addChild(map, 0, 33);
 	auto oj = map->getObjectGroup("Objects");
@@ -59,21 +55,14 @@ bool MainGame::init()
 	float sPy = sPoint["y"].asFloat();
 	finishPoint = oj->getObject("FinishPoint");
 
-	//auto listGrounds = groundOj->getObjects();
 	for (auto item : groundOj->getObjects()) {
 		grounds.push_back(Rect(item.asValueMap()["x"].asFloat(), item.asValueMap()["y"].asFloat(), item.asValueMap()["width"].asFloat(), item.asValueMap()["height"].asFloat()));
 	}
-	//auto test = ground0["width"].asFloat();
 	meta = map->getLayer("meta");
-	//meta->setVisible(false);
-	//Sprite* abc = Sprite::create()
 	ppp = Player::create();
 	ppp->mapWidth = map->getContentSize().width;
 	ppp->mapScale = map->getScale();
 	ppp->setPosition(sPx, sPy);
-	//ppp->setAnchorPoint(Vec2(0,0));
-	//ppp->setScale(0.6f);
-	//ppp->setFlippedX(true);
 	if(ppp)
 	this->addChild(ppp, 2);
 	this->ppp->w1kills = 0;
@@ -87,12 +76,9 @@ bool MainGame::init()
 	}
 	this->ppp->level = Label::create();
 	if (this->ppp->level) {
-		//this->ppp->level->setScale(2.8f);
-		//this->ppp->level->setAnchorPoint(Vec2(0.5, 0));
 		this->ppp->level->setString("1");
 		this->ppp->level->setColor(Color3B(255, 255, 255));
 		this->ppp->level->setSystemFontSize(16);
-		//this->ppp->level->setPosition(this->ppp->getContentSize().width/2.7, ppp->getContentSize().height-69);
 		this->ppp->addChild(ppp->level);
 	}
 
@@ -108,16 +94,6 @@ bool MainGame::init()
 
 	this->setPosition(Vec2(0, 0));
 
-	while(pppPositionHelper==nullptr) pppPositionHelper = Sprite::create("CloseNormal.png");
-	pppPositionHelper->setOpacity(0);
-	pppPositionHelper->setAnchorPoint(Vec2(0, 0));
-	auto helperPos = Vec2((ppp->getContentSize().width - pppPositionHelper->getContentSize().width) / 2, ppp->getContentSize().height);
-	pppPositionHelper->setPosition(helperPos);
-	if(pppPositionHelper)
-	this->addChild(pppPositionHelper);
-	pppPositionHelper->setScale(0.5);
-	pppPositionHelper->setAnchorPoint(Vec2(0.5, 0));
-
 	this->finishPortal = Sprite::create("Enemies/Effect/Gate/0.png");
 	if (finishPortal)
 		this->addChild(finishPortal, 99);
@@ -132,6 +108,9 @@ bool MainGame::init()
 	this->setupTouchHandling();
 
 	this->scheduleUpdate();
+	auto followPlayer = Follow::create(ppp, Rect(0, 0, map->getContentSize().width, map->getContentSize().height));
+	followPlayer->setTag(99);
+	this->runAction(followPlayer);
 	
 	return true;
 }
@@ -289,34 +268,6 @@ Point MainGame::tileCoordForPosition(Point position) {
 	int y = ((map->getMapSize().height *map->getScale() * map->getTileSize().height) - (position.y*map->getScale())) / (map->getTileSize().height*map->getScale());
 	return Point(x, y);
 }
-void MainGame::updatePlayerPosition() {
-	//if (ppp->isSpawn) {
-		auto pppPos = this->ppp->getPosition();
-
-		auto movePos = this->pppPositionHelper->getPosition();
-		movePos.x = MathUtil::lerp(movePos.x, pppPos.x, 0.69f);
-		auto posY = visibleSize.height / 2;
-		if (pppPos.y > visibleSize.height / 2) {
-			if(pppPos.y<visibleSize.height/2+112) posY = pppPos.y;
-			else posY = visibleSize.height / 2 + 112;
-		}
-		movePos.y = MathUtil::lerp(movePos.y, posY, 1.f);
-		/*auto theLineRight = map1->getContentSize().width / 4*1.3f;
-		auto theLineLeft = map1->getContentSize().width / 4;*/
-		//auto theLineRight = map1->getContentSize().width - 360;
-		//auto theLineLeft = 360 ;
-			auto followPlayer = Follow::create(pppPositionHelper,Rect(0, 0, map->getContentSize().width, map->getContentSize().height));
-			followPlayer->setTag(99);
-			//if ((pppPos.y < 145*map1->getScale() &&!ppp->isRolling) || ((pppPos.y < 145*map1->getScale()+33)&&ppp->isRolling)) 
-			//	movePos.y = visibleSize.height/2;
-		
-			/*if (pppPos.x < theLineLeft) 
-				movePos.x = theLineLeft;
-			else if (pppPos.x > theLineRight) movePos.x = theLineRight;*/
-
-			this->runAction(followPlayer);
-			this->pppPositionHelper->setPosition(movePos);
-}
 
 void MainGame::update(float elapsed)
 {
@@ -417,10 +368,6 @@ void MainGame::update(float elapsed)
 			gravity->setTag(99);
 			if(ppp->isFalling)
 			this->map->runAction(gravity);
-
-
-
-			this->updatePlayerPosition();
 			
 
 			if (ppp->isHoldingKey && !ppp->isAttacking) {
@@ -430,7 +377,7 @@ void MainGame::update(float elapsed)
 			checkCollision(ppp);
 			if(currentWave!=0)
 			this->waveXMapXInit();
-			if (!congratz) {
+			if (allEnemy[9]->isDead && allEnemy[4]->isDead && !congratz) {
 				for (auto item : allEnemy)
 				{
 					congratz = true;
@@ -440,8 +387,6 @@ void MainGame::update(float elapsed)
 					
 					finishPortal->setPositionY(ppp->getPosition().y);
 					finishPortal->setVisible(true);
-					//finishPortal->setOpacity(222);
-					//finishPortal->setScale(2.7f);
 				}
 			}
 			if (congratz && ppp->isSpawn) 
@@ -449,9 +394,6 @@ void MainGame::update(float elapsed)
 				// change level
 				if (std::fabsf(ppp->getPosition().x - finishPortal->getPosition().x) < 10) 
 				{
-					//ppp->runAction(this->animation("MainChar/WinBoss", ppp->attackSpeed));
-					/*this->congratulation->setPosition(Vec2(this->getPosition().x*-1,0));
-					this->congratulation->runAction(FadeIn::create(1.6f));*/
 					congratz = false;
 					HUDLayer::GetInstance()->setVisible(false);
 
@@ -473,10 +415,6 @@ void MainGame::update(float elapsed)
 		}
 		if (ppp->isDead && !this->isGameOver) {
 			ppp->isSpawn = false;
-			auto where2Put = pppPositionHelper->getPosition().x - visibleSize.width / 2;
-			if (where2Put < 0) where2Put = 0;
-			/*this->gameOver->setPosition(Vec2(where2Put,0));
-			this->gameOver->runAction(FadeIn::create(2.0f));*/
 			this->isGameOver = true;
 			HUDLayer::GetInstance()->setVisible(false);
 
@@ -523,7 +461,6 @@ void MainGame::spawnPlayer()
 	zap->setPosition(Vec2(ppp->getPosition().x, ppp->getPosition().y /*+ 66*/));
 	if(zap)
 	this->addChild(zap);
-	//zap->setScale(2);
 	zap->runAction(Sequence::create(DelayTime::create(0.69f), CallFunc::create([=]() {ppp->spawnEffect(); }), animation("Spawn", 0.1f),
 		CallFunc::create([=]() {this->removeChild(zap, true); }), nullptr));
 }
@@ -909,15 +846,6 @@ void MainGame::displayDamage(int damage, std::string color, Vec2 where,Size size
 		digit.erase(0,1);
 	}
 
-
-	//while (damage > 0)
-	//{
-	//	auto digit = damage % 10;
-	//	digits.push_back(digit);
-
-	//	damage /= 10;
-	//}
-
 	auto sprite_size = cache->getSpriteFrameByName(color + "0.png")->getOriginalSize();
 
 	auto start = where;
@@ -958,8 +886,6 @@ void MainGame::delAll()
 	this->removeAllChildrenWithCleanup(true);
 
 	this->init();
-
-	this->updatePlayerPosition();
 	
 	HUDLayer::GetInstance()->resetHUDstate();
 }
@@ -1107,7 +1033,6 @@ void MainGame::changeMap(int level)
 
 	this->map = TMXTiledMap::create("map" + std::to_string(currentMap) + ".tmx");
 
-	auto theTest = map->getContentSize();
 
 	if (map)
 		this->addChild(map, 0, 33);
@@ -1118,14 +1043,11 @@ void MainGame::changeMap(int level)
 	float sPy = sPoint["y"].asFloat();
 	finishPoint = oj->getObject("FinishPoint");
 
-	//auto listGrounds = groundOj->getObjects();
 	for (auto item : groundOj->getObjects()) {
 		grounds.push_back(Rect(item.asValueMap()["x"].asFloat(), item.asValueMap()["y"].asFloat(), item.asValueMap()["width"].asFloat(), item.asValueMap()["height"].asFloat()));
 	}
-	//auto test = ground0["width"].asFloat();
 	meta = map->getLayer("meta");
 	meta->setVisible(false);
-	//Sprite* abc = Sprite::create()
 	ppp = Player::create();
 	ppp->mapWidth = map->getContentSize().width;
 	ppp->mapScale = map->getScale();
@@ -1150,12 +1072,9 @@ void MainGame::changeMap(int level)
 	}
 	this->ppp->level = Label::create();
 	if (this->ppp->level) {
-		//this->ppp->level->setScale(2.8f);
-		//this->ppp->level->setAnchorPoint(Vec2(0.5, 0));
 		this->ppp->level->setString(std::to_string(this->lastLevel));
 		this->ppp->level->setColor(Color3B(255, 255, 255));
 		this->ppp->level->setSystemFontSize(16);
-		//this->ppp->level->setPosition(this->ppp->getContentSize().width/2.7, ppp->getContentSize().height-69);
 		this->ppp->addChild(ppp->level);
 	}
 
@@ -1170,16 +1089,6 @@ void MainGame::changeMap(int level)
 		this->addChild(nothingBar, 3);
 
 	this->setPosition(Vec2(0, 0));
-
-	while (pppPositionHelper == nullptr) pppPositionHelper = Sprite::create("CloseNormal.png");
-	pppPositionHelper->setOpacity(0);
-	pppPositionHelper->setAnchorPoint(Vec2(0, 0));
-	auto helperPos = Vec2((ppp->getContentSize().width - pppPositionHelper->getContentSize().width) / 2, ppp->getContentSize().height);
-	pppPositionHelper->setPosition(helperPos);
-	if (pppPositionHelper)
-		this->addChild(pppPositionHelper);
-	pppPositionHelper->setScale(0.5);
-	pppPositionHelper->setAnchorPoint(Vec2(0.5, 0));
 
 	this->finishPortal = Sprite::create("Enemies/Effect/Gate/0.png");
 	if (finishPortal)
