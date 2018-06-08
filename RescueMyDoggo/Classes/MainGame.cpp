@@ -622,17 +622,48 @@ void MainGame::allEnemyInit()
 		{
 			wave->listLineX.push_back(line["x"].asFloat());
 		}
-		wave->skillDamage = 11;
-		wave->visionRange = 310;
-		wave->moveSpeed = 120;
-		wave->isCaster = true;
-		wave->castSpeed = 0.12f;
-		wave->skillSpeed = 0.1f;
-		wave->skillCD = 4;
-		wave->skillRange = 300;
-		wave->setHP(100);
+
+		switch (this->currentMap)
+		{
+		case 1:
+			wave->skillDamage = 11;
+			wave->visionRange = 310;
+			wave->moveSpeed = 120;
+			wave->isCaster = true;
+			wave->castSpeed = 0.12f;
+			wave->skillSpeed = 0.1f;
+			wave->skillCD = 4;
+			wave->skillRange = 300;
+			wave->setHP(100);
+			break;
+
+		case 2:
+			wave->skillDamage = 11;
+			wave->visionRange = 310;
+			wave->moveSpeed = 120;
+			wave->isCaster = true;
+			wave->castSpeed = 0.12f;
+			wave->skillSpeed = 0.1f;
+			wave->skillCD = 4;
+			wave->skillRange = 300;
+			wave->setHP(100);
+			break;
+
+		case 3:
+			wave->skillDamage = 11;
+			wave->visionRange = 310;
+			wave->moveSpeed = 120;
+			wave->isCaster = true;
+			wave->castSpeed = 0.12f;
+			wave->skillSpeed = 0.1f;
+			wave->skillCD = 4;
+			wave->skillRange = 300;
+			wave->setHP(100);
+			break;
+		}
+		
 		wave->initOption();
-		wave->setPosition(RandomHelper::random_real(wave->listLineX.at(0), wave->listLineX.at(1)), listLine.at(0)["y"].asFloat()+43);
+		wave->setPosition(RandomHelper::random_real(wave->listLineX.at(0), wave->listLineX.at(1)), listLine.at(0)["y"].asFloat() + 43);
 		wave->ppp = ppp;
 		wave->setVisible(false);
 		wave->isSpawned = false;
@@ -653,17 +684,52 @@ void MainGame::allEnemyInit()
 		{
 			boss1m1->listLineX.push_back(line["x"].asFloat());
 		}
-		boss1m1->visionRange = 420;
-		boss1m1->skillDamage = 150;
-		//boss1m1->setScale(1.6f);
-		boss1m1->moveSpeed = 333;
-		boss1m1->isSSMobility = true;
-		boss1m1->castSpeed = 0.069f;
-		boss1m1->skillCD = 2;
-		boss1m1->skillRange = 400;
-		boss1m1->mobilitySSAt = 3;
-		boss1m1->mobilitySpeed = 4;
-		boss1m1->setHP(300);
+
+		switch (this->currentMap)
+		{
+		case 1:
+			boss1m1->visionRange = 420;
+			boss1m1->skillDamage = 150;
+			//boss1m1->setScale(1.6f);
+			boss1m1->moveSpeed = 333;
+			boss1m1->isSSMobility = true;
+			boss1m1->castSpeed = 0.069f;
+			boss1m1->skillCD = 2;
+			boss1m1->skillRange = 400;
+			boss1m1->mobilitySSAt = 3;
+			boss1m1->mobilitySpeed = 4;
+			boss1m1->setHP(300);
+			break;
+
+		case 2:
+			boss1m1->visionRange = 420;
+			boss1m1->skillDamage = 150;
+			//boss1m1->setScale(1.6f);
+			boss1m1->moveSpeed = 333;
+			boss1m1->isSSMobility = true;
+			boss1m1->castSpeed = 0.069f;
+			boss1m1->skillCD = 2;
+			boss1m1->skillRange = 400;
+			boss1m1->mobilitySSAt = 3;
+			boss1m1->mobilitySpeed = 4;
+			boss1m1->setHP(300);
+			break;
+
+		case 3:
+			boss1m1->visionRange = 420;
+			boss1m1->skillDamage = 150;
+			//boss1m1->setScale(1.6f);
+			boss1m1->moveSpeed = 333;
+			boss1m1->isSSMobility = true;
+			boss1m1->castSpeed = 0.069f;
+			boss1m1->skillCD = 2;
+			boss1m1->skillRange = 400;
+			boss1m1->mobilitySSAt = 3;
+			boss1m1->mobilitySpeed = 4;
+			boss1m1->setHP(300);
+			break;
+		}
+		
 		boss1m1->initOption();
 		auto boss1Pos = oj->getObject("Boss1");
 		boss1m1->setPosition(Vec2(boss1Pos["x"].asFloat(), boss1Pos["y"].asFloat()+43));
@@ -686,15 +752,45 @@ void MainGame::allEnemyInit()
 		{
 			wave->listLineX.push_back(line["x"].asFloat());
 		}
-		wave->skillDamage = 96;
-		wave->visionRange = 350;
-		wave->moveSpeed = 100;
-		wave->isCaster = true;
-		wave->castSpeed = 0.12f;
-		wave->skillSpeed = 0.1f;
-		wave->skillCD = 4;
-		wave->skillRange = 400;
-		wave->setHP(175);
+		switch (this->currentMap)
+		{
+		case 1:
+			wave->skillDamage = 96;
+			wave->visionRange = 350;
+			wave->moveSpeed = 100;
+			wave->isCaster = true;
+			wave->castSpeed = 0.12f;
+			wave->skillSpeed = 0.1f;
+			wave->skillCD = 4;
+			wave->skillRange = 400;
+			wave->setHP(175);
+			break;
+
+		case 2:
+			wave->skillDamage = 96;
+			wave->visionRange = 350;
+			wave->moveSpeed = 100;
+			wave->isCaster = true;
+			wave->castSpeed = 0.12f;
+			wave->skillSpeed = 0.1f;
+			wave->skillCD = 4;
+			wave->skillRange = 400;
+			wave->setHP(175);
+			break;
+
+		case 3:
+			wave->skillDamage = 96;
+			wave->visionRange = 350;
+			wave->moveSpeed = 100;
+			wave->isCaster = true;
+			wave->castSpeed = 0.12f;
+			wave->skillSpeed = 0.1f;
+			wave->skillCD = 4;
+			wave->skillRange = 400;
+			wave->setHP(175);
+			break;
+		}
+
 		wave->initOption();
 		wave->setPosition(RandomHelper::random_real(wave->listLineX.at(2), wave->listLineX.at(3)), listLine.at(2)["y"].asFloat()+43);
 		wave->ppp = ppp;
@@ -716,17 +812,51 @@ void MainGame::allEnemyInit()
 		{
 			boss2m1->listLineX.push_back(line["x"].asFloat());
 		}
-     	//boss2m1->setScale(1.6f);
-		boss2m1->skillDamage = 200;
-		boss2m1->visionRange = 450;
-		boss2m1->moveSpeed = 420;
-		boss2m1->isSSMobility = true;
-		boss2m1->castSpeed = 0.041f;
-		boss2m1->skillCD = 2;
-		boss2m1->skillRange = 420;
-		boss2m1->mobilitySSAt = 4;
-		boss2m1->mobilitySpeed = 2;
-		boss2m1->setHP(200);
+		switch (this->currentMap)
+		{
+		case 1:
+			//boss2m1->setScale(1.6f);
+			boss2m1->skillDamage = 200;
+			boss2m1->visionRange = 450;
+			boss2m1->moveSpeed = 420;
+			boss2m1->isSSMobility = true;
+			boss2m1->castSpeed = 0.041f;
+			boss2m1->skillCD = 2;
+			boss2m1->skillRange = 420;
+			boss2m1->mobilitySSAt = 4;
+			boss2m1->mobilitySpeed = 2;
+			boss2m1->setHP(200);
+			break;
+
+		case 2:
+			//boss2m1->setScale(1.6f);
+			boss2m1->skillDamage = 200;
+			boss2m1->visionRange = 450;
+			boss2m1->moveSpeed = 420;
+			boss2m1->isSSMobility = true;
+			boss2m1->castSpeed = 0.041f;
+			boss2m1->skillCD = 2;
+			boss2m1->skillRange = 420;
+			boss2m1->mobilitySSAt = 4;
+			boss2m1->mobilitySpeed = 2;
+			boss2m1->setHP(200);
+			break;
+
+		case 3:
+			//boss2m1->setScale(1.6f);
+			boss2m1->skillDamage = 200;
+			boss2m1->visionRange = 450;
+			boss2m1->moveSpeed = 420;
+			boss2m1->isSSMobility = true;
+			boss2m1->castSpeed = 0.041f;
+			boss2m1->skillCD = 2;
+			boss2m1->skillRange = 420;
+			boss2m1->mobilitySSAt = 4;
+			boss2m1->mobilitySpeed = 2;
+			boss2m1->setHP(200);
+			break;
+		}
+     	
 		boss2m1->initOption();
 		auto boss2Pos = oj->getObject("Boss2");
 		boss2m1->setPosition(Vec2(boss2Pos["x"].asFloat(), boss2Pos["y"].asFloat()+43));
