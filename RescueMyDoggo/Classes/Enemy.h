@@ -31,6 +31,7 @@ public:
 	int doneAtkAfterF; //doneAttackAfterFrames;
 	int inviTime;
 	int getHitTime;
+	int direction;
 	float mobilitySpeed;
 	float skillCD;
 	float skillRange;

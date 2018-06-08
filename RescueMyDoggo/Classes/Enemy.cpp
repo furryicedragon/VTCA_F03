@@ -6,7 +6,7 @@ Enemy* Enemy::create(int xMapNumber, int xWaveNumber, int xBossNumber)
 	Enemy* pSprite = new Enemy();
 	pSprite->eeeFrames = SpriteFrameCache::getInstance();
 	if (pSprite && pSprite->initWithSpriteFrame(pSprite->eeeFrames->getSpriteFrameByName
-	(std::to_string(xMapNumber) + std::to_string(xWaveNumber) + std::to_string(xBossNumber) + "_idle0.png")))
+	(std::to_string(xMapNumber) + std::to_string(xWaveNumber) + std::to_string(xBossNumber) + "0_idle0.png")))
 	{
 		pSprite->autorelease();
 		pSprite->mapNumber = xMapNumber;
@@ -21,6 +21,7 @@ Enemy* Enemy::create(int xMapNumber, int xWaveNumber, int xBossNumber)
 
 void Enemy::initOption()
 {
+	this->direction = 0;
 	this->canDrop = false;
 	this->canChase = true;
 	this->canRespawn = true;
@@ -90,7 +91,7 @@ void Enemy::getLastFrameNumberOf(std::string actionName)
 {
 	for (int i = 0; i < 99; i++) {
 		auto frameName = 
-			std::to_string(mapNumber) + std::to_string(waveNumber) + std::to_string(bossNumber) +"_" + actionName + std::to_string(i) + ".png";
+			std::to_string(mapNumber) + std::to_string(waveNumber) + std::to_string(bossNumber) +std::to_string(this->direction) +"_" + actionName + std::to_string(i) + ".png";
 		SpriteFrame* test = eeeFrames->getSpriteFrameByName(frameName);
 		if (!test) {
 			if (actionName == "attack")
@@ -124,6 +125,7 @@ void Enemy::movingAnimation()
 	}
 	else if (this->canMove) {
 		this->stopAllActionsByTag(1);
+		this->stopAllActionsByTag(3);
 		//auto anim = RepeatForever::create(animation("Moving", 0.12f));
 		auto anim = RepeatForever::create(makeAnimation("moving", 0.12f));
 		anim->setTag(3);
@@ -144,8 +146,8 @@ void Enemy::chasing()
 		this->isMoving = true;
 		this->breakTime = false;
 		float moveByX = pppX - (this->getPosition().x + this->getContentSize().width / 2);
-		if (moveByX < 0)  this->setFlippedX(false);
-		else this->setFlippedX(true);
+		if (moveByX < 0)  this->direction = 0;
+		else this->direction = 1;
 		this->movingAnimation();
 		this->stopAllActionsByTag(4);
 
@@ -174,12 +176,12 @@ void Enemy::randomMoving() {
 	this->isIdle = false;
 	this->stopAllActionsByTag(4);
 
-	this->movingAnimation();
-	if (moveByX > 0) this->setFlippedX(true); //done
+	if (moveByX > 0) this->direction = 1; //done
 	else {
 		moveByX *= -1;
-		this->setFlippedX(false);
+		this->direction = 0;
 	}
+	this->movingAnimation();
 	if (this->mapNumber == 2 && this->waveNumber == 1) {
 		//wat a tree shoud do
 	}
@@ -223,10 +225,10 @@ void Enemy::moving() {
 void Enemy::attack() {
 	if (this->isSpawned) {
 		float howFar = ppp->getPosition().x - (this->getPosition().x + this->getContentSize().width / 2);
-		if (howFar < 0) this->setFlippedX(false);
-		else this->setFlippedX(true);
-		if (checkFrame("projectile"))
-			this->spell->setFlippedX(this->isFlippedX());
+		if (howFar < 0) this->direction = 0;
+		else this->direction = 1;
+		//if (checkFrame("projectile"))
+		//	this->spell->setFlippedX(this->isFlippedX());
 		this->stopAllActions();
 		this->isIdle = false;
 		this->isAttacking = true;
@@ -256,9 +258,9 @@ void Enemy::attack() {
 void Enemy::casterSpell()
 	{
 	float range = 500.f;
-	if (!this->isFlippedX()) range *= -1;
+	if (this->direction==0) range *= -1;
 	float move2X = this->getPosition().x;
-	if (this->isFlippedX()) {
+	if (this->direction==1) {
 		move2X += this->getContentSize().width/2;
 	}
 	else move2X -= this->getContentSize().width / 2;
@@ -333,16 +335,16 @@ void Enemy::getHit(int damage) {
 		}
 
 		SpriteFrame * hit = eeeFrames->getSpriteFrameByName(std::to_string(mapNumber) + std::to_string(waveNumber) 
-			+ std::to_string(bossNumber) + "_hurt0.png");
+			+ std::to_string(bossNumber) + std::to_string(this->direction) + "_hurt0.png");
 		if(hit)
 		this->setSpriteFrame(hit);
 		int x = -16;
 		if (ppp->getPositionX() - ppp->getContentSize().width / 2 < this->getPositionX()) 
 		{
 			x *= -1;
-			this->setFlippedX(false);
+			this->direction = 0;
 		}
-		else this->setFlippedX(true);
+		else this->direction = 1;
 		this->runAction(MoveBy::create(0.33f,Vec2(x, 0)));
 		int healthP = std::stoi(this->hp->getString());
 		healthP -= damage;
@@ -445,7 +447,7 @@ bool Enemy::checkFrame(std::string action)
 	action = "_" + action + "0.png";
 	//auto checkSprite = Sprite::create(combination +"/"+ action);
 	auto checkSprite = eeeFrames->getSpriteFrameByName
-	(std::to_string(this->mapNumber) + std::to_string(this->waveNumber) + std::to_string(this->bossNumber) + action);
+	(std::to_string(this->mapNumber) + std::to_string(this->waveNumber) + std::to_string(this->bossNumber) + std::to_string(this->direction) + action);
 	if (checkSprite) return true;
 	else return false;
 }
@@ -455,22 +457,22 @@ void Enemy::update(float elapsed)
 {
 	if(!this->isDead && this->isSpawned)
 	moving();
-	if (this->isChasing && !this->canChase) {
-		if (!this->isFlippedX() && ppp->getPositionX() > this->getPositionX()+this->getContentSize().width)
+	if (this->isChasing && !this->canChase && !this->isAttacking) {
+		if (this->direction==0 && ppp->getPositionX() > this->getPositionX()+this->getContentSize().width)
 		{
 			this->stopAllActionsByTag(3);
 			this->stopAllActionsByTag(4);
 			if(!this->mobilityUsing)
-			this->setFlippedX(true);
+			this->direction = 1;
 			this->canChase = true;
 			this->isMoving = false;
 			this->idleStatus();
 		}
-		else if (this->isFlippedX() && ppp->getPositionX() < this->getPositionX() - this->getContentSize().width) {
+		else if (this->direction==1 && ppp->getPositionX() < this->getPositionX() - this->getContentSize().width) {
 			this->stopAllActionsByTag(3);
 			this->stopAllActionsByTag(4);
 			if(!this->mobilityUsing)
-			this->setFlippedX(false);
+			this->direction = 0;
 			this->canChase = true;
 			this->isMoving = false;
 			this->idleStatus();
@@ -480,7 +482,8 @@ void Enemy::update(float elapsed)
 
 Animate* Enemy::makeAnimation(std::string actionName, float timeEachFrame)
 {
-	std::string key = std::to_string(this->mapNumber) + std::to_string(this->waveNumber) + std::to_string(this->bossNumber) + "_" + actionName;
+	std::string key = std::to_string(this->mapNumber) + std::to_string(this->waveNumber) + std::to_string(this->bossNumber) 
+		+ std::to_string(this->direction) + "_" + actionName;
 
 	Animate* anim = listAnimations.at(key);
 
