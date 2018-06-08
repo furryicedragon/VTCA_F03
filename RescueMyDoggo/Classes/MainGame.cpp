@@ -419,7 +419,10 @@ void MainGame::update(float elapsed)
 			HUDLayer::GetInstance()->setVisible(false);
 
 			auto gameOverLayer = static_cast<Layer*> (Director::getInstance()->getRunningScene()->getChildByTag(9900) );
-			gameOverLayer->setVisible(true);
+
+			this->runAction(Sequence::create(DelayTime::create(2.0f), 
+				CallFunc::create([=]() {gameOverLayer->setVisible(true); experimental::AudioEngine::play2d("sounds/defeat.mp3", false, 0.7f); }), nullptr));
+			
 			/*this->runAction(Sequence::create(DelayTime::create(1), CallFunc::create([=]() {this->canRetry=true; }), nullptr));
 			this->runAction(Sequence::create(DelayTime::create(1), CallFunc::create([=]() {this->canRetry=true;}), nullptr));*/
 		}
@@ -1095,9 +1098,10 @@ void MainGame::collectMoney() {
 				if (item->getTag() == 4) {
 					ppp->score += 500;
 				}
+				experimental::AudioEngine::play2d("sounds/coin_pickup.mp3", false, 1.0f);
 				item->setTag(69);
 				item->runAction(Sequence::create(DelayTime::create(0.2f),MoveBy::create(0.2f, Vec2(0, 40)), FadeOut::create(0.5f), 
-					CallFunc::create([=]() {this->removeChild(item, true); }), nullptr));
+					CallFunc::create([=]() { this->removeChild(item, true); }), nullptr));
 			}
 		}
 		else

@@ -2,7 +2,7 @@
 USING_NS_CC;
 using namespace std;
 
-#define GodMode 1
+#define GodMode 0
 
 Player* Player::create()
 {
@@ -233,9 +233,11 @@ void Player::attack() {
 		this->stopAllActions();				//stop all hanh dong de attack
 		//std::string name = "Attack/Attack Chain/" + std::to_string(this->attackChainNumber); //name = Folder chua Animate cua (attack)
 		//this->runAction(Sequence::create(animation(name, attackSpeed),
-		this->runAction(Sequence::create(makeAnimation("attack" + std::to_string(RandomHelper::random_int(0, 6))/*std::to_string(this->attackChainNumber)*/, attackSpeed),
+		int attackAnim = RandomHelper::random_int(0, 5);
+		this->runAction(Sequence::create(makeAnimation("attack" + std::to_string(attackAnim)/*std::to_string(this->attackChainNumber)*/, attackSpeed),
 			CallFunc::create([=]() 
 			{
+				experimental::AudioEngine::play2d("sounds/slash" + std::to_string(attackAnim < 5 ? RandomHelper::random_int(1, 3) : 4) + ".mp3", false, 1.0f);
 				std::fill(canAADamage.begin(), canAADamage.end(), false);
 				this->isAttacking = false;
 				this->idleStatus();  
@@ -326,6 +328,7 @@ void Player::getHit(int damage, float eeePosX) {
 		int healthP = std::stoi(this->hp->getString());
 		healthP -= damage;
 
+		experimental::AudioEngine::play2d("sounds/hit.mp3", false, 1.0f);
 		if (healthP < 0 || healthP == 0) {
 			this->hp->setString("0");
 			this->dead();
@@ -376,6 +379,7 @@ void Player::dead()
 		//this->runAction(Sequence::create(animation("Death", 0.12), CallFunc::create([=]() {this->runAction(FadeOut::create(1.0)); }), nullptr));
 		//this->runAction(animation("Death", 0.12f));
 	this->setSpriteFrame(pppFrames->getSpriteFrameByName(std::to_string(this->direction)+"dead0.png"));
+	experimental::AudioEngine::play2d("sounds/playerdie.mp3", false, 0.3f);
 }
 
 void Player::forbidAllAction()
@@ -509,7 +513,7 @@ void Player::useSkill(int skillID, Button* button)
 		//this->runAction(Sequence::create(animation(skill->castAName,attackSpeed), 
 		this->runAction(Sequence::create(makeAnimation(skill->castAName,attackSpeed), 
 			CallFunc::create([=]() 
-			{this->usingSkill = false; this->idleStatus(); }), nullptr));
+			{experimental::AudioEngine::play2d(skillID == 1 ? "sounds/slash4.mp3" : "sounds/dashstab.mp3"); this->usingSkill = false; this->idleStatus(); }), nullptr));
 
 		if (skillID != 1)
 			this->usingMobility(skill);
@@ -536,7 +540,10 @@ void Player::useSkill(int skillID, Button* button)
 			//listSkill.at(skillID)->setPosition;
 			int moveRange = skill->skillRange;
 			if (this->direction == 0)  moveRange = skill->skillRange * -1;
-			listSkill.at(skillID)->runAction(Sequence::create(DelayTime::create(skill->skillAppearTime*attackSpeed),MoveTo::create(0,Vec2(this->getPosition().x, this->getPosition().y)),MoveBy::create(0.5, Vec2(moveRange, 0)),nullptr));
+			listSkill.at(skillID)->runAction(Sequence::create(
+				DelayTime::create(skill->skillAppearTime*attackSpeed),
+				MoveTo::create(0, Vec2(this->getPosition().x, this->getPosition().y)),
+				Spawn::create(CallFunc::create([=]() {experimental::AudioEngine::play2d("sounds/fireball.mp3", false, 1.0f); }), MoveBy::create(0.5, Vec2(moveRange, 0)), nullptr),nullptr));
 		}
 	}
 }

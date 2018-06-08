@@ -338,6 +338,7 @@ void Enemy::getHit(int damage) {
 			+ std::to_string(bossNumber) + std::to_string(this->direction) + "_hurt0.png");
 		if(hit)
 		this->setSpriteFrame(hit);
+		experimental::AudioEngine::play2d("sounds/hit.mp3", false, 1.0f);
 		int x = -16;
 		if (ppp->getPositionX() - ppp->getContentSize().width / 2 < this->getPositionX()) 
 		{

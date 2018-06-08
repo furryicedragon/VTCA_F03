@@ -3,16 +3,12 @@
 #include "ui\UISlider.h"
 #include "ui\CocosGUI.h"
 #include "ui\UIWidget.h"
-#include "SimpleAudioEngine.h"
-#include "audio/include/AudioEngine.h"
 #include "MainScene.h"
 #include "MainGame.h"
 
 USING_NS_CC;
 
 using namespace std;
-using namespace CocosDenshion;
-using namespace experimental;
 
 int bg_music_main;
 

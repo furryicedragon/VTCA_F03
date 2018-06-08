@@ -9,7 +9,9 @@
 #include "Button.h"
 #include "ButtonBase.h"
 #include "StatPlayer.h"
+#include "AudioEngine.h"
 USING_NS_CC;
+
 class Player :public cocos2d::Sprite {
 public:
 	static Player* create();

@@ -6,6 +6,7 @@
 #include <cocos2d.h>
 #include <ui\UISlider.h>
 #include <ui\UIWidget.h>
+#include "AudioEngine.h"
 
 USING_NS_CC;
 
@@ -24,7 +25,7 @@ USING_NS_CC;
 
 #define UI_barfg "UIUX/LoadingBarFileRed.png"
 #define UI_barbg "UIUX/LoadingBarFile.png"
-#define BG_audio "UIUX/Polyphia-The_Worst.mp3"
+#define BG_audio "sounds/Polyphia-The_Worst.mp3"
 
 #define BT_HomeGame "UIUX/button_start.png"
 #define BT_RetryGame "UIUX/retry_button.png"
