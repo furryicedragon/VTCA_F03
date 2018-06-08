@@ -940,7 +940,7 @@ void MainGame::dropMoneyInit()
 					listDrops.pushBack(moneyDrop);
 					moneyDrop->runAction(RepeatForever::create(makeAnimation("treasure", 0.15f)));
 				}
-				auto jumpAction = JumpBy::create(0.5, Vec2(0, 15), 100, 1);
+				auto jumpAction = JumpBy::create(0.5, Vec2(0, -30), 100, 1);
 				moneyDrop->runAction(jumpAction);			
 		}
 	}
@@ -966,7 +966,7 @@ void MainGame::collectMoney() {
 					ppp->score += 500;
 				}
 				item->setTag(69);
-				item->runAction(Sequence::create(DelayTime::create(0.2f),MoveBy::create(0.2f, Vec2(0, 30)), FadeOut::create(0.5f), 
+				item->runAction(Sequence::create(DelayTime::create(0.2f),MoveBy::create(0.2f, Vec2(0, 40)), FadeOut::create(0.5f), 
 					CallFunc::create([=]() {this->removeChild(item, true); }), nullptr));
 			}
 		}
