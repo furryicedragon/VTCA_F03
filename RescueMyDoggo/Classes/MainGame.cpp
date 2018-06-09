@@ -26,6 +26,11 @@ bool MainGame::init()
 	cache->addSpriteFramesWithFile("drops.plist");
 	cache->addSpriteFramesWithFile("Map1.plist");
 	cache->addSpriteFramesWithFile("Map2.plist");
+	cache->addSpriteFramesWithFile("Map3-0.plist");
+	cache->addSpriteFramesWithFile("Map3-1.plist");
+	cache->addSpriteFramesWithFile("Map3-2.plist");
+	cache->addSpriteFramesWithFile("Map3-3.plist");
+	cache->addSpriteFramesWithFile("Map3-4.plist");
 	cache->addSpriteFramesWithFile("ppp.plist");
 
 	this->canRetry = false;
