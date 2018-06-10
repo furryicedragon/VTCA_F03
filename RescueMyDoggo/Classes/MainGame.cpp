@@ -510,7 +510,8 @@ void MainGame::checkAttackRange(Enemy * eee, int index)
 			}
 		}
 		if (eee->canDamage && !ppp->isRolling && !eee->isCaster
-			&& ((eee->direction == 1 && ppp->getPositionX() - eee->getPositionX() <= eee->skillRange) || (eee->direction==0 && eee->getPositionX() - ppp->getPositionX() < eee->skillRange) ) ) {
+			&& ((eee->direction == 1 && ppp->getPositionX()  - eee->getPositionX() <= eee->skillRange) 
+				|| (eee->direction==0 && eee->getPositionX() - ppp->getPositionX() < eee->skillRange) ) ) {
 			if (!ppp->isDead && ppp->state != 1)
 				this->displayDamage(eee->skillDamage, "blue", ppp->getPosition(), Size(0, 0));
 			ppp->getHit(eee->skillDamage, eee->getPosition().x);
@@ -786,15 +787,15 @@ void MainGame::allEnemyInit()
 
 		case 2:
 			wave->skillDamage = 300;
-			wave->visionRange = 300;
-			wave->moveSpeed = 100;
+			wave->visionRange = 222;
+			wave->moveSpeed = 99;
 			wave->norAtkDmgAfterF = 4;
 			wave->doneAtkAfterF = 3;
 			wave->isCaster = false;
 			wave->castSpeed = 0.12f;
 			wave->skillSpeed = 0.1f;
-			wave->skillCD = 9;
-			wave->skillRange = 280;
+			wave->skillCD = 5;
+			wave->skillRange = 120;
 			wave->setHP(450);
 			break;
 
