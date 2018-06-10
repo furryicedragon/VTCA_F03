@@ -344,6 +344,7 @@ void Enemy::getHit(int damage) {
 		this->isIdle = false;
 		this->isAttacking = false;
 		this->isMoving = false;
+		this->breakTime = false;
 		this->getHitTime++;
 
 		if (getHitTime == 3) {
