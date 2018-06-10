@@ -148,9 +148,8 @@ void Enemy::chasing()
 		float moveByX = pppX - (this->getPosition().x + this->getContentSize().width / 2);
 		if (moveByX < 0)  this->direction = 0;
 		else this->direction = 1;
-		this->stopAllActionsByTag(4);
-		//this->stopAllActionsByTag(3);
 		this->movingAnimation();
+		this->stopAllActionsByTag(4);
 
 		if (this->mapNumber == 2 && this->waveNumber == 1) {
 			//what a tree should do
@@ -159,7 +158,7 @@ void Enemy::chasing()
 		{
 			auto move2 = Sequence::create(MoveTo::create(std::fabsf(moveByX)/moveSpeed, Vec2(ppp->getPosition().x, this->getPosition().y)),
 				CallFunc::create([=]() 
-			{this->canChase = true; this->isMoving = false; if (ppp->getPosition().x - (this->getPosition().x + this->getContentSize().width*this->getScale() / 2) > visionRange + 200) this->isChasing = false; else this->idleStatus(); }), nullptr);
+			{this->canMove = true; this->canChase = true; this->isMoving = false; if (std::fabsf(ppp->getPosition().x - this->getPosition().x) > visionRange + 100) this->isChasing = false; else this->idleStatus(); }), nullptr);
 			//could need some fix?! nah
 			move2->setTag(4);
 			this->runAction(move2);
@@ -193,7 +192,7 @@ void Enemy::randomMoving() {
 	else
 	{
 		auto seq = Sequence::create(MoveTo::create(moveByX/moveSpeed, Vec2(randomX, this->getPosition().y)),
-			CallFunc::create([=]() {this->isMoving = false; this->breakTime = false; }), /*DelayTime::create(1),*/ nullptr);
+			CallFunc::create([=]() {this->isMoving = false; this->breakTime = false; this->canMove = true; }), /*DelayTime::create(1),*/ nullptr);
 		seq->setTag(4);
 		this->runAction(seq);
 	}
