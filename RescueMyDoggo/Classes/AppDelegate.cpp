@@ -1,7 +1,7 @@
 #include "AppDelegate.h"
 #include "MainScene.h"
 
-// #define USE_AUDIO_ENGINE 1
+#define USE_AUDIO_ENGINE 1
 // #define USE_SIMPLE_AUDIO_ENGINE 1
 
 #if USE_AUDIO_ENGINE && USE_SIMPLE_AUDIO_ENGINE
@@ -25,6 +25,17 @@ static cocos2d::Size largeResolutionSize = cocos2d::Size(960, 960);
 
 AppDelegate::AppDelegate()
 {
+	AudioEngine::preload("sounds/Polyphia-The_Worst.mp3"); 
+	AudioEngine::preload("sounds/slash1.mp3");
+	AudioEngine::preload("sounds/slash2.mp3");
+	AudioEngine::preload("sounds/slash3.mp3");
+	AudioEngine::preload("sounds/slash4.mp3");
+	AudioEngine::preload("sounds/coin_pickup.mp3");
+	AudioEngine::preload("sounds/dashstab.mp3");
+	AudioEngine::preload("sounds/defeat.mp3");
+	AudioEngine::preload("sounds/fireball.mp3");
+	AudioEngine::preload("sounds/hit.mp3");
+	AudioEngine::preload("sounds/playerdie.mp3");
 }
 
 AppDelegate::~AppDelegate() 
