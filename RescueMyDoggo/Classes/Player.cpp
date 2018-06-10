@@ -510,13 +510,19 @@ void Player::useSkill(int skillID, Button* button)
 		this->usingSkill = true;
 
 
-		//this->runAction(Sequence::create(animation(skill->castAName,attackSpeed), 
+		//this->runAction(Sequence::create(animation(skill->castAName,attackSpeed),
 		this->runAction(Sequence::create(makeAnimation(skill->castAName,attackSpeed), 
 			CallFunc::create([=]() 
-			{experimental::AudioEngine::play2d(skillID == 1 ? "sounds/slash4.mp3" : "sounds/dashstab.mp3"); this->usingSkill = false; this->idleStatus(); }), nullptr));
+			{if (skillID == 1) experimental::AudioEngine::play2d("sounds/slash4.mp3"); 
+			this->usingSkill = false; this->idleStatus(); }), nullptr));
 
 		if (skillID != 1)
+		{
+			this->runAction(Sequence::create(DelayTime::create(0.1f),
+				CallFunc::create([=]() {experimental::AudioEngine::play2d("sounds/dashstab.mp3"); }), nullptr));
 			this->usingMobility(skill);
+		}
+			
 		
 
 		if(skillID!=1)
