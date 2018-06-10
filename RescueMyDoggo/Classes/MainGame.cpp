@@ -6,6 +6,8 @@ USING_NS_CC;
 
 #define MaxMap 5
 
+MainGame * MainGame::instance = NULL;
+
 bool MainGame::init()
 {
 	doneAddingEnemy = false;
@@ -13,6 +15,9 @@ bool MainGame::init()
 	{
 		return false;
 	}
+
+	MainGame::instance = this;
+
 	congratulation = Sprite::create("Gratz/0.png");
 	congratulation->setAnchorPoint(Vec2(0, 0));
 	auto itsOKMan = RepeatForever::create(animation("Gratz", 1));
@@ -118,6 +123,10 @@ bool MainGame::init()
 	this->runAction(followPlayer);
 	
 	return true;
+}
+
+MainGame * MainGame::GetInstance() {
+	return MainGame::instance;
 }
 
 void MainGame::setupTouchHandling() {
@@ -423,10 +432,10 @@ void MainGame::update(float elapsed)
 			this->isGameOver = true;
 			HUDLayer::GetInstance()->setVisible(false);
 
-			auto gameOverLayer = static_cast<Layer*> (Director::getInstance()->getRunningScene()->getChildByTag(9900) );
+			/*auto gameOverLayer = static_cast<Layer*> (Director::getInstance()->getRunningScene()->getChildByTag(9900) );*/
 
 			this->runAction(Sequence::create(DelayTime::create(2.0f), 
-				CallFunc::create([=]() {gameOverLayer->setVisible(true); experimental::AudioEngine::play2d("sounds/defeat.mp3", false, 0.7f); }), nullptr));
+				CallFunc::create([=]() {MainScene::GetInstance()->gameOverLayer->setVisible(true); experimental::AudioEngine::play2d("sounds/defeat.mp3", false, 0.7f); }), nullptr));
 			
 			/*this->runAction(Sequence::create(DelayTime::create(1), CallFunc::create([=]() {this->canRetry=true; }), nullptr));
 			this->runAction(Sequence::create(DelayTime::create(1), CallFunc::create([=]() {this->canRetry=true;}), nullptr));*/

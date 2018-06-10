@@ -18,10 +18,13 @@ public:
 	CREATE_FUNC(MainScene);
 	virtual bool init() override;
 
+	static MainScene * instance;
+	static MainScene * GetInstance();
 
 	void setupMenuPause();
 	void setingPause();
 	Layer* layerSetingPause;
+	Layer* gameOverLayer;
 
 	Layer* gamePauseLayer;
 	void setupGameOverLayer();

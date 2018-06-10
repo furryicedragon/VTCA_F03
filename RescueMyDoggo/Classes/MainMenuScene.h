@@ -62,6 +62,9 @@ public:
 	Menu* _menuGame;
 	Layer* setupSeting;
 
+	static MainMenuScene * instance;
+	static MainMenuScene * GetInstance();
+
 	float bgMusic = 0.3f, gameMusic = 0.3f;
 
 	void bgAudio();

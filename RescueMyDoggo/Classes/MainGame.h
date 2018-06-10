@@ -17,6 +17,10 @@ class MainGame : public cocos2d::Node
 public:
 	CREATE_FUNC(MainGame);
 	Size visibleSize;
+
+	static MainGame * instance;
+	static MainGame * GetInstance();
+
 	virtual bool init() override;
 	Enemy* boss1m1;
 	Enemy* boss2m1;

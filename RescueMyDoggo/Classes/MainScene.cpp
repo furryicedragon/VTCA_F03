@@ -3,6 +3,8 @@
 
 USING_NS_CC;
 
+MainScene * MainScene::instance = NULL;
+
 Scene* MainScene::createScene()
 {
 	return MainScene::create();
@@ -27,7 +29,13 @@ bool MainScene::init()
 	setupMenuPause();
 	setupGameOverLayer();
 
+	MainScene::instance = this;
+
 	return true;
+}
+
+MainScene * MainScene::GetInstance() {
+	return MainScene::instance;
 }
 
 void MainScene::setupMenuPause()
@@ -56,15 +64,19 @@ void MainScene::setupMenuPause()
 			//hud_layer->resetHUDstate();
 			HUDLayer::GetInstance()->resetHUDstate();
 
-			auto mainGame = static_cast<MainGame*>(this->getChildByTag(8888));
+			/*auto mainGame = static_cast<MainGame*>(this->getChildByTag(8888));
 			if (mainGame->currentMap == 1)
 				mainGame->delAll();
 			else
 				mainGame->delAll(mainGame->currentMap);
-			mainGame->gameStarto();
+			mainGame->gameStarto();*/
+			if (MainGame::GetInstance()->currentMap == 1) MainGame::GetInstance()->delAll();
+			else MainGame::GetInstance()->delAll(MainGame::GetInstance()->currentMap);
+			MainGame::GetInstance()->gameStarto();
 
-			auto pause_layer = static_cast<Layer*> (this->getChildByTag(9902));
-			pause_layer->setVisible(false);
+			/*auto pause_layer = static_cast<Layer*> (this->getChildByTag(9902));
+			pause_layer->setVisible(false);*/
+			MainScene::GetInstance()->gamePauseLayer->setVisible(false);
 
 			break;
 		}
@@ -96,11 +108,13 @@ void MainScene::setupMenuPause()
 		{
 		case ui::Widget::TouchEventType::ENDED:
 			Director::getInstance()->resume();
-			auto hud_layer = static_cast<HUDLayer*> (this->getChildByTag(9999));
-			hud_layer->setVisible(true);
+			/*auto hud_layer = static_cast<HUDLayer*> (this->getChildByTag(9999));
+			hud_layer->setVisible(true);*/
+			HUDLayer::GetInstance()->setVisible(true);
 
-			auto pause_layer = static_cast<Layer*> (this->getChildByTag(9902));
-			pause_layer->setVisible(false);
+			/*auto pause_layer = static_cast<Layer*> (this->getChildByTag(9902));
+			pause_layer->setVisible(false);*/
+			MainScene::GetInstance()->gamePauseLayer->setVisible(false);
 			break;
 
 		}
@@ -141,7 +155,7 @@ void MainScene::setingPause()
 void MainScene::setupGameOverLayer()
 {
 	auto visibleSize = Director::getInstance()->getVisibleSize();
-	auto gameOverLayer = Layer::create();
+	this->gameOverLayer = Layer::create();
 
 	auto gameover_bg = Sprite::create(GUI_backDead);
 	gameover_bg->setScale(0.8f);
@@ -161,22 +175,29 @@ void MainScene::setupGameOverLayer()
 		switch (type)
 		{
 		case ui::Widget::TouchEventType::ENDED:
-			auto mainGame = static_cast<MainGame*>(this->getChildByTag(8888));
+			/*auto mainGame = static_cast<MainGame*>(this->getChildByTag(8888));
 			mainGame->delAll();
-			mainGame->setVisible(false);
+			mainGame->setVisible(false);*/
+			MainGame::GetInstance()->delAll();
+			MainGame::GetInstance()->setVisible(false);
 
-			auto hud_layer = static_cast<HUDLayer*> (this->getChildByTag(9999));
-			hud_layer->resetHUDstate();
+			/*auto hud_layer = static_cast<HUDLayer*> (this->getChildByTag(9999));
+			hud_layer->resetHUDstate();*/
+			HUDLayer::GetInstance()->resetHUDstate();
 			
-			auto menu = static_cast<MainMenuScene*>(this->getChildByTag(9090));
+			/*auto menu = static_cast<MainMenuScene*>(this->getChildByTag(9090));
 			menu->bgAudio();
-			menu->setVisible(true);
+			menu->setVisible(true);*/
+			MainMenuScene::GetInstance()->bgAudio();
+			MainMenuScene::GetInstance()->setVisible(true);
 			
-			auto layer = static_cast<Layer*>(this->getChildByTag(9900));
-			layer->setVisible(false);
+			/*auto layer = static_cast<Layer*>(this->getChildByTag(9900));
+			layer->setVisible(false);*/
+			MainScene::GetInstance()->gameOverLayer->setVisible(false);
 
-			auto layerPause = static_cast<Layer*>(this->getChildByTag(9902));
-			layerPause->setVisible(false);
+			/*auto layerPause = static_cast<Layer*>(this->getChildByTag(9902));
+			layerPause->setVisible(false);*/
+			MainScene::GetInstance()->gamePauseLayer->setVisible(false);
 			break;
 		}
 	});
@@ -191,11 +212,13 @@ void MainScene::setupGameOverLayer()
 		switch (type)
 		{
 		case ui::Widget::TouchEventType::ENDED:
-			auto layer = static_cast<Layer*>(this->getChildByTag(9900));
-			layer->setVisible(false);
+			/*auto layer = static_cast<Layer*>(this->getChildByTag(9900));
+			layer->setVisible(false);*/
+			MainScene::GetInstance()->gameOverLayer->setVisible(false);
 
-			auto mainGame = static_cast<MainGame*>(this->getChildByTag(8888));  
-			mainGame->restartGame();
+			/*auto mainGame = static_cast<MainGame*>(this->getChildByTag(8888));  
+			mainGame->restartGame();*/
+			MainGame::GetInstance()->restartGame();
 			break;
 
 		}

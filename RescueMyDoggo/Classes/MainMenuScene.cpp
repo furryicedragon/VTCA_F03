@@ -12,6 +12,8 @@ using namespace std;
 
 int bg_music_main;
 
+MainMenuScene * MainMenuScene::instance = NULL;
+
 bool MainMenuScene::init()
 {
 	if (!Layer::init())
@@ -29,7 +31,13 @@ bool MainMenuScene::init()
 	setupOption();
 	loadbar();
 
+	MainMenuScene::instance = this;
+
 	return true;
+}
+
+MainMenuScene * MainMenuScene::GetInstance() {
+	return MainMenuScene::instance;
 }
 
 void MainMenuScene::setupMenuGame()
@@ -45,14 +53,19 @@ void MainMenuScene::setupMenuGame()
 			auto scenedattentdnchadc = static_cast<MainScene*> (Director::getInstance()->getRunningScene()->getChildByTag(8888));
 																														vd 8888 la cua MainGame
 																															vi sao?*/
-		auto mainGameScene = static_cast<MainGame*> (Director::getInstance()->getRunningScene()->getChildByTag(8888));
+		/*auto mainGameScene = static_cast<MainGame*> (Director::getInstance()->getRunningScene()->getChildByTag(8888));
 		if (mainGameScene) 
 		{ 
 			mainGameScene->setVisible(true);
 			this->setVisible(false);
 			mainGameScene->gameStarto();
 			experimental::AudioEngine::setVolume(bg_music_main, 0.0f);
-		}
+		}*/
+		MainGame::GetInstance()->setVisible(true);
+		this->setVisible(false);
+		MainGame::GetInstance()->gameStarto();
+		experimental::AudioEngine::setVolume(bg_music_main, 0.0f);
+
 	});
 
 	//auto restartItem = MenuItemImage::create(GUI_start, GUI_start, [&](Ref* sender)
@@ -148,10 +161,13 @@ void MainMenuScene::setupOption()
 		{
 		case ui::Widget::TouchEventType::ENDED:
 			setupSeting->setVisible(false);
-			auto gamepauseLayer = static_cast<Layer*> (Director::getInstance()->getRunningScene()->getChildByTag(9902));
+			/*auto gamepauseLayer = static_cast<Layer*> (Director::getInstance()->getRunningScene()->getChildByTag(9902));
 			bool a = gamepauseLayer->isVisible();
 			if(a == false) _menuGame->setVisible(true);
-			else { }
+			else { }*/
+			bool a = MainScene::GetInstance()->gamePauseLayer->isVisible();
+			if (a == false) _menuGame->setVisible(true);
+			else {}
 
 			bgMusic = experimental::AudioEngine::getVolume(bg_music_main);
 			break;
@@ -168,10 +184,13 @@ void MainMenuScene::setupOption()
 		{
 		case ui::Widget::TouchEventType::ENDED:
 			setupSeting->setVisible(false);
-			auto gamepauseLayer = static_cast<Layer*> (Director::getInstance()->getRunningScene()->getChildByTag(9902));
+			/*auto gamepauseLayer = static_cast<Layer*> (Director::getInstance()->getRunningScene()->getChildByTag(9902));
 			bool a = gamepauseLayer->isVisible();
 			if (a == false) _menuGame->setVisible(true);
-			else { }
+			else { }*/
+			bool a = MainScene::GetInstance()->gamePauseLayer->isVisible();
+			if (a == false) _menuGame->setVisible(true);
+			else {}
 
 			bgMusic = experimental::AudioEngine::getVolume(bg_music_main);
 			break;

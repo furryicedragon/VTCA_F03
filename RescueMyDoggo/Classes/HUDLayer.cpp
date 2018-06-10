@@ -43,8 +43,9 @@ void HUDLayer::setupPause()
 		case ui::Widget::TouchEventType::ENDED:
 			this->setVisible(false);
 			Director::getInstance()->pause();
-			auto gamepauseLayer = static_cast<Layer*> (Director::getInstance()->getRunningScene()->getChildByTag(9902));
-			gamepauseLayer->setVisible(true);
+			/*auto gamepauseLayer = static_cast<Layer*> (Director::getInstance()->getRunningScene()->getChildByTag(9902));
+			gamepauseLayer->setVisible(true);*/
+			MainScene::GetInstance()->gamePauseLayer->setVisible(true);
 			break;
 		}
 	});
