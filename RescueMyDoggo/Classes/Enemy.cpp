@@ -148,8 +148,9 @@ void Enemy::chasing()
 		float moveByX = pppX - (this->getPosition().x + this->getContentSize().width / 2);
 		if (moveByX < 0)  this->direction = 0;
 		else this->direction = 1;
-		this->movingAnimation();
 		this->stopAllActionsByTag(4);
+		//this->stopAllActionsByTag(3);
+		this->movingAnimation();
 
 		if (this->mapNumber == 2 && this->waveNumber == 1) {
 			//what a tree should do
@@ -168,9 +169,13 @@ void Enemy::chasing()
 }
 void Enemy::randomMoving() {
 
-	if(this->waveNumber==1 || this->bossNumber==1)
+	if((this->waveNumber==1 || this->bossNumber==1) && (this->mapNumber != 2 || (this->mapNumber == 2 && this->bossNumber == 0)))
 	randomX = RandomHelper::random_real(listLineX.at(0), listLineX.at(1)); //di chuyen trong 1 khoang giua line1 va line2 trong tiledMap
-	if(this->waveNumber==2 || this->bossNumber>1) randomX = RandomHelper::random_real(listLineX.at(2), listLineX.at(3));
+	if((this->waveNumber==2 || this->bossNumber==2) && (this->mapNumber!=2 || (this->mapNumber==2 && this->bossNumber==0))) 
+	randomX = RandomHelper::random_real(listLineX.at(2), listLineX.at(3));
+	if (this->mapNumber == 2 && this->bossNumber > 0) 
+		randomX = RandomHelper::random_real(listLineX.at(4), listLineX.at(5));
+
 	float eX = this->getPosition().x;
 	float moveByX = randomX - eX;
 	this->isIdle = false;
@@ -260,6 +265,9 @@ void Enemy::casterSpell()
 	float range = 500.f;
 	if (this->direction==0) range *= -1;
 	float move2X = this->getPosition().x;
+	float move2Y = this->getPositionY();
+	if (this->mapNumber == 2 && this->bossNumber == 2)move2Y -= 20;
+	if (this->mapNumber == 1 && this->waveNumber == 1) move2Y += 10;
 	if (this->direction==1) {
 		move2X += this->getContentSize().width/2;
 	}
@@ -270,18 +278,28 @@ void Enemy::casterSpell()
 		CallFunc::create([=]() {this->spell->setVisible(true); }),
 		makeAnimation("projectile", castSpeed), CallFunc::create([=]() {this->spell->setVisible(false); this->attackLandedEffect(); }), nullptr));
 	
-	if (this->waveNumber == 1 && this->mapNumber == 1) {
+	if ((this->waveNumber == 1 && this->mapNumber == 1)||(this->mapNumber==2 && this->bossNumber==2)) {
 			this->spell->runAction(Sequence::create(
 				CallFunc::create([=]() {this->interuptable=true; }),
-				DelayTime::create(castSpeed * 8),
+				DelayTime::create(castSpeed * skillAtkAfterF),
 				CallFunc::create([=]() {
 			this->interuptable = false;
-			this->spell->setPosition(move2X, this->getPosition().y+10);
+			this->spell->setPosition(move2X, move2Y);
 			this->spell->setVisible(true); 
 			this->spell->runAction(RepeatForever::create(makeAnimation("projectile", castSpeed)));
 		}),
 				MoveBy::create(0.69f, Vec2(range, 0)),
 			CallFunc::create([=]() {this->spell->setVisible(false);  this->spell->setPosition(0, 0); }), nullptr));
+	}
+	if (this->mapNumber == 2 && this->bossNumber == 1) {
+		this->spell->runAction(Sequence::create(CallFunc::create([=]() {this->interuptable = true; }),
+			DelayTime::create(castSpeed * skillAtkAfterF),
+			CallFunc::create([=]() {
+			this->interuptable = false;
+			this->spell->setPosition(ppp->getPositionX(), ppp->getPositionY() + 10);
+			this->spell->setVisible(true);
+			this->spell->runAction(Sequence::create(makeAnimation("projectile", castSpeed), CallFunc::create([=]() {this->spell->setVisible(false); }), nullptr));
+		}), DelayTime::create(castSpeed * 2), CallFunc::create([=]() {this->attackLandedEffect(); }),nullptr));
 	}
 
 

@@ -508,16 +508,15 @@ void MainGame::checkAttackRange(Enemy * eee, int index)
 
 				ppp->canAADamage[index] = false;
 			}
-
-			if (eee->canDamage && !ppp->isRolling && !eee->isCaster) {
-				if (!ppp->isDead && ppp->state != 1)
-					this->displayDamage(eee->skillDamage, "blue", ppp->getPosition(),Size(0,0));
-				ppp->getHit(eee->skillDamage, eee->getPosition().x);
-				
-				eee->canDamage = false;
-			}
 		}
+		if (eee->canDamage && !ppp->isRolling && !eee->isCaster
+			&& ((eee->direction == 1 && ppp->getPositionX() - eee->getPositionX() <= eee->skillRange) || (eee->direction==0 && eee->getPositionX() - ppp->getPositionX() < eee->skillRange) ) ) {
+			if (!ppp->isDead && ppp->state != 1)
+				this->displayDamage(eee->skillDamage, "blue", ppp->getPosition(), Size(0, 0));
+			ppp->getHit(eee->skillDamage, eee->getPosition().x);
 
+			eee->canDamage = false;
+		}
 		int i = 0;
 		float rectPos = ppp->listSkill.at(1)->getPosition().x;
 		if (!ppp->listSkill.at(1)->isFlippedX()) 
@@ -540,7 +539,7 @@ void MainGame::checkAttackRange(Enemy * eee, int index)
 		}
 
 
-		if (eee->isCaster && !ppp->isRolling && !eee->canDamage && std::fabsf(eee->spell->getPosition().x - ppp->getPosition().x) < 22 && std::fabsf(eee->spell->getPositionY() - ppp->getPositionY())<40 && (eee->mapNumber==1 && eee->waveNumber==1)) {
+		if (eee->isCaster && !ppp->isRolling && !eee->canDamage && std::fabsf(eee->spell->getPosition().x - ppp->getPosition().x) < 22 && std::fabsf(eee->spell->getPositionY() - ppp->getPositionY())<40 && ((eee->mapNumber==1 && eee->waveNumber==1) || (eee->mapNumber==2 && eee->bossNumber==2))) {
 			eee->spell->setPosition(0, 0);
 			eee->spell->setVisible(false);
 			eee->spell->stopAllActions();
@@ -568,7 +567,7 @@ void MainGame::waveXMapXInit() {
 			this->spawnEffect(allEnemy[4], 1);
 			boss1 = true;
 		}
-		if (ppp->w2kills == 8 && !boss2) { 
+		if (ppp->w2kills >1 && !boss2) { 
 			this->spawnEffect(allEnemy[9], 1);
 			boss2 = true; 
 		}
@@ -632,7 +631,7 @@ void MainGame::allEnemyInit()
 
 		listLine.push_back(line);
 	}
-
+	//wave 1
 	for (int i = 0; i < 4; i++) {
 		Enemy* wave = Enemy::create(currentMap, 1, 0);
 		for (auto line : listLine)
@@ -649,21 +648,24 @@ void MainGame::allEnemyInit()
 			wave->isCaster = true;
 			wave->castSpeed = 0.12f;
 			wave->skillSpeed = 0.1f;
+			wave->skillAtkAfterF = 8;
 			wave->skillCD = 4;
 			wave->skillRange = 300;
 			wave->setHP(100);
 			break;
 
 		case 2:
-			wave->skillDamage = 11;
+			wave->skillDamage = 99;
 			wave->visionRange = 310;
+			wave->norAtkDmgAfterF = 3;
+			wave->doneAtkAfterF = 2;
 			wave->moveSpeed = 120;
-			wave->isCaster = true;
+			wave->isCaster = false;
 			wave->castSpeed = 0.12f;
 			wave->skillSpeed = 0.1f;
-			wave->skillCD = 4;
-			wave->skillRange = 300;
-			wave->setHP(100);
+			wave->skillCD = 3;
+			wave->skillRange = 240;
+			wave->setHP(150);
 			break;
 
 		case 3:
@@ -694,8 +696,8 @@ void MainGame::allEnemyInit()
 		}
 	}
 
-
-	{	//boss 1
+	//boss 1
+	{
 		this->boss1m1 = Enemy::create(currentMap, 0, 1);
 		for (auto line : listLine)
 		{
@@ -723,13 +725,12 @@ void MainGame::allEnemyInit()
 			boss1m1->skillDamage = 150;
 			//boss1m1->setScale(1.6f);
 			boss1m1->moveSpeed = 333;
-			boss1m1->isSSMobility = true;
-			boss1m1->castSpeed = 0.069f;
+			boss1m1->isCaster = true;
+			boss1m1->skillAtkAfterF = 8;
+			boss1m1->castSpeed = 0.1f;
 			boss1m1->skillCD = 2;
 			boss1m1->skillRange = 400;
-			boss1m1->mobilitySSAt = 3;
-			boss1m1->mobilitySpeed = 4;
-			boss1m1->setHP(300);
+			boss1m1->setHP(400);
 			break;
 
 		case 3:
@@ -762,7 +763,7 @@ void MainGame::allEnemyInit()
 		}
 	}
 
-
+	//wave2
 	for (int i = 0; i < 4; i++) {
 		Enemy* wave = Enemy::create(currentMap, 2, 0);
 		for (auto line : listLine)
@@ -776,7 +777,7 @@ void MainGame::allEnemyInit()
 			wave->visionRange = 350;
 			wave->moveSpeed = 100;
 			wave->isCaster = true;
-			wave->castSpeed = 0.12f;
+			wave->castSpeed = 0.1f;
 			wave->skillSpeed = 0.1f;
 			wave->skillCD = 4;
 			wave->skillRange = 400;
@@ -784,15 +785,17 @@ void MainGame::allEnemyInit()
 			break;
 
 		case 2:
-			wave->skillDamage = 96;
-			wave->visionRange = 350;
+			wave->skillDamage = 300;
+			wave->visionRange = 300;
 			wave->moveSpeed = 100;
-			wave->isCaster = true;
+			wave->norAtkDmgAfterF = 4;
+			wave->doneAtkAfterF = 3;
+			wave->isCaster = false;
 			wave->castSpeed = 0.12f;
 			wave->skillSpeed = 0.1f;
-			wave->skillCD = 4;
-			wave->skillRange = 400;
-			wave->setHP(175);
+			wave->skillCD = 9;
+			wave->skillRange = 280;
+			wave->setHP(450);
 			break;
 
 		case 3:
@@ -822,8 +825,9 @@ void MainGame::allEnemyInit()
 			this->spawnEffect(allEnemy[i + 5], i);
 		}
 	}
-
-	{	//boss2
+	
+	//boss2
+	{
 		this->boss2m1 = Enemy::create(currentMap, 0, 2);
 		for (auto line : listLine)
 		{
@@ -847,16 +851,15 @@ void MainGame::allEnemyInit()
 
 		case 2:
 			//boss2m1->setScale(1.6f);
-			boss2m1->skillDamage = 200;
-			boss2m1->visionRange = 450;
-			boss2m1->moveSpeed = 420;
-			boss2m1->isSSMobility = true;
-			boss2m1->castSpeed = 0.041f;
+			boss2m1->skillDamage = 222;
+			boss2m1->visionRange = 380;
+			boss2m1->moveSpeed = 300;
+			boss2m1->isCaster = true;
+			boss2m1->skillAtkAfterF = 10;
+			boss2m1->castSpeed = 0.04f;
 			boss2m1->skillCD = 2;
-			boss2m1->skillRange = 420;
-			boss2m1->mobilitySSAt = 4;
-			boss2m1->mobilitySpeed = 2;
-			boss2m1->setHP(200);
+			boss2m1->skillRange = 380;
+			boss2m1->setHP(630);
 			break;
 
 		case 3:
@@ -1064,7 +1067,10 @@ void MainGame::dropMoneyInit()
 		for (auto item : allEnemy) {
 			if (item->canDrop) {
 				auto moneyDrop = Sprite::create();
-				moneyDrop->setPosition(item->getPosition());			
+				if (item->mapNumber != 2 || (item->mapNumber == 2 && item->bossNumber == 2) || item->waveNumber>0)
+					moneyDrop->setPosition(item->getPosition());
+				else
+					moneyDrop->setPosition(Vec2(item->getPositionX(), item->getPositionY() + 58));
 				this->addChild(moneyDrop, 9);
 				item->canDrop = false;
 				if (item->moneyRank == 1) {
@@ -1185,9 +1191,9 @@ void MainGame::changeMap(int level)
 	ppp->mapScale = map->getScale();
 	ppp->setPosition(sPx, sPy);
 
-	ppp->damageCurrent = 16 * lastLevel;
-	ppp->baseHP = lastHP;
-	ppp->hp->setString(std::to_string(lastHP));
+	ppp->damageCurrent = 1699 * lastLevel;
+	ppp->baseHP = lastHP + 99999;
+	ppp->hp->setString(std::to_string(lastHP + 99999));
 	ppp->attackSpeed = 0.14f - ((0.14f / 20)*lastLevel);
 	ppp->score = this->lastScore;
 

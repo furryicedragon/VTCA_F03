@@ -22,6 +22,7 @@ public:
 	int mapNumber;
 	int waveNumber;
 	int bossNumber;
+	int skillAtkAfterF; //useAttackSkillAfterFrames;
 	int useSkillLastFN;
 	int skillLastFN;
 	int mobilitySSAt;
