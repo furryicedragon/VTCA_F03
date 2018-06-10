@@ -161,7 +161,7 @@ void Enemy::chasing()
 		{
 			auto move2 = Sequence::create(MoveTo::create(std::fabsf(moveByX)/moveSpeed, Vec2(ppp->getPosition().x, this->getPosition().y)),
 				CallFunc::create([=]() 
-			{this->canMove = true; this->canChase = true; this->isMoving = false; if (std::fabsf(ppp->getPosition().x - this->getPosition().x) > visionRange + 100) this->isChasing = false; else this->idleStatus(); }), nullptr);
+			{this->breakTime = false; this->canMove = true; this->canChase = true; this->isMoving = false; if (std::fabsf(ppp->getPosition().x - this->getPosition().x) > visionRange + 100) this->isChasing = false; this->idleStatus(); }), nullptr);
 			//could need some fix?! nah
 			move2->setTag(4);
 			this->runAction(move2);
@@ -171,13 +171,13 @@ void Enemy::chasing()
 }
 void Enemy::randomMoving() {
 
+	this->isMoving = true;
 	if((this->waveNumber==1 || this->bossNumber==1) && (this->mapNumber != 2 || (this->mapNumber == 2 && this->bossNumber == 0)))
 	randomX = RandomHelper::random_real(listLineX.at(0), listLineX.at(1)); //di chuyen trong 1 khoang giua line1 va line2 trong tiledMap
 	if((this->waveNumber==2 || this->bossNumber==2) && (this->mapNumber!=2 || (this->mapNumber==2 && this->bossNumber==0))) 
 	randomX = RandomHelper::random_real(listLineX.at(2), listLineX.at(3));
 	if (this->mapNumber == 2 && this->bossNumber > 0) 
 		randomX = RandomHelper::random_real(listLineX.at(4), listLineX.at(5));
-
 	float eX = this->getPosition().x;
 	float moveByX = randomX - eX;
 	this->isIdle = false;
@@ -195,7 +195,8 @@ void Enemy::randomMoving() {
 	else
 	{
 		auto seq = Sequence::create(MoveTo::create(moveByX/moveSpeed, Vec2(randomX, this->getPosition().y)),
-			CallFunc::create([=]() {this->isMoving = false; this->breakTime = false; this->canMove = true; }), /*DelayTime::create(1),*/ nullptr);
+			CallFunc::create([=]() {this->isMoving = false; this->canMove = true; this->idleStatus(); }),
+			DelayTime::create(RandomHelper::random_real(0.5f, 1.0f)), CallFunc::create([=]() { this->breakTime = false; }), nullptr);
 		seq->setTag(4);
 		this->runAction(seq);
 	}
@@ -217,8 +218,7 @@ void Enemy::moving() {
 		if (!this->isMoving && !this->isAttacking && !this->isChasing && !this->breakTime) 
 		{
 			this->breakTime = true;
-			this->idleStatus();
-			this->runAction(Sequence::create(DelayTime::create(RandomHelper::random_real(0.5f,1.0f)), CallFunc::create([=]() {this->randomMoving(); }), nullptr));
+			this->randomMoving();
 		}
 		else
 		{
