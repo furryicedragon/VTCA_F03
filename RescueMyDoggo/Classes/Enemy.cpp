@@ -1,6 +1,9 @@
 #include"Enemy.h"
 USING_NS_CC;
 using namespace std;
+
+int hitSound = experimental::AudioEngine::play2d("sounds/hit.mp3", false, 0);
+
 Enemy* Enemy::create(int xMapNumber, int xWaveNumber, int xBossNumber)
 {
 	Enemy* pSprite = new Enemy();
@@ -355,7 +358,8 @@ void Enemy::getHit(int damage) {
 			+ std::to_string(bossNumber) + std::to_string(this->direction) + "_hurt0.png");
 		if(hit)
 		this->setSpriteFrame(hit);
-		experimental::AudioEngine::play2d("sounds/hit.mp3", false, 1.0f);
+		if (experimental::AudioEngine::getState(hitSound) != experimental::AudioEngine::AudioState::PLAYING)
+			hitSound = experimental::AudioEngine::play2d("sounds/hit.mp3", false, 0.7f);
 		int x = -16;
 		if (ppp->getPositionX() - ppp->getContentSize().width / 2 < this->getPositionX()) 
 		{

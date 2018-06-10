@@ -328,7 +328,7 @@ void Player::getHit(int damage, float eeePosX) {
 		int healthP = std::stoi(this->hp->getString());
 		healthP -= damage;
 
-		experimental::AudioEngine::play2d("sounds/hit.mp3", false, 1.0f);
+		experimental::AudioEngine::play2d("sounds/hit.mp3", false, 0.7f);
 		if (healthP < 0 || healthP == 0) {
 			this->hp->setString("0");
 			this->dead();

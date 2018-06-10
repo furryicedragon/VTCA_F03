@@ -4,7 +4,7 @@
 #include "MainScene.h"
 USING_NS_CC;
 
-#define MaxMap 5
+#define MaxMap 3
 
 MainGame * MainGame::instance = NULL;
 
@@ -399,14 +399,14 @@ void MainGame::update(float elapsed)
 					item->dead();
 					item->canRespawn = false;
 					
-					finishPortal->setPositionY(ppp->getPosition().y);
+					finishPortal->setPositionY(ppp->getPositionY());
 					finishPortal->setVisible(true);
 				}
 			}
-			if (congratz && ppp->isSpawn) 
+			if (congratz && ppp->isSpawn && finishPortal->isVisible()) 
 			{
 				// change level
-				if (std::fabsf(ppp->getPosition().x - finishPortal->getPosition().x) < 10) 
+				if (std::fabsf(ppp->getPositionX() - finishPortal->getPositionX()) < 10) 
 				{
 					congratz = false;
 					HUDLayer::GetInstance()->setVisible(false);
@@ -1118,7 +1118,10 @@ void MainGame::collectMoney() {
 				if (item->getTag() == 4) {
 					ppp->score += 500;
 				}
-				experimental::AudioEngine::play2d("sounds/coin_pickup.mp3", false, 1.0f);
+
+				this->runAction(Sequence::create(DelayTime::create(0.3f),
+						CallFunc::create([=]() {experimental::AudioEngine::play2d("sounds/coin_pickup.mp3", false, 0.7f); }), nullptr));
+				
 				item->setTag(69);
 				item->runAction(Sequence::create(DelayTime::create(0.2f),MoveBy::create(0.2f, Vec2(0, 40)), FadeOut::create(0.5f), 
 					CallFunc::create([=]() { this->removeChild(item, true); }), nullptr));
