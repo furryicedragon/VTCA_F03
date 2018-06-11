@@ -159,9 +159,10 @@ void Enemy::chasing()
 		}
 		else
 		{
-			auto move2 = Sequence::create(MoveTo::create(std::fabsf(moveByX)/moveSpeed, Vec2(ppp->getPosition().x, this->getPosition().y)),
+			auto move2 = Sequence::create(DelayTime::create(std::fabsf(moveByX)/moveSpeed),
 				CallFunc::create([=]() 
-			{this->breakTime = false; this->canMove = true; this->canChase = true; this->isMoving = false; if (std::fabsf(ppp->getPosition().x - this->getPosition().x) > visionRange + 100) this->isChasing = false; this->idleStatus(); }), nullptr);
+			{this->breakTime = false; this->canMove = true; this->canChase = true; this->isMoving = false;
+			if (std::fabsf(ppp->getPosition().x - this->getPosition().x) > visionRange + 100) this->isChasing = false; this->idleStatus(); }), nullptr);
 			//could need some fix?! nah
 			move2->setTag(4);
 			this->runAction(move2);
@@ -178,7 +179,7 @@ void Enemy::randomMoving() {
 	randomX = RandomHelper::random_real(listLineX.at(2), listLineX.at(3));
 	if (this->mapNumber == 2 && this->bossNumber > 0) 
 		randomX = RandomHelper::random_real(listLineX.at(4), listLineX.at(5));
-	float eX = this->getPosition().x;
+	float eX = this->getPositionX();
 	float moveByX = randomX - eX;
 	this->isIdle = false;
 	this->stopAllActionsByTag(4);
@@ -194,7 +195,7 @@ void Enemy::randomMoving() {
 	}
 	else
 	{
-		auto seq = Sequence::create(MoveTo::create(moveByX/moveSpeed, Vec2(randomX, this->getPosition().y)),
+		auto seq = Sequence::create(DelayTime::create(moveByX/moveSpeed),
 			CallFunc::create([=]() {this->isMoving = false; this->canMove = true; this->idleStatus(); }),
 			DelayTime::create(RandomHelper::random_real(0.5f, 1.0f)), CallFunc::create([=]() { this->breakTime = false; }), nullptr);
 		seq->setTag(4);
@@ -202,6 +203,7 @@ void Enemy::randomMoving() {
 	}
 
 }
+
 void Enemy::moving() {
 	float howFar = std::fabsf(ppp->getPosition().x - this->getPosition().x);
 	if (howFar < skillRange && !this->isAttacking && !this->isOnCD 
@@ -501,6 +503,11 @@ void Enemy::update(float elapsed)
 			this->idleStatus();
 		}
 	}
+	if (this->isMoving)
+	{
+		this->setPositionX(this->getPositionX() + ( this->direction ? (moveSpeed * elapsed) : - (moveSpeed * elapsed) ) );
+	}
+		
 }
 
 Animate* Enemy::makeAnimation(std::string actionName, float timeEachFrame)
