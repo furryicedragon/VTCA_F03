@@ -11,7 +11,7 @@
 USING_NS_CC;
 
 #define GUI_background "UIUX/bgdfblur.png"
-#define GUi_nameGame
+#define GUI_title "UIUX/title.png"
 #define GUI_backMainmenu "UIUX/bgMenu.png"
 #define GUI_menupause "UIUX/optionMenuinGame.png"
 #define GUI_backsetingpause "UIUX/optionbg.png"

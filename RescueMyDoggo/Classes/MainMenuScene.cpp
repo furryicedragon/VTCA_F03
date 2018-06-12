@@ -44,23 +44,14 @@ void MainMenuScene::setupMenuGame()
 {
 	Size visibleSize = Director::getInstance()->getVisibleSize();
 
+	auto title = Sprite::create(GUI_title);
+	title->setScale(1.5f);
+	title->setPosition(visibleSize.width / 2, visibleSize.height * 0.8);
+	this->addChild(title, 1);
+
+
 	auto startItem = MenuItemImage::create(GUI_startnomal, GUI_startclick, [&](Ref* sender)
 	{
-		/*thg thi ng ta de 
-			auto mainScene chang han
-			auto mainScene = static_cast< cai nay la kieu? cua Scene minh dinh lay, vd minh lay mainscene thi phai de vao MainScene*
-			vd
-			auto scenedattentdnchadc = static_cast<MainScene*> (Director::getInstance()->getRunningScene()->getChildByTag(8888));
-																														vd 8888 la cua MainGame
-																															vi sao?*/
-		/*auto mainGameScene = static_cast<MainGame*> (Director::getInstance()->getRunningScene()->getChildByTag(8888));
-		if (mainGameScene) 
-		{ 
-			mainGameScene->setVisible(true);
-			this->setVisible(false);
-			mainGameScene->gameStarto();
-			experimental::AudioEngine::setVolume(bg_music_main, 0.0f);
-		}*/
 		MainGame::GetInstance()->setVisible(true);
 		this->setVisible(false);
 		MainGame::GetInstance()->gameStarto();
