@@ -364,7 +364,7 @@ void Enemy::getHit(int damage) {
 		if (experimental::AudioEngine::getState(hitSound) != experimental::AudioEngine::AudioState::PLAYING)
 			hitSound = experimental::AudioEngine::play2d("sounds/hit.mp3", false, 0.7f);
 		int x = -16;
-		if (ppp->getPositionX() - ppp->getContentSize().width / 2 < this->getPositionX()) 
+		if (ppp->getPositionX() - 25 < this->getPositionX()) 
 		{
 			x *= -1;
 			this->direction = 0;
@@ -503,7 +503,7 @@ void Enemy::update(float elapsed)
 			this->idleStatus();
 		}
 	}
-	if (this->isMoving)
+	if (this->isMoving && (this->mapNumber!=2 || (this->mapNumber==2 && this->waveNumber!=1)))
 	{
 		this->setPositionX(this->getPositionX() + ( this->direction ? (moveSpeed * elapsed) : - (moveSpeed * elapsed) ) );
 	}
