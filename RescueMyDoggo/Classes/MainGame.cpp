@@ -1076,10 +1076,41 @@ void MainGame::dropMoneyInit()
 		for (auto item : allEnemy) {
 			if (item->canDrop) {
 				auto moneyDrop = Sprite::create();
-				if (item->mapNumber != 2 || (item->mapNumber == 2 && item->bossNumber == 2) || item->waveNumber>0)
+				/*if (item->mapNumber != 2 || (item->mapNumber == 2 && item->bossNumber == 2) || item->waveNumber>0)
 					moneyDrop->setPosition(item->getPosition());
 				else
-					moneyDrop->setPosition(Vec2(item->getPositionX(), item->getPositionY() + 58));
+					moneyDrop->setPosition(Vec2(item->getPositionX(), item->getPositionY() + 58));*/
+
+				if (item->mapNumber == 1) {
+					if (item->waveNumber > 0) {
+						moneyDrop->setPosition(item->getPosition());
+					}
+					else if (item->bossNumber == 1 || item->bossNumber == 2) {
+						moneyDrop->setPosition(item->getPositionX(), item->getPositionY() + 5);
+					}
+				}
+				if (item->mapNumber == 2) {
+					if (item->waveNumber > 0 || item->bossNumber == 2) {
+						moneyDrop->setPosition(item->getPositionX(), item->getPositionY() - 12);
+					}
+					if (item->bossNumber == 1) {
+						moneyDrop->setPosition(item->getPositionX(), item->getPositionY() + 42);
+					}
+				}
+				if (item->mapNumber == 3) {
+					if (item->waveNumber > 0) {
+						moneyDrop->setPosition(item->getPositionX(), item->getPositionY() - 40);
+					}
+					else if (item->bossNumber == 1)
+					{
+						moneyDrop->setPosition(item->getPositionX(), item->getPositionY() - 10);
+					}
+					else if (item->bossNumber == 2)
+					{
+						moneyDrop->setPosition(item->getPositionX(), item->getPositionY() - 50);
+					}
+				}
+
 				this->addChild(moneyDrop, 9);
 				item->canDrop = false;
 				if (item->moneyRank == 1) {
