@@ -38,8 +38,11 @@ public:
 	Sprite* startGame;
 	Sprite* congratulation;
 	Sprite* finishPortal;
+	Sprite* teleportation;
+	Sprite* teleportation2;
 
 	ValueMap finishPoint;
+	ValueMap finishTeleport;
 	
 	EventKeyboard::KeyCode lastKeyPressed;
 	EventKeyboard::KeyCode anotherKeyPressed;
