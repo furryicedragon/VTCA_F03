@@ -154,11 +154,11 @@
  <objectgroup name="Objects">
   <object id="6" name="SpawnPoint" x="86" y="958"/>
   <object id="7" name="FinishPoint" x="1809" y="939"/>
-  <object id="8" name="Line1" x="257" y="816" width="13" height="153"/>
-  <object id="9" name="Line2" x="1441" y="772" width="15" height="196"/>
-  <object id="10" name="Line3" x="63" y="257" width="13" height="166"/>
-  <object id="11" name="Line4" x="1296" y="258" width="11" height="171"/>
-  <object id="12" name="Boss2" x="575" y="385" width="35" height="35"/>
+  <object id="8" name="Line1" x="331" y="782" width="13" height="153"/>
+  <object id="9" name="Line2" x="1441" y="754" width="15" height="196"/>
+  <object id="10" name="Line3" x="63" y="235" width="13" height="166"/>
+  <object id="11" name="Line4" x="1296" y="234" width="11" height="171"/>
+  <object id="12" name="Boss2" x="575" y="324" width="35" height="35"/>
   <object id="13" name="Boss1" x="688" y="928" width="31" height="33"/>
   <object id="14" name="teleportation1" x="913" y="707" width="16" height="17"/>
   <object id="15" name="teleportation2" x="1364" y="386" width="20" height="20"/>

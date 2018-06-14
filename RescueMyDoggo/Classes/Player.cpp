@@ -548,8 +548,11 @@ void Player::useSkill(int skillID, Button* button)
 			if (this->direction == 0)  moveRange = skill->skillRange * -1;
 			listSkill.at(skillID)->runAction(Sequence::create(
 				DelayTime::create(skill->skillAppearTime*attackSpeed),
-				MoveTo::create(0, Vec2(this->getPosition().x, this->getPosition().y)),
-				Spawn::create(CallFunc::create([=]() {experimental::AudioEngine::play2d("sounds/fireball.mp3", false, 1.0f); }), MoveBy::create(0.5, Vec2(moveRange, 0)), nullptr),nullptr));
+				MoveTo::create(0, Vec2(this->getPosition().x, this->getPosition().y)), 
+				CallFunc::create([=]() {std::fill(skill->canDamage.begin(), skill->canDamage.end(), true); }),
+				CallFunc::create([=]() {experimental::AudioEngine::play2d("sounds/fireball.mp3", false, 1.0f); }),
+				MoveBy::create(0.5, Vec2(moveRange, 0)),
+				CallFunc::create([=]() {std::fill(skill->canDamage.begin(), skill->canDamage.end(), false); }), nullptr));
 		}
 	}
 }

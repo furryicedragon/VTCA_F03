@@ -485,12 +485,18 @@ void MainGame::spawnPlayer()
 
 bool MainGame::checkRange(Enemy* enemy2Check, int theRange) {
 
-	auto itemWidth = enemy2Check->getContentSize().width*enemy2Check->getScale();
+	auto itemWidth = enemy2Check->getContentSize().width;
+	auto eeePosY = enemy2Check->getPositionY() - 43;
 	auto calculateIt = 40;
-	if (enemy2Check->bossNumber == 1) calculateIt = 150;
+	if (enemy2Check->mapNumber == 3 && enemy2Check->bossNumber != 1) {
+		if (enemy2Check->bossNumber == 2) eeePosY -= 69;
+			else
+		eeePosY -= 40;
+	}
+	if (enemy2Check->bossNumber == 1 && enemy2Check->mapNumber==1) calculateIt = 150;
 	auto howfarX = enemy2Check->getPosition().x - ppp->getPosition().x;
 		if (((howfarX < 69 && ppp->direction==0 && howfarX>-itemWidth / 2 - theRange)
-			|| (howfarX < itemWidth / 2 + theRange && howfarX>-69 && ppp->direction==1))&& ppp->getPosition().y - (enemy2Check->getPositionY()-43)<calculateIt && ppp->getPositionY()-(enemy2Check->getPositionY()-43)>0)
+			|| (howfarX < itemWidth / 2 + theRange && howfarX>-69 && ppp->direction==1))&& ppp->getPositionY() - eeePosY<calculateIt && ppp->getPositionY()-eeePosY>0)
 			return true;
 		else
 			return false;
@@ -510,8 +516,8 @@ void MainGame::checkAttackRange(Enemy * eee, int index)
 			}
 		}
 		if (eee->canDamage && !ppp->isRolling && !eee->isCaster
-			&& ((eee->direction == 1 && ppp->getPositionX()  - eee->getPositionX() <= eee->skillRange) 
-				|| (eee->direction==0 && eee->getPositionX() - ppp->getPositionX() < eee->skillRange) ) ) {
+			&& (((eee->direction == 1||(eee->mapNumber==3 && eee->waveNumber==1)) && ppp->getPositionX()  - eee->getPositionX() <= eee->skillRange) 
+				|| ((eee->direction==0 || (eee->mapNumber==3 && eee->waveNumber==1)) && eee->getPositionX() - ppp->getPositionX() > eee->skillRange) ) ) {
 			if (!ppp->isDead && ppp->state != 1)
 				this->displayDamage(eee->skillDamage, "blue", ppp->getPosition(), Size(0, 0));
 			ppp->getHit(eee->skillDamage, eee->getPosition().x);
@@ -522,11 +528,11 @@ void MainGame::checkAttackRange(Enemy * eee, int index)
 		float rectPos = ppp->listSkill.at(1)->getPosition().x;
 		if (!ppp->listSkill.at(1)->isFlippedX()) 
 			rectPos -= ppp->listSkill.at(1)->getContentSize().width/2;
-		Rect skillRect = Rect(rectPos, ppp->listSkill.at(1)->getPosition().y, 300, 100);
+		Rect skillRect = Rect(rectPos, ppp->listSkill.at(1)->getPosition().y-69, 300, /*100*/269);
 		Rect eeeRect = eee->getBoundingBox();
 		for (auto item : ppp->listSkill)
 		{
-			if (ppp->usingSkill && item->canDamage[index]
+			if ((ppp->usingSkill||i==1) && item->canDamage[index]
 				&& ((skillRect.intersectsRect(eee->getBoundingBox()) && i==1)
 					|| (i ==0 && checkRange(eee,item->skillRange))))
 			{
@@ -661,7 +667,6 @@ void MainGame::allEnemyInit()
 			wave->norAtkDmgAfterF = 3;
 			wave->doneAtkAfterF = 2;
 			wave->moveSpeed = 120;
-			wave->isCaster = false;
 			wave->castSpeed = 0.12f;
 			wave->skillSpeed = 0.1f;
 			wave->skillCD = 3;
@@ -670,15 +675,16 @@ void MainGame::allEnemyInit()
 			break;
 
 		case 3:
-			wave->skillDamage = 11;
+			wave->skillDamage = 222;
 			wave->visionRange = 310;
 			wave->moveSpeed = 120;
-			wave->isCaster = true;
-			wave->castSpeed = 0.12f;
+			wave->norAtkDmgAfterF = 9;
+			wave->doneAtkAfterF = 5;
+			wave->castSpeed = 0.09f;
 			wave->skillSpeed = 0.1f;
 			wave->skillCD = 4;
-			wave->skillRange = 300;
-			wave->setHP(100);
+			wave->skillRange = 150;
+			wave->setHP(666);
 			break;
 		}
 		
@@ -731,21 +737,20 @@ void MainGame::allEnemyInit()
 			boss1m1->castSpeed = 0.1f;
 			boss1m1->skillCD = 2;
 			boss1m1->skillRange = 400;
-			boss1m1->setHP(400);
+			boss1m1->setHP(333);
 			break;
 
 		case 3:
-			boss1m1->visionRange = 420;
-			boss1m1->skillDamage = 150;
+			boss1m1->visionRange = 200;
+			boss1m1->skillDamage = 240;
 			//boss1m1->setScale(1.6f);
 			boss1m1->moveSpeed = 333;
-			boss1m1->isSSMobility = true;
-			boss1m1->castSpeed = 0.069f;
+			boss1m1->norAtkDmgAfterF = 5;
+			boss1m1->doneAtkAfterF = 6;
+			boss1m1->castSpeed = 0.09f;
 			boss1m1->skillCD = 2;
-			boss1m1->skillRange = 400;
-			boss1m1->mobilitySSAt = 3;
-			boss1m1->mobilitySpeed = 4;
-			boss1m1->setHP(300);
+			boss1m1->skillRange = 150;
+			boss1m1->setHP(550);
 			break;
 		}
 		
@@ -800,15 +805,16 @@ void MainGame::allEnemyInit()
 			break;
 
 		case 3:
-			wave->skillDamage = 96;
-			wave->visionRange = 350;
+			wave->skillDamage = 290;
+			wave->visionRange = 250;
 			wave->moveSpeed = 100;
-			wave->isCaster = true;
-			wave->castSpeed = 0.12f;
+			wave->norAtkDmgAfterF = 3;
+			wave->doneAtkAfterF = 4;
+			wave->castSpeed = 0.11f;
 			wave->skillSpeed = 0.1f;
 			wave->skillCD = 4;
-			wave->skillRange = 400;
-			wave->setHP(175);
+			wave->skillRange = 222;
+			wave->setHP(500);
 			break;
 		}
 
@@ -860,21 +866,22 @@ void MainGame::allEnemyInit()
 			boss2m1->castSpeed = 0.04f;
 			boss2m1->skillCD = 2;
 			boss2m1->skillRange = 380;
-			boss2m1->setHP(630);
+			boss2m1->setHP(500);
 			break;
 
 		case 3:
 			//boss2m1->setScale(1.6f);
-			boss2m1->skillDamage = 200;
-			boss2m1->visionRange = 450;
-			boss2m1->moveSpeed = 420;
-			boss2m1->isSSMobility = true;
-			boss2m1->castSpeed = 0.041f;
+			boss2m1->skillDamage = 280;
+			boss2m1->visionRange = 321;
+			boss2m1->moveSpeed = 369;
+			boss2m1->norAtkDmgAfterF = 11;
+			boss2m1->doneAtkAfterF = 3;
+			boss2m1->castSpeed = 0.8f;
 			boss2m1->skillCD = 2;
-			boss2m1->skillRange = 420;
+			boss2m1->skillRange = 300;
 			boss2m1->mobilitySSAt = 4;
 			boss2m1->mobilitySpeed = 2;
-			boss2m1->setHP(200);
+			boss2m1->setHP(800);
 			break;
 		}
      	
@@ -895,11 +902,11 @@ void MainGame::allEnemyInit()
 
 	for (auto eee : allEnemy)
 	{
-		if ((eee->waveNumber == 1 || eee->bossNumber == 1) && eee->mapNumber == 1) {
+		if ((eee->waveNumber == 1 || eee->bossNumber == 1) && (eee->mapNumber == 1 || eee->mapNumber == 3)) {
 			eee->spotPlayerLineLeft = eee->listLineX.at(0);
 			eee->spotPlayerLineRight = eee->listLineX.at(1);
 		}
-		if ((eee->waveNumber == 2 || eee->bossNumber > 1) && eee->mapNumber == 1) {
+		if ((eee->waveNumber == 2 || eee->bossNumber > 1) && eee->mapNumber == 1 || eee->mapNumber == 3) {
 			eee->spotPlayerLineLeft = eee->listLineX.at(2);
 			eee->spotPlayerLineRight = eee->listLineX.at(3);
 		}

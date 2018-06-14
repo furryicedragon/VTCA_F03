@@ -206,14 +206,19 @@ void Enemy::randomMoving() {
 
 void Enemy::moving() {
 	float howFar = std::fabsf(ppp->getPosition().x - this->getPosition().x);
+	auto eeePosY = this->getPositionY() - 43;
+	if (this->mapNumber == 3 && bossNumber != 1) {
+		if (this->bossNumber == 2) eeePosY -= 69;
+		else eeePosY -= 40;
+	}
 	if (howFar < skillRange && !this->isAttacking && !this->isOnCD 
-		&& std::fabsf(ppp->getPosition().y - this->getPosition().y) < 145 && (ppp->getPositionY() - (this->getPositionY() - 43))>0 && ppp->getPositionX() > spotPlayerLineLeft && ppp->getPositionX()<spotPlayerLineRight) {
+		&& std::fabsf(ppp->getPosition().y - eeePosY) < 145 && (ppp->getPositionY() - eeePosY)>0 && ppp->getPositionX() > spotPlayerLineLeft && ppp->getPositionX()<spotPlayerLineRight) {
 		this->attack();
 	}
-	if (ppp->getPosition().y - this->getPosition().y > 145 || ppp->getPositionX() < spotPlayerLineLeft || ppp->getPositionX() > spotPlayerLineRight)
+	if (ppp->getPosition().y - eeePosY > 145 || ppp->getPositionX() < spotPlayerLineLeft || ppp->getPositionX() > spotPlayerLineRight)
 		this->isChasing = false;
 
-	if (howFar < visionRange && !this->isChasing && !this->isAttacking && std::fabsf(ppp->getPosition().y - this->getPosition().y) < 145 && (ppp->getPositionY() - (this->getPositionY() - 43))>0 && ppp->getPositionX() > spotPlayerLineLeft && ppp->getPositionX()<spotPlayerLineRight) {
+	if (howFar < visionRange && !this->isChasing && !this->isAttacking && std::fabsf(ppp->getPosition().y - eeePosY) < 145 && (ppp->getPositionY() - eeePosY)>0 && ppp->getPositionX() > spotPlayerLineLeft && ppp->getPositionX()<spotPlayerLineRight) {
 		this->isChasing = true;
 	}
 	else {
