@@ -401,7 +401,7 @@ void Player::statUp()
 	
 	//statPlus->setScale(3);
 	//statPlus->setAnchorPoint(Vec2(0.5, 0));
-	statPlus->setPosition(this->getContentSize().width / 2, this->getPosition().y + this->getContentSize().height);
+	statPlus->setPosition(this->getContentSize().width / 2,this->getContentSize().height + 50);
 	statPlus->setSystemFontSize(20);
 
 		this->statPlus->runAction(Sequence::create(

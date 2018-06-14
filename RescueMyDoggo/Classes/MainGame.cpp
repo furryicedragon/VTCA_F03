@@ -37,6 +37,7 @@ bool MainGame::init()
 	cache->addSpriteFramesWithFile("Map3-3.plist");
 	cache->addSpriteFramesWithFile("Map3-4.plist");
 	cache->addSpriteFramesWithFile("ppp.plist");
+	cache->addSpriteFramesWithFile("teleportation.plist");
 
 	this->canRetry = false;
 	this->enemyAdded = false;
@@ -80,9 +81,9 @@ bool MainGame::init()
 
 
 	this->ppp->statPlus = Label::create();
-	if (ppp->statPlus) {
-		this->ppp->addChild(ppp->statPlus);
+	if (ppp->statPlus) {	
 		ppp->statPlus->setVisible(false);
+		this->ppp->addChild(ppp->statPlus);
 	}
 	this->ppp->level = Label::create();
 	if (this->ppp->level) {
@@ -259,18 +260,16 @@ void MainGame::check4Directions(Point posDirection, int directionClock) {
 
 		if (!properties.empty()) {
 			bool collide = properties["Collidable"].asBool();
-			if (collide) {
+			if (collide) {		
 				if (ppp->canMoveDirections[directionClock]) {
 					ppp->isMoving = false;
 				}
 				ppp->canMoveDirections[directionClock] = false;
 			}
-
 			bool  collect = properties["Collectible"].asBool();
 			if (collect) {
 				//do something else 
 			}
-
 		}
 	}
 	if (tileGID == 0 && !ppp->canMoveDirections[directionClock])
@@ -287,7 +286,7 @@ void MainGame::update(float elapsed)
 {
 
 	if(this->isGameStart)
-	{	
+	{
 		auto pos = ppp->getPosition();
 		pos.y += 60;
 		this->HPonHead->setPosition(pos);
@@ -300,7 +299,6 @@ void MainGame::update(float elapsed)
 			this->dropMoneyInit();
 			this->collectMoney();
 		}
-
 		if (ppp->lastSeenLife != std::stoi(ppp->hp->getString()) / ppp->baseHP * 100) {
 			ppp->lastSeenLife = std::stoi(ppp->hp->getString()) / ppp->baseHP * 100;
 			HUDLayer::GetInstance()->statPlayer->DameHit->runAction(ProgressTo::create(1.0f, ppp->lastSeenLife));
@@ -375,7 +373,10 @@ void MainGame::update(float elapsed)
 		}
 		if (this->enemyAdded) {
 			checkGravity();
-
+			if(this->currentMap>1)
+			if (teleportation->getBoundingBox().containsPoint(ppp->getPosition())) {
+				ppp->setPosition(teleportation2->getPosition());
+			}
 			auto gravity = RepeatForever::create(Sequence::create(CallFunc::create([=]() { 
 				if (this->checkGravity()) { ppp->setPositionY(ppp->getPosition().y - 1); 
 				}}), DelayTime::create(0.05f), nullptr));
@@ -1185,6 +1186,15 @@ void MainGame::changeMap(int level)
 	float sPy = sPoint["y"].asFloat();
 	finishPoint = oj->getObject("FinishPoint");
 
+	auto TeleportPoint1 = oj->getObject("teleportation1");
+	float sTP1x = TeleportPoint1["x"].asFloat();
+	float sTP1y = TeleportPoint1["y"].asFloat();
+
+	auto TeleportPoint2 = oj->getObject("teleportation2");
+	float sTP2x = TeleportPoint2["x"].asFloat();
+	float sTP2y = TeleportPoint2["y"].asFloat();
+
+
 	for (auto item : groundOj->getObjects()) {
 		grounds.push_back(Rect(item.asValueMap()["x"].asFloat(), item.asValueMap()["y"].asFloat(), item.asValueMap()["width"].asFloat(), item.asValueMap()["height"].asFloat()));
 	}
@@ -1231,6 +1241,20 @@ void MainGame::changeMap(int level)
 		this->addChild(nothingBar, 3);
 
 	this->setPosition(Vec2(0, 0));
+
+	this->teleportation = Sprite::create();
+	teleportation->runAction(RepeatForever::create(makeAnimation("teleportation", 0.06f)));	
+	teleportation->setPosition(Vec2(sTP1x * this->map->getScale(), sTP1y *this->map->getScale()));
+	teleportation->setScale(0.8f);
+	teleportation->setVisible(true);
+	this->addChild(teleportation);
+	
+	this->teleportation2 = Sprite::create();
+	teleportation2->runAction(RepeatForever::create(makeAnimation("teleportation", 0.06f)));
+	teleportation2->setPosition(Vec2(sTP2x *this->map->getScale(), sTP2y *this->map->getScale()));
+	teleportation2->setScale(0.8f);
+	teleportation2->setVisible(true);
+	this->addChild(teleportation2);
 
 	this->finishPortal = Sprite::create("Enemies/Effect/Gate/0.png");
 	if (finishPortal)
