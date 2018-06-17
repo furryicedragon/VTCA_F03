@@ -363,7 +363,7 @@ void Player::roll() {
 		//this->runAction(Sequence::create(DelayTime::create(attackSpeed),JumpBy::create(attackSpeed * 2, Vec2(theX, 80),0/*33*/,1),nullptr));
 		//auto a = pppFrames->getSpriteFrameByName(std::to_string(direction) + "jump.png");
 		//this->setSpriteFrame(pppFrames->getSpriteFrameByName(std::to_string(direction)+"jump0.png"));
-		this->runAction(Sequence::create(JumpBy::create(0.2f, Vec2(theX, 600), 0/*33*/, 1), CallFunc::create([=]() {this->isRolling = false; this->isFalling = true; }), nullptr));
+		this->runAction(Sequence::create(JumpBy::create(0.2f, Vec2(theX, 120), 0/*33*/, 1), CallFunc::create([=]() {this->isRolling = false; this->isFalling = true; }), nullptr));
 		//this->runAction(Sequence::create(animation("Roll", attackSpeed), CallFunc::create([=]() {this->isRolling = false; this->idleStatus(); }), nullptr));
 		//this->runAction(Sequence::create(makeAnimation("evade", attackSpeed), CallFunc::create([=]() {this->isRolling = false; this->idleStatus(); }), nullptr));
 	}

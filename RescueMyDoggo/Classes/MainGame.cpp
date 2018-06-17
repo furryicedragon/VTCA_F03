@@ -18,14 +18,6 @@ bool MainGame::init()
 
 	MainGame::instance = this;
 
-	congratulation = Sprite::create("Gratz/0.png");
-	congratulation->setAnchorPoint(Vec2(0, 0));
-	auto itsOKMan = RepeatForever::create(animation("Gratz", 1));
-	this->congratulation->runAction(itsOKMan);
-	if (congratulation)
-		this->addChild(congratulation, 99999);
-	this->congratulation->runAction(FadeOut::create(0));
-
 	cache = SpriteFrameCache::getInstance();
 	cache->addSpriteFramesWithFile("damage.plist");
 	cache->addSpriteFramesWithFile("drops.plist");
@@ -90,6 +82,7 @@ bool MainGame::init()
 		this->ppp->level->setString("1");
 		this->ppp->level->setColor(Color3B(255, 255, 255));
 		this->ppp->level->setSystemFontSize(16);
+		this->ppp->level->setVisible(false);
 		this->ppp->addChild(ppp->level);
 	}
 
@@ -110,7 +103,7 @@ bool MainGame::init()
 		this->addChild(finishPortal, 99);
 	finishPortal->setAnchorPoint(Vec2(0, 0));
 	finishPortal->runAction(RepeatForever::create(animation("Enemies/Effect/Gate", 0.06f)));
-	finishPortal->setPosition(Vec2(finishPoint["x"].asFloat()*this->map->getScale(), 0));
+	finishPortal->setPosition(Vec2(finishPoint["x"].asFloat()*this->map->getScale(), finishPoint["y"].asFloat()*this->map->getScale()));
 	finishPortal->setVisible(false);
 
 	this->isGameStart = false;
@@ -373,12 +366,13 @@ void MainGame::update(float elapsed)
 		}
 		if (this->enemyAdded) {
 			checkGravity();
-			if(this->currentMap>1)
-			if (teleportation->getBoundingBox().containsPoint(ppp->getPosition())) {
-				ppp->setPosition(teleportation2->getPosition());
-			}
+
+			if (this->currentMap > 1)
+				if (teleportation->getBoundingBox().containsPoint(ppp->getPosition())) 
+					ppp->setPosition(teleportation2->getPosition());
+
 			auto gravity = RepeatForever::create(Sequence::create(CallFunc::create([=]() { 
-				if (this->checkGravity()) { ppp->setPositionY(ppp->getPosition().y - 1); 
+				if (this->checkGravity()) { ppp->setPositionY(ppp->getPositionY() - 1); 
 				}}), DelayTime::create(0.05f), nullptr));
 			gravity->setTag(99);
 			if(ppp->isFalling)
@@ -400,19 +394,26 @@ void MainGame::update(float elapsed)
 					item->dead();
 					item->canRespawn = false;
 					
-					finishPortal->setPositionY(ppp->getPositionY());
 					finishPortal->setVisible(true);
+
+					if (currentMap == 3)
+					{
+						for (int i = 1; i <= 4; i++)
+							HUDLayer::GetInstance()->getChildByTag(i)->setVisible(false);
+					}
+
 				}
 			}
 			if (congratz && ppp->isSpawn && finishPortal->isVisible()) 
 			{
 				// change level
-				if (std::fabsf(ppp->getPositionX() - finishPortal->getPositionX()) < 10) 
+				if (finishPortal->getBoundingBox().containsPoint(ppp->getPosition())) 
 				{
 					congratz = false;
 					HUDLayer::GetInstance()->setVisible(false);
 
-					if (currentMap + 1 <= MaxMap)
+					int nextMap = currentMap + 1;
+					if (nextMap <= MaxMap)
 					{
 						this->lastLevel = std::stoi( ppp->level->getString() );
 						this->lastHP = ppp->baseHP;
@@ -424,6 +425,11 @@ void MainGame::update(float elapsed)
 					else
 					{
 						// congrats scene?
+						ppp->isSpawn = false;
+						ppp->forbidAllAction();
+
+						this->congratulation->setPosition(Vec2(this->getPosition().x*-1, 0));
+						this->congratulation->runAction(FadeIn::create(1.6f));
 					}
 				}
 			}
@@ -450,7 +456,7 @@ bool MainGame::checkGravity()
 {
 	int i = 0;
 	for (auto item : grounds) {
-		if (!Rect(ppp->getPositionX()-11, ppp->getPositionY() - 20, 22, 80).intersectsRect(item) || ppp->getPosition().y - 20 < item.getMaxY())
+		if (!Rect(ppp->getPositionX()-11, ((int)ppp->getPositionY()) - 20, 22, 80).intersectsRect(item) || ppp->getPositionY() - 20 < item.getMaxY())
 			i++;
 	}
 	if (i == grounds.size()) { //neu ko dung tren ground
@@ -480,7 +486,7 @@ void MainGame::spawnPlayer()
 	if(zap)
 	this->addChild(zap);
 	zap->runAction(Sequence::create(DelayTime::create(0.69f), CallFunc::create([=]() {ppp->spawnEffect(); }), animation("Spawn", 0.1f),
-		CallFunc::create([=]() {this->removeChild(zap, true); }), nullptr));
+		CallFunc::create([=]() {this->removeChild(zap, true); HUDLayer::GetInstance()->toggleVisiblity(); }), nullptr));
 }
 
 
@@ -1060,7 +1066,6 @@ void MainGame::gameStarto()
 	{
 		isGameStart = true;
 		this->spawnPlayer();
-		HUDLayer::GetInstance()->toggleVisiblity();
 	}
 }
 
@@ -1192,6 +1197,16 @@ Animate* MainGame::makeAnimation(std::string actionName, float timeEachFrame)
 
 void MainGame::changeMap(int level)
 {
+	if (level == 3)
+	{
+		congratulation = Sprite::create("Gratz/0.png");
+		congratulation->setAnchorPoint(Vec2(0, 0));
+		auto itsOKMan = RepeatForever::create(animation("Gratz", 1));
+		this->congratulation->runAction(itsOKMan);
+		this->addChild(congratulation, 99999);
+		this->congratulation->runAction(FadeOut::create(0));
+	}
+
 	doneAddingEnemy = false;
 
 	this->canRetry = false;
@@ -1265,6 +1280,7 @@ void MainGame::changeMap(int level)
 		this->ppp->level->setString(std::to_string(this->lastLevel));
 		this->ppp->level->setColor(Color3B(255, 255, 255));
 		this->ppp->level->setSystemFontSize(16);
+		this->ppp->level->setVisible(false);
 		this->ppp->addChild(ppp->level);
 	}
 
@@ -1299,6 +1315,6 @@ void MainGame::changeMap(int level)
 		this->addChild(finishPortal, 99);
 	finishPortal->setAnchorPoint(Vec2(0, 0));
 	finishPortal->runAction(RepeatForever::create(animation("Enemies/Effect/Gate", 0.06f)));
-	finishPortal->setPosition(Vec2(finishPoint["x"].asFloat()*this->map->getScale(), 0));
+	finishPortal->setPosition(Vec2(finishPoint["x"].asFloat()*this->map->getScale(), finishPoint["y"].asFloat()*this->map->getScale()));
 	finishPortal->setVisible(false);
 }

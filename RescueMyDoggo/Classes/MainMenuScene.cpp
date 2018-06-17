@@ -44,10 +44,11 @@ void MainMenuScene::setupMenuGame()
 {
 	Size visibleSize = Director::getInstance()->getVisibleSize();
 
-	auto title = Sprite::create(GUI_title);
-	title->setScale(1.5f);
-	title->setPosition(visibleSize.width / 2, visibleSize.height * 0.8);
-	this->addChild(title, 1);
+	titleSprite = Sprite::create(GUI_title);
+	titleSprite->setScale(1.5f);
+	titleSprite->setPosition(visibleSize.width / 2, visibleSize.height * 0.8);
+	titleSprite->setVisible(false);
+	this->addChild(titleSprite, 1);
 
 
 	auto startItem = MenuItemImage::create(GUI_startnomal, GUI_startclick, [&](Ref* sender)
@@ -227,7 +228,7 @@ void MainMenuScene::loadbar()
 	mouseBar->setPercentage(0.0f);
 	float timeline = mouseBar->getPercentage();
 
-	auto action = Sequence::create(ProgressTo::create(1.0f, 100.0f), CallFunc::create([=]() { _menuGame->setVisible(true); _background->removeChildByTag(1, true); }), nullptr);
+	auto action = Sequence::create(ProgressTo::create(1.0f, 100.0f), CallFunc::create([=]() { _menuGame->setVisible(true); titleSprite->setVisible(true); _background->removeChildByTag(1, true); }), nullptr);
 	mouseBar->runAction(action);
 	loadBar->addChild(mouseBar);
 

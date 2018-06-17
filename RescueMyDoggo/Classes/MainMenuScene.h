@@ -55,7 +55,7 @@ class MainMenuScene : public cocos2d::Layer
 public:
 
 	virtual bool init() override;
-	cocos2d::Sprite* _background, *_bgOption;
+	cocos2d::Sprite* _background, *_bgOption, *titleSprite;
 	void setupMenuGame();
 	void setupOption();
 

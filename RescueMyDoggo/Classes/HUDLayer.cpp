@@ -61,7 +61,7 @@ void HUDLayer::setupStick()
 	joystickBaseDimensions = Rect(0, 0, 160.0f, 160.0f);
 
 	Point joystickBasePosition;
-	joystickBasePosition = Vec2(visibleSize.width * 0.1f, visibleSize.height*0.1f);
+	joystickBasePosition = Vec2(visibleSize.width * 0.1f, visibleSize.height*0.125f);
 
 	JoystickBase *joystickBase = new JoystickBase();
 	joystickBase->init();
@@ -75,6 +75,7 @@ void HUDLayer::setupStick()
 	aJoystick->autorelease();
 	joystickBase->setJoystick(aJoystick);
 	joystickBase->setPosition(joystickBasePosition);
+	joystickBase->setScale(0.9f);
 
 	movementStick = joystickBase->getJoystick();
 	movementStick->retain();
@@ -109,6 +110,7 @@ void HUDLayer::setupButtons()
 
 		buttonBase->setButton(aButton);
 		buttonBase->setPosition(buttonPosition);
+		buttonBase->setTag(1);
 
 		attackBtn = buttonBase->getHUDbutton();
 		attackBtn->retain();
@@ -118,7 +120,7 @@ void HUDLayer::setupButtons()
 	
 	// roll btn
 	{
-		buttonPosition = Vec2(visibleSize.width * 0.9f, visibleSize.height * 0.25f);
+		buttonPosition = Vec2(visibleSize.width * 0.95f, visibleSize.height * 0.25f);
 
 		ButtonBase *buttonBase = new ButtonBase();
 		buttonBase->init();
@@ -129,6 +131,7 @@ void HUDLayer::setupButtons()
 		buttonBase->setDisabledSprite(Sprite::create("HUD/Skill_icon/roll.png"));
 		buttonBase->setPressSprite(Sprite::create("HUD/Skill_icon/roll.png"));
 		buttonBase->setOpacity(0.8);
+		buttonBase->setScale(0.75f);
 
 		Button *aButton = new Button();
 		aButton->initWithRect(buttonDimensions);
@@ -136,6 +139,7 @@ void HUDLayer::setupButtons()
 
 		buttonBase->setButton(aButton);
 		buttonBase->setPosition(buttonPosition);
+		buttonBase->setTag(2);
 
 		rollBtn = buttonBase->getHUDbutton();
 		rollBtn->retain();
@@ -163,6 +167,7 @@ void HUDLayer::setupButtons()
 
 		buttonBase->setButton(aButton);
 		buttonBase->setPosition(buttonPosition);
+		buttonBase->setTag(3);
 
 		skill1Btn = buttonBase->getHUDbutton();
 		skill1Btn->retain();
@@ -195,6 +200,7 @@ void HUDLayer::setupButtons()
 
 		buttonBase->setButton(aButton);
 		buttonBase->setPosition(buttonPosition);
+		buttonBase->setTag(4);
 
 		skill2Btn = buttonBase->getHUDbutton();
 		skill2Btn->retain();
@@ -237,7 +243,7 @@ void HUDLayer::setupStat()
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
-	Vec2 StatPosition = Vec2(visibleSize.width* 0.35f, visibleSize.height * 0.92f);
+	Vec2 StatPosition = Vec2(visibleSize.width* 0.25f, visibleSize.height * 0.92f);
 
 	statPlayer = new StatPlayer();
 	statPlayer->init();
