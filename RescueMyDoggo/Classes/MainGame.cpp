@@ -386,7 +386,7 @@ void MainGame::update(float elapsed)
 			checkCollision(ppp);
 			if(currentWave!=0)
 			this->waveXMapXInit();
-			if (!congratz) {
+			if (allEnemy[9]->isDead && allEnemy[4]->isDead && !congratz) {
 				for (auto item : allEnemy)
 				{
 					congratz = true;
@@ -1258,9 +1258,9 @@ void MainGame::changeMap(int level)
 	ppp->mapScale = map->getScale();
 	ppp->setPosition(sPx, sPy);
 
-	ppp->damageCurrent = 1699 * lastLevel;
-	ppp->baseHP = lastHP + 99999;
-	ppp->hp->setString(std::to_string(lastHP + 99999));
+	ppp->damageCurrent = 16 * lastLevel;
+	ppp->baseHP = lastHP;
+	ppp->hp->setString(std::to_string(lastHP));
 	ppp->attackSpeed = 0.14f - ((0.14f / 20)*lastLevel);
 	ppp->score = this->lastScore;
 
