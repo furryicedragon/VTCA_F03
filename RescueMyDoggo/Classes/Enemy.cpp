@@ -325,10 +325,10 @@ void Enemy::mobilitySS()
 	if (howFar < skillRange) {
 		if (this->bossNumber == 1 && this->mapNumber == 1)
 			this->runAction(Sequence::create(DelayTime::create(castSpeed*(mobilitySSAt + 1)),
-				JumpTo::create(castSpeed*mobilitySpeed, Vec2(ppp->getPosition().x - this->getContentSize().width / 2, this->getPosition().y), 72, 1), CallFunc::create([=]() {this->mobilityUsing = false; this->canDamage = true;  this->invulnerable = false; }), nullptr));
+				JumpTo::create(castSpeed*mobilitySpeed, Vec2(ppp->getPosition().x - this->getContentSize().width / 2, this->getPosition().y), 72, 1), CallFunc::create([=]() {this->mobilityUsing = false; this->canDamage = true;  this->invulnerable = false; }), DelayTime::create(castSpeed*mobilityDoneAfterF), CallFunc::create([=]() {this->canDamage = false; }), nullptr));
 		else
 		this->runAction(Sequence::create(DelayTime::create(castSpeed*(mobilitySSAt + 1)),
-			MoveTo::create(castSpeed*mobilitySpeed, Vec2(ppp->getPosition().x - this->getContentSize().width / 2, this->getPosition().y)), CallFunc::create([=]() {this->mobilityUsing = false; this->canDamage = true; this->invulnerable = false; }), nullptr));
+			MoveTo::create(castSpeed*mobilitySpeed, Vec2(ppp->getPosition().x - this->getContentSize().width / 2, this->getPosition().y)), CallFunc::create([=]() {this->mobilityUsing = false; this->canDamage = true; this->invulnerable = false; }), DelayTime::create(castSpeed*mobilityDoneAfterF), CallFunc::create([=]() {this->canDamage = false; }), nullptr));
 	}
 			
 }

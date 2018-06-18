@@ -25,7 +25,8 @@ public:
 	int skillAtkAfterF; //useAttackSkillAfterFrames;
 	int useSkillLastFN;
 	int skillLastFN;
-	int mobilitySSAt;
+	int mobilitySSAt; //useMobilityAt
+	int mobilityDoneAfterF; //doneAttackingUsingMobilityAfterFrame
 	int moveSpeed;
 	int visionRange;
 	int norAtkDmgAfterF; // normalAttackDamageAfterFrames

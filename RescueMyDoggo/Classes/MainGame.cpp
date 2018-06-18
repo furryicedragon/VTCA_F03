@@ -731,6 +731,7 @@ void MainGame::allEnemyInit()
 			boss1m1->skillRange = 400;
 			boss1m1->mobilitySSAt = 3;
 			boss1m1->mobilitySpeed = 4;
+			boss1m1->mobilityDoneAfterF = 3;
 			boss1m1->setHP(300);
 			break;
 
@@ -860,6 +861,7 @@ void MainGame::allEnemyInit()
 			boss2m1->skillRange = 420;
 			boss2m1->mobilitySSAt = 4;
 			boss2m1->mobilitySpeed = 2;
+			boss2m1->mobilityDoneAfterF = 3;
 			boss2m1->setHP(200);
 			break;
 
