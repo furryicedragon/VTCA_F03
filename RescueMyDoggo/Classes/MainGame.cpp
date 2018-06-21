@@ -455,7 +455,8 @@ void MainGame::update(float elapsed)
 			HUDLayer::GetInstance()->setVisible(false);
 
 			auto highScoreLabel = (Label*)MainScene::GetInstance()->gameOverLayer->getChildByTag(100)->getChildByTag(10);
-			highScoreLabel->setString(std::to_string(def->getIntegerForKey("highScore")));
+			int hs = def->getIntegerForKey("highScore");
+			highScoreLabel->setString(std::to_string(hs));
 
 			this->runAction(Sequence::create(DelayTime::create(2.0f), 
 				CallFunc::create([=]() {MainScene::GetInstance()->gameOverLayer->setVisible(true); experimental::AudioEngine::play2d("sounds/defeat.mp3", false, 0.7f); }), nullptr));
@@ -1255,8 +1256,10 @@ void MainGame::changeMap(int level)
 		{
 			switch (type)
 			{
+			case ui::Widget::TouchEventType::BEGAN:
+				experimental::AudioEngine::play2d("sounds/button_click.mp3");
+				break;
 			case ui::Widget::TouchEventType::ENDED:
-
 				MainGame::GetInstance()->delAll();
 				MainGame::GetInstance()->setVisible(false);
 
@@ -1406,4 +1409,5 @@ void MainGame::saveHighScore()
 		highScore = lastScore;
 	}
 	def->setIntegerForKey("highScore", highScore);
+	def->flush();
 }

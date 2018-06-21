@@ -53,6 +53,7 @@ void MainMenuScene::setupMenuGame()
 
 	auto startItem = MenuItemImage::create(GUI_startnomal, GUI_startclick, [&](Ref* sender)
 	{
+		experimental::AudioEngine::play2d("sounds/button_click.mp3");
 		MainGame::GetInstance()->setVisible(true);
 		this->setVisible(false);
 		MainGame::GetInstance()->gameStarto();
@@ -69,6 +70,7 @@ void MainMenuScene::setupMenuGame()
 	auto optionItem = MenuItemImage::create(BT_optionnomal, BT_optionclick, [&](Ref* sender)
 	{
 		//Code nhẩy vào tùy chỉnh game!
+		experimental::AudioEngine::play2d("sounds/button_click.mp3");
 		_menuGame->setVisible(false);
 		titleSprite->setVisible(false);
 		setupSeting->setVisible(true);
@@ -83,6 +85,7 @@ void MainMenuScene::setupMenuGame()
 	auto exitItem = MenuItemImage::create(BT_exitnomal, BT_exitclick, [&](Ref* sender)
 	{
 		//Code để thoát game!
+		experimental::AudioEngine::play2d("sounds/button_click.mp3");
 		exitGame();
 	});
 
@@ -152,6 +155,10 @@ void MainMenuScene::setupOption()
 	{
 		switch (type)
 		{
+		case ui::Widget::TouchEventType::BEGAN:
+			experimental::AudioEngine::play2d("sounds/button_click.mp3");
+			break;
+
 		case ui::Widget::TouchEventType::ENDED:
 			setupSeting->setVisible(false);
 			
@@ -172,6 +179,11 @@ void MainMenuScene::setupOption()
 	{
 		switch (type)
 		{
+
+		case ui::Widget::TouchEventType::BEGAN:
+			experimental::AudioEngine::play2d("sounds/button_click.mp3");
+			break;
+
 		case ui::Widget::TouchEventType::ENDED:
 			setupSeting->setVisible(false);
 			
@@ -228,8 +240,6 @@ void MainMenuScene::loadbar()
 
 void MainMenuScene::exitGame()
 {
-	_background->removeAllChildren();
-
 	Director::getInstance()->end();
 	
 	#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)

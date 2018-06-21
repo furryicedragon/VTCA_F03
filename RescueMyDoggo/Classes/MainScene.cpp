@@ -58,24 +58,18 @@ void MainScene::setupMenuPause()
 	{
 		switch (type)
 		{
+		case ui::Widget::TouchEventType::BEGAN:
+			experimental::AudioEngine::play2d("sounds/button_click.mp3");
+			break;
 		case ui::Widget::TouchEventType::ENDED:
 			Director::getInstance()->resume();
-			//auto hud_layer = static_cast<HUDLayer*> (this->getChildByTag(9999));
-			//hud_layer->resetHUDstate();
 			HUDLayer::GetInstance()->resetHUDstate();
 
-			/*auto mainGame = static_cast<MainGame*>(this->getChildByTag(8888));
-			if (mainGame->currentMap == 1)
-				mainGame->delAll();
-			else
-				mainGame->delAll(mainGame->currentMap);
-			mainGame->gameStarto();*/
+			
 			if (MainGame::GetInstance()->currentMap == 1) MainGame::GetInstance()->delAll();
 			else MainGame::GetInstance()->delAll(MainGame::GetInstance()->currentMap);
 			MainGame::GetInstance()->gameStarto();
 
-			/*auto pause_layer = static_cast<Layer*> (this->getChildByTag(9902));
-			pause_layer->setVisible(false);*/
 			MainScene::GetInstance()->gamePauseLayer->setVisible(false);
 
 			break;
@@ -91,8 +85,10 @@ void MainScene::setupMenuPause()
 	{
 		switch (type)
 		{
+		case ui::Widget::TouchEventType::BEGAN:
+			experimental::AudioEngine::play2d("sounds/button_click.mp3");
+			break;
 		case ui::Widget::TouchEventType::ENDED:
-			
 			break;
 		}
 	});
@@ -106,14 +102,13 @@ void MainScene::setupMenuPause()
 	{
 		switch (type)
 		{
+		case ui::Widget::TouchEventType::BEGAN:
+			experimental::AudioEngine::play2d("sounds/button_click.mp3");
+			break;
 		case ui::Widget::TouchEventType::ENDED:
 			Director::getInstance()->resume();
-			/*auto hud_layer = static_cast<HUDLayer*> (this->getChildByTag(9999));
-			hud_layer->setVisible(true);*/
+			
 			HUDLayer::GetInstance()->setVisible(true);
-
-			/*auto pause_layer = static_cast<Layer*> (this->getChildByTag(9902));
-			pause_layer->setVisible(false);*/
 			MainScene::GetInstance()->gamePauseLayer->setVisible(false);
 			break;
 
@@ -128,8 +123,11 @@ void MainScene::setupMenuPause()
 	{
 		switch (type)
 		{
+		case ui::Widget::TouchEventType::BEGAN:
+			experimental::AudioEngine::play2d("sounds/button_click.mp3");
+			break;
+
 		case ui::Widget::TouchEventType::ENDED:
-			this->removeAllChildren();
 
 			Director::getInstance()->end();
 
@@ -183,8 +181,10 @@ void MainScene::setupGameOverLayer()
 	{
 		switch (type)
 		{
+		case ui::Widget::TouchEventType::BEGAN:
+			experimental::AudioEngine::play2d("sounds/button_click.mp3");
+			break;
 		case ui::Widget::TouchEventType::ENDED:
-			
 			MainGame::GetInstance()->delAll();
 			MainGame::GetInstance()->setVisible(false);
 
@@ -208,6 +208,9 @@ void MainScene::setupGameOverLayer()
 	{
 		switch (type)
 		{
+		case ui::Widget::TouchEventType::BEGAN:
+			experimental::AudioEngine::play2d("sounds/button_click.mp3");
+			break;
 		case ui::Widget::TouchEventType::ENDED:
 			MainScene::GetInstance()->gameOverLayer->setVisible(false);
 
