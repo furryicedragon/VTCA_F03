@@ -164,9 +164,18 @@ void MainScene::setupGameOverLayer()
 
 	Size _bgOptionDead = gameover_bg->getContentSize();
 
-	////show button ra menu hay chơi lại khi chết dưới cái back
-	auto btMenu = ui::Button::create(BT_homenomal, BT_homeclick);
+	auto highScoreTitle = Label::createWithSystemFont("Highscore:", "Arial", 40);
+	highScoreTitle->setPosition(_bgOptionDead.width / 2, _bgOptionDead.height / 2 + 30);
+	gameover_bg->addChild(highScoreTitle);
 
+	auto highScoreLabel = Label::createWithSystemFont("0", "Arial", 50);
+	highScoreLabel->setPositionX(highScoreTitle->getPositionX());
+	highScoreLabel->setPositionY(highScoreTitle->getPositionY() - 55);
+	highScoreLabel->setTag(10);
+	gameover_bg->addChild(highScoreLabel);
+
+	////show button ra menu hay chơi lại khi chết dưới cái back
+	auto btMenu = ui::Button::create(BT_exitnomal, BT_exitclick);
 
 	btMenu->setPosition(Vec2(_bgOptionDead.width * 0.7, _bgOptionDead.height * 0.2));
 	btMenu->setScale(0.5f);
@@ -175,28 +184,16 @@ void MainScene::setupGameOverLayer()
 		switch (type)
 		{
 		case ui::Widget::TouchEventType::ENDED:
-			/*auto mainGame = static_cast<MainGame*>(this->getChildByTag(8888));
-			mainGame->delAll();
-			mainGame->setVisible(false);*/
+			
 			MainGame::GetInstance()->delAll();
 			MainGame::GetInstance()->setVisible(false);
 
-			/*auto hud_layer = static_cast<HUDLayer*> (this->getChildByTag(9999));
-			hud_layer->resetHUDstate();*/
 			HUDLayer::GetInstance()->resetHUDstate();
 			
-			/*auto menu = static_cast<MainMenuScene*>(this->getChildByTag(9090));
-			menu->bgAudio();
-			menu->setVisible(true);*/
 			MainMenuScene::GetInstance()->bgAudio();
 			MainMenuScene::GetInstance()->setVisible(true);
 			
-			/*auto layer = static_cast<Layer*>(this->getChildByTag(9900));
-			layer->setVisible(false);*/
 			MainScene::GetInstance()->gameOverLayer->setVisible(false);
-
-			/*auto layerPause = static_cast<Layer*>(this->getChildByTag(9902));
-			layerPause->setVisible(false);*/
 			MainScene::GetInstance()->gamePauseLayer->setVisible(false);
 			break;
 		}
@@ -212,12 +209,8 @@ void MainScene::setupGameOverLayer()
 		switch (type)
 		{
 		case ui::Widget::TouchEventType::ENDED:
-			/*auto layer = static_cast<Layer*>(this->getChildByTag(9900));
-			layer->setVisible(false);*/
 			MainScene::GetInstance()->gameOverLayer->setVisible(false);
 
-			/*auto mainGame = static_cast<MainGame*>(this->getChildByTag(8888));  
-			mainGame->restartGame();*/
 			MainGame::GetInstance()->restartGame();
 			break;
 
@@ -225,7 +218,7 @@ void MainScene::setupGameOverLayer()
 	});
 	gameover_bg->addChild(btRetry);
 
-	gameOverLayer->addChild(gameover_bg);
+	gameOverLayer->addChild(gameover_bg, 0, 100);
 	gameOverLayer->setVisible(false);
 	this->addChild(gameOverLayer, 11, 9900);
 }

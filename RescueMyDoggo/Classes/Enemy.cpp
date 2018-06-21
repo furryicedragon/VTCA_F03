@@ -434,30 +434,8 @@ void Enemy::dead() {
 		auto theX = 40.f;
 		if (howFar > 0) theX *= -1;
 		this->runAction(MoveBy::create(0.5, Vec2(theX, 0)));
-		if (this->waveNumber == 1)
-		{
-			moneyRank = 1;
-			ppp->currentEXP += 25;
-		}
-			
-		if (this->waveNumber == 2) 
-		{
-			moneyRank = 1;
-			ppp->currentEXP += 50;
-
-		}
-			
-		if (this->bossNumber == 1)
-		{
-			moneyRank = 2;
-			ppp->currentEXP += 150;
-
-		}		
-		if (this->bossNumber == 2) 
-		{
-			moneyRank = 3;
-			ppp->currentEXP += 300;
-		}
+		
+		ppp->currentEXP += this->expReward;
 }
 
 void Enemy::forbidAllAction()
@@ -467,9 +445,6 @@ void Enemy::forbidAllAction()
 		this->spell->stopAllActions();
 		this->spell->setVisible(false);
 	}
-
-	//this->spellLanded->stopAllActions();
-	//this->spellLanded->setVisible(false);
 }
 
 bool Enemy::checkFrame(std::string action)

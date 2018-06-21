@@ -104,6 +104,9 @@ public:
 	float lastExp;
 
 	void changeMap(int map);
+
+	int highScore;
+	void saveHighScore();
 private:
 	virtual void update(float elapsed) override;
 	bool checkCollision(Player* pPlayer);

@@ -34,7 +34,7 @@ void Player::initOption()
 	this->baseHP = 100;
 	this->baseEXP = 100;
 	if (!GodMode)
-		this->damageCurrent = 16;
+		this->damageCurrent = 24;
 	else
 		this->damageCurrent = 9000;
 	this->score = 0;

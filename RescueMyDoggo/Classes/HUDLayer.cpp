@@ -222,6 +222,13 @@ void HUDLayer::resetHUDstate()
 	cd1->setVisible(false);
 	cd2->setVisible(false);
 
+	// reset button pos
+	Size visibleSize = Director::getInstance()->getVisibleSize();
+	this->getChildByTag(1)->setPosition(visibleSize.width * 0.9f, visibleSize.height * 0.1f);
+	this->getChildByTag(2)->setPosition(visibleSize.width * 0.95f, visibleSize.height * 0.25f);
+	this->getChildByTag(3)->setPosition(visibleSize.width * 0.775f, visibleSize.height * 0.1f);
+	this->getChildByTag(4)->setPosition(visibleSize.width * 0.65f, visibleSize.height * 0.1f);
+
 	// reset stat bar
 	this->statPlayer->removeFromParentAndCleanup(true);
 	this->setupStat();

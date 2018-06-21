@@ -70,6 +70,7 @@ void MainMenuScene::setupMenuGame()
 	{
 		//Code nhẩy vào tùy chỉnh game!
 		_menuGame->setVisible(false);
+		titleSprite->setVisible(false);
 		setupSeting->setVisible(true);
 	});
 
@@ -153,14 +154,11 @@ void MainMenuScene::setupOption()
 		{
 		case ui::Widget::TouchEventType::ENDED:
 			setupSeting->setVisible(false);
-			/*auto gamepauseLayer = static_cast<Layer*> (Director::getInstance()->getRunningScene()->getChildByTag(9902));
-			bool a = gamepauseLayer->isVisible();
-			if(a == false) _menuGame->setVisible(true);
-			else { }*/
+			
 			bool a = MainScene::GetInstance()->gamePauseLayer->isVisible();
 			if (a == false) _menuGame->setVisible(true);
 			else {}
-
+			titleSprite->setVisible(true);
 			bgMusic = experimental::AudioEngine::getVolume(bg_music_main);
 			break;
 		}
@@ -176,14 +174,11 @@ void MainMenuScene::setupOption()
 		{
 		case ui::Widget::TouchEventType::ENDED:
 			setupSeting->setVisible(false);
-			/*auto gamepauseLayer = static_cast<Layer*> (Director::getInstance()->getRunningScene()->getChildByTag(9902));
-			bool a = gamepauseLayer->isVisible();
-			if (a == false) _menuGame->setVisible(true);
-			else { }*/
+			
 			bool a = MainScene::GetInstance()->gamePauseLayer->isVisible();
 			if (a == false) _menuGame->setVisible(true);
 			else {}
-
+			titleSprite->setVisible(true);
 			bgMusic = experimental::AudioEngine::getVolume(bg_music_main);
 			break;
 		}
@@ -196,10 +191,7 @@ void MainMenuScene::setupOption()
 
 void MainMenuScene::bgAudio()
 {
-	if (!bg_music_main)
-		bg_music_main = experimental::AudioEngine::play2d(BG_audio, true, bgMusic);
-	else
-		experimental::AudioEngine::setVolume(bg_music_main, bgMusic);
+	bg_music_main = experimental::AudioEngine::play2d(BG_audio, true, bgMusic);
 }
 
 void MainMenuScene::update()

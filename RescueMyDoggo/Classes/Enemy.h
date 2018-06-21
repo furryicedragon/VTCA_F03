@@ -18,7 +18,6 @@ public:
 	//std::string combination;
 	SpriteFrameCache* eeeFrames;
 	float skillDamage;
-	int moneyRank;
 	int mapNumber;
 	int waveNumber;
 	int bossNumber;
@@ -83,6 +82,9 @@ public:
 	void forbidAllAction();
 	void movingAnimation();
 	void chasing();
+
+	int moneyRank;
+	int expReward;
 	//void spawnEffect();
 
 	Map<std::string, Animate*> listAnimations;

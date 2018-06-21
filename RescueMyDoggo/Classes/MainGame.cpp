@@ -7,6 +7,7 @@ USING_NS_CC;
 #define MaxMap 3
 
 MainGame * MainGame::instance = NULL;
+auto def = UserDefault::getInstance();
 
 bool MainGame::init()
 {
@@ -17,6 +18,7 @@ bool MainGame::init()
 	}
 
 	MainGame::instance = this;
+	highScore = def->getIntegerForKey("highScore", 0);
 
 	cache = SpriteFrameCache::getInstance();
 	cache->addSpriteFramesWithFile("damage.plist");
@@ -89,6 +91,10 @@ bool MainGame::init()
 	this->HPonHead = ppp->HPonHead;
 	this->HitDame = ppp->HitDame;
 	this->nothingBar = ppp->nothingBar;
+	this->HPonHead->setVisible(false);
+	this->HitDame->setVisible(false);
+	this->nothingBar->setVisible(false);
+
 	if(HPonHead)
 	this->addChild(HPonHead, 5);
 	if(HitDame)
@@ -285,9 +291,7 @@ void MainGame::update(float elapsed)
 		this->HPonHead->setPosition(pos);
 		this->HitDame->setPosition(pos);
 		this->nothingBar->setPosition(pos);
-		if (lastScore != ppp->score) {
-			HUDLayer::GetInstance()->scoreLabel->setString(std::to_string(ppp->score));
-		}
+		
 		if (doneAddingEnemy) {
 			this->dropMoneyInit();
 			this->collectMoney();
@@ -306,7 +310,6 @@ void MainGame::update(float elapsed)
 		if (ppp->lastSeenExp != ppp->currentEXP / ppp->baseEXP * 100) {
 			ppp->lastSeenExp = ppp->currentEXP / ppp->baseEXP * 100;
 			HUDLayer::GetInstance()->statPlayer->EXPplayer->runAction(ProgressTo::create(0.3f, ppp->lastSeenExp));
-			//HUDLayer::GetInstance()->statPlayer->EXPplayer->setPercentage(ppp->lastSeenExp);
 		}
 		if (ppp->isDead && this->isGameOver) {
 			this->HPonHead->setVisible(false);
@@ -386,7 +389,7 @@ void MainGame::update(float elapsed)
 			checkCollision(ppp);
 			if(currentWave!=0)
 			this->waveXMapXInit();
-			if (allEnemy[9]->isDead && allEnemy[4]->isDead && !congratz) {
+			if (/*allEnemy[9]->isDead && allEnemy[4]->isDead &&*/ !congratz) {
 				for (auto item : allEnemy)
 				{
 					congratz = true;
@@ -396,10 +399,20 @@ void MainGame::update(float elapsed)
 					
 					finishPortal->setVisible(true);
 
+					
 					if (currentMap == 3)
 					{
-						for (int i = 1; i <= 4; i++)
-							HUDLayer::GetInstance()->getChildByTag(i)->setVisible(false);
+						auto hud = HUDLayer::GetInstance();
+
+						auto atkbtn = hud->getChildByTag(1);
+						auto rollbtn = hud->getChildByTag(2);
+						auto skill1btn = hud->getChildByTag(3);
+						auto skill2btn = hud->getChildByTag(4);
+
+						atkbtn->setPositionX(atkbtn->getPositionX() - 5);
+						skill1btn->setPositionX(skill1btn->getPositionX() - 5);
+						skill2btn->setPositionX(skill2btn->getPositionX() - 5);
+						rollbtn->setPositionY(rollbtn->getPositionY() - 15);
 					}
 
 				}
@@ -411,25 +424,27 @@ void MainGame::update(float elapsed)
 				{
 					congratz = false;
 					HUDLayer::GetInstance()->setVisible(false);
+					this->saveHighScore();
 
-					int nextMap = currentMap + 1;
-					if (nextMap <= MaxMap)
+					if (currentMap + 1 <= MaxMap)
 					{
 						this->lastLevel = std::stoi( ppp->level->getString() );
 						this->lastHP = ppp->baseHP;
 						this->lastExp = ppp->lastSeenExp;
-						this->lastScore = ppp->score;
 						this->delAll(++currentMap);
 						this->gameStarto();
 					}
 					else
 					{
 						// congrats scene?
-						ppp->isSpawn = false;
-						ppp->forbidAllAction();
+						this->isGameStart = false;
 
+						auto btMenu = (ui::Button*)this->congratulation->getChildByTag(1);
+						auto endLabel = (Label*)this->congratulation->getChildByTag(2);
 						this->congratulation->setPosition(Vec2(this->getPosition().x*-1, 0));
-						this->congratulation->runAction(FadeIn::create(1.6f));
+						this->congratulation->runAction(Sequence::create(FadeIn::create(1.6f), 
+							CallFunc::create([=]() { ppp->forbidAllAction(); 
+							  btMenu->setVisible(true); btMenu->setEnabled(true); endLabel->setVisible(true); }), nullptr));
 					}
 				}
 			}
@@ -439,13 +454,12 @@ void MainGame::update(float elapsed)
 			this->isGameOver = true;
 			HUDLayer::GetInstance()->setVisible(false);
 
-			/*auto gameOverLayer = static_cast<Layer*> (Director::getInstance()->getRunningScene()->getChildByTag(9900) );*/
+			auto highScoreLabel = (Label*)MainScene::GetInstance()->gameOverLayer->getChildByTag(100)->getChildByTag(10);
+			highScoreLabel->setString(std::to_string(def->getIntegerForKey("highScore")));
 
 			this->runAction(Sequence::create(DelayTime::create(2.0f), 
 				CallFunc::create([=]() {MainScene::GetInstance()->gameOverLayer->setVisible(true); experimental::AudioEngine::play2d("sounds/defeat.mp3", false, 0.7f); }), nullptr));
 			
-			/*this->runAction(Sequence::create(DelayTime::create(1), CallFunc::create([=]() {this->canRetry=true; }), nullptr));
-			this->runAction(Sequence::create(DelayTime::create(1), CallFunc::create([=]() {this->canRetry=true;}), nullptr));*/
 		}
 		}
 
@@ -486,7 +500,8 @@ void MainGame::spawnPlayer()
 	if(zap)
 	this->addChild(zap);
 	zap->runAction(Sequence::create(DelayTime::create(0.69f), CallFunc::create([=]() {ppp->spawnEffect(); }), animation("Spawn", 0.1f),
-		CallFunc::create([=]() {this->removeChild(zap, true); HUDLayer::GetInstance()->toggleVisiblity(); }), nullptr));
+		CallFunc::create([=]() {this->removeChild(zap, true); HUDLayer::GetInstance()->toggleVisiblity(); 
+								this->HPonHead->setVisible(true); this->HitDame->setVisible(true); this->nothingBar->setVisible(true); }), nullptr));
 }
 
 
@@ -577,11 +592,11 @@ void MainGame::waveXMapXInit() {
 			this->checkAttackRange(item, i);
 			i++;
 		}
-		if (ppp->w1kills > 1 && !boss1) {
+		if (ppp->w1kills > 7 && !boss1) {
 			this->spawnEffect(allEnemy[4], 1);
 			boss1 = true;
 		}
-		if (ppp->w2kills >1 && !boss2) { 
+		if (ppp->w2kills > 7 && !boss2) { 
 			this->spawnEffect(allEnemy[9], 1);
 			boss2 = true; 
 		}
@@ -666,6 +681,8 @@ void MainGame::allEnemyInit()
 			wave->skillCD = 4;
 			wave->skillRange = 300;
 			wave->setHP(100);
+			wave->moneyRank = 1;
+			wave->expReward = 25;
 			break;
 
 		case 2:
@@ -679,6 +696,8 @@ void MainGame::allEnemyInit()
 			wave->skillCD = 3;
 			wave->skillRange = 240;
 			wave->setHP(150);
+			wave->moneyRank = 2;
+			wave->expReward = 100;
 			break;
 
 		case 3:
@@ -692,6 +711,8 @@ void MainGame::allEnemyInit()
 			wave->skillCD = 4;
 			wave->skillRange = 150;
 			wave->setHP(666);
+			wave->moneyRank = 3;
+			wave->expReward = 300;
 			break;
 		}
 		
@@ -733,6 +754,8 @@ void MainGame::allEnemyInit()
 			boss1m1->mobilitySpeed = 4;
 			boss1m1->mobilityDoneAfterF = 3;
 			boss1m1->setHP(300);
+			boss1m1->moneyRank = 2;
+			boss1m1->expReward = 150;
 			break;
 
 		case 2:
@@ -746,6 +769,8 @@ void MainGame::allEnemyInit()
 			boss1m1->skillCD = 2;
 			boss1m1->skillRange = 400;
 			boss1m1->setHP(333);
+			boss1m1->moneyRank = 3;
+			boss1m1->expReward = 500;
 			break;
 
 		case 3:
@@ -759,6 +784,8 @@ void MainGame::allEnemyInit()
 			boss1m1->skillCD = 2;
 			boss1m1->skillRange = 150;
 			boss1m1->setHP(550);
+			boss1m1->moneyRank = 4;
+			boss1m1->expReward = 1200;
 			break;
 		}
 		
@@ -796,6 +823,8 @@ void MainGame::allEnemyInit()
 			wave->skillCD = 4;
 			wave->skillRange = 400;
 			wave->setHP(175);
+			wave->moneyRank = 1;
+			wave->expReward = 50;
 			break;
 
 		case 2:
@@ -810,6 +839,8 @@ void MainGame::allEnemyInit()
 			wave->skillCD = 5;
 			wave->skillRange = 120;
 			wave->setHP(450);
+			wave->moneyRank = 2;
+			wave->expReward = 200;
 			break;
 
 		case 3:
@@ -823,6 +854,8 @@ void MainGame::allEnemyInit()
 			wave->skillCD = 4;
 			wave->skillRange = 222;
 			wave->setHP(500);
+			wave->moneyRank = 3;
+			wave->expReward = 600;
 			break;
 		}
 
@@ -863,6 +896,8 @@ void MainGame::allEnemyInit()
 			boss2m1->mobilitySpeed = 2;
 			boss2m1->mobilityDoneAfterF = 3;
 			boss2m1->setHP(200);
+			boss2m1->moneyRank = 2;
+			boss2m1->expReward = 300;
 			break;
 
 		case 2:
@@ -876,6 +911,8 @@ void MainGame::allEnemyInit()
 			boss2m1->skillCD = 2;
 			boss2m1->skillRange = 380;
 			boss2m1->setHP(500);
+			boss2m1->moneyRank = 3;
+			boss2m1->expReward = 1000;
 			break;
 
 		case 3:
@@ -891,6 +928,8 @@ void MainGame::allEnemyInit()
 			boss2m1->mobilitySSAt = 4;
 			boss2m1->mobilitySpeed = 2;
 			boss2m1->setHP(800);
+			boss2m1->moneyRank = 4;
+			boss2m1->expReward = 2345;
 			break;
 		}
      	
@@ -1165,6 +1204,7 @@ void MainGame::collectMoney() {
 				if (item->getTag() == 4) {
 					ppp->score += 500;
 				}
+				HUDLayer::GetInstance()->scoreLabel->setString(std::to_string(ppp->score));
 
 				this->runAction(Sequence::create(DelayTime::create(0.3f),
 						CallFunc::create([=]() {experimental::AudioEngine::play2d("sounds/coin_pickup.mp3", false, 0.7f); }), nullptr));
@@ -1207,6 +1247,40 @@ void MainGame::changeMap(int level)
 		this->congratulation->runAction(itsOKMan);
 		this->addChild(congratulation, 99999);
 		this->congratulation->runAction(FadeOut::create(0));
+
+		auto btMenu = ui::Button::create(BT_exitnomal, BT_exitclick);
+		btMenu->setPosition(Vec2(congratulation->getContentSize().width / 2, congratulation->getContentSize().height * 0.08f));
+		btMenu->setTag(1);
+		btMenu->addTouchEventListener([&](Ref* sender, ui::Widget::TouchEventType type)
+		{
+			switch (type)
+			{
+			case ui::Widget::TouchEventType::ENDED:
+
+				MainGame::GetInstance()->delAll();
+				MainGame::GetInstance()->setVisible(false);
+
+				MainMenuScene::GetInstance()->bgAudio();
+				MainMenuScene::GetInstance()->setVisible(true);
+
+				HUDLayer::GetInstance()->resetHUDstate();
+
+				MainScene::GetInstance()->gameOverLayer->setVisible(false);
+				MainScene::GetInstance()->gamePauseLayer->setVisible(false);
+
+				break;
+			}
+		});
+		btMenu->setVisible(false);
+		btMenu->setEnabled(false);
+
+		auto endLabel = Label::createWithSystemFont("Thanks for playing!", "Arial", 40.0f, Size::ZERO, TextHAlignment::CENTER);
+		endLabel->setPosition(congratulation->getContentSize().width / 2, congratulation->getContentSize().height * 0.18f);
+		endLabel->setVisible(false);
+		endLabel->setTag(2);
+
+		congratulation->addChild(btMenu);
+		congratulation->addChild(endLabel);
 	}
 
 	doneAddingEnemy = false;
@@ -1289,6 +1363,9 @@ void MainGame::changeMap(int level)
 	this->HPonHead = ppp->HPonHead;
 	this->HitDame = ppp->HitDame;
 	this->nothingBar = ppp->nothingBar;
+	this->HPonHead->setVisible(false);
+	this->HitDame->setVisible(false);
+	this->nothingBar->setVisible(false);
 	if (HPonHead)
 		this->addChild(HPonHead, 5);
 	if (HitDame)
@@ -1319,4 +1396,14 @@ void MainGame::changeMap(int level)
 	finishPortal->runAction(RepeatForever::create(animation("Enemies/Effect/Gate", 0.06f)));
 	finishPortal->setPosition(Vec2(finishPoint["x"].asFloat()*this->map->getScale(), finishPoint["y"].asFloat()*this->map->getScale()));
 	finishPortal->setVisible(false);
+}
+
+void MainGame::saveHighScore()
+{
+	this->lastScore = ppp->score;
+	if (this->lastScore > this->highScore)
+	{
+		highScore = lastScore;
+	}
+	def->setIntegerForKey("highScore", highScore);
 }
