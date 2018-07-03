@@ -173,7 +173,7 @@ void MainScene::setupGameOverLayer()
 	gameover_bg->addChild(highScoreLabel);
 
 	////show button ra menu hay chơi lại khi chết dưới cái back
-	auto btMenu = ui::Button::create(BT_exitnomal, BT_exitclick);
+	auto btMenu = ui::Button::create(BT_homenomal, BT_homeclick);
 
 	btMenu->setPosition(Vec2(_bgOptionDead.width * 0.7, _bgOptionDead.height * 0.2));
 	btMenu->setScale(0.5f);

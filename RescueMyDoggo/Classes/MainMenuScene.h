@@ -44,8 +44,8 @@ USING_NS_CC;
 #define BT_backclick "UIUX/Xclick.png"
 #define BT_accept "UIUX/V.png"
 #define BT_acceptclick "UIUX/Vclick.png"
-#define BT_homenomal "UIUX/resumnomal.png"
-#define BT_homeclick "UIUX/resumeclick.png"
+#define BT_homenomal "UIUX/homenomal.png"
+#define BT_homeclick "UIUX/homeclick.png"
 #define GUI_startnomal "UIUX/buttonStartnomal.png"
 #define GUI_startclick "UIUX/buttonStartclick.png"
 
