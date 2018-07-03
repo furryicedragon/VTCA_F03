@@ -101,7 +101,7 @@ public:
 	int lastScore;
 	int lastLevel;
 	int lastHP;
-	float lastExp;
+	float lastExp, lastBaseEXP;
 
 	void changeMap(int map);
 

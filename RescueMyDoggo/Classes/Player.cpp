@@ -2,7 +2,7 @@
 USING_NS_CC;
 using namespace std;
 
-#define GodMode 1
+#define GodMode 0
 
 Player* Player::create()
 {
@@ -511,7 +511,7 @@ void Player::useSkill(int skillID, Button* button)
 
 
 		//this->runAction(Sequence::create(animation(skill->castAName,attackSpeed),
-		this->runAction(Sequence::create(makeAnimation(skill->castAName,attackSpeed), 
+		this->runAction(Sequence::create(makeAnimation(skill->castAName, 0.14f), 
 			CallFunc::create([=]() 
 			{if (skillID == 1) experimental::AudioEngine::play2d("sounds/slash4.mp3"); 
 			this->usingSkill = false; this->idleStatus(); }), nullptr));
@@ -529,13 +529,13 @@ void Player::useSkill(int skillID, Button* button)
 		skill->setPosition(skill->skillPosition);
 
 
-		skill->runAction(Sequence::create(DelayTime::create(skill->skillAppearTime*attackSpeed), 
+		skill->runAction(Sequence::create(DelayTime::create(skill->skillAppearTime*0.14f), 
 			CallFunc::create([=]() 
 			{ 
 			skill->setVisible(true); 
 			std::fill(skill->canDamage.begin(), skill->canDamage.end(), true); 
 			}),
-			allAnimation(skill->skillAName,skill->skillDisappearTime*attackSpeed/skill->frames), 
+			allAnimation(skill->skillAName,skill->skillDisappearTime*0.14f/skill->frames), 
 				CallFunc::create([=]() {skill->setVisible(false);
 			std::fill(skill->canDamage.begin(), skill->canDamage.end(), false); }), nullptr));
 
@@ -547,7 +547,7 @@ void Player::useSkill(int skillID, Button* button)
 			int moveRange = skill->skillRange;
 			if (this->direction == 0)  moveRange = skill->skillRange * -1;
 			listSkill.at(skillID)->runAction(Sequence::create(
-				DelayTime::create(skill->skillAppearTime*attackSpeed),
+				DelayTime::create(skill->skillAppearTime*0.14f),
 				MoveTo::create(0, Vec2(this->getPosition().x, this->getPosition().y)), 
 				CallFunc::create([=]() {std::fill(skill->canDamage.begin(), skill->canDamage.end(), true); }),
 				CallFunc::create([=]() {experimental::AudioEngine::play2d("sounds/fireball.mp3", false, 1.0f); }),
@@ -561,8 +561,8 @@ void Player::usingMobility(Skill* skill)
 {
 	this->dashingSpeed = 35;
 
-	float delay1 = skill->mobilityDelayTime*attackSpeed;
-	float delay2 = skill->mobilityTime*attackSpeed;
+	float delay1 = skill->mobilityDelayTime*0.14f;
+	float delay2 = skill->mobilityTime*0.14f;
 
 	movementHelper->runAction(Sequence::create(
 		DelayTime::create(delay1),

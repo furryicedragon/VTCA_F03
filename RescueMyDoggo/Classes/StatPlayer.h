@@ -25,6 +25,7 @@ public:
 	Sprite* nothingBar2;
 
 	Label* level;
+	Label* hpLabel, *expLabel;
 
 	void DisplayStat();
 };

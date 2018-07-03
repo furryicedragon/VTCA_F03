@@ -301,6 +301,8 @@ void MainGame::update(float elapsed)
 		this->HPonHead->setPosition(pos);
 		this->HitDame->setPosition(pos);
 		this->nothingBar->setPosition(pos);
+		HUDLayer::GetInstance()->statPlayer->hpLabel->setString(ppp->hp->getString() + " / " + std::to_string((int)ppp->baseHP));
+		HUDLayer::GetInstance()->statPlayer->expLabel->setString(std::to_string((int)ppp->currentEXP) + " / " + std::to_string((int)ppp->baseEXP));
 
 		if (doneAddingEnemy) {
 			this->dropMoneyInit();
@@ -320,6 +322,7 @@ void MainGame::update(float elapsed)
 		if (ppp->lastSeenExp != ppp->currentEXP / ppp->baseEXP * 100) {
 			ppp->lastSeenExp = ppp->currentEXP / ppp->baseEXP * 100;
 			HUDLayer::GetInstance()->statPlayer->EXPplayer->runAction(ProgressTo::create(0.3f, ppp->lastSeenExp));
+			
 		}
 		if (ppp->isDead && this->isGameOver) {
 			this->HPonHead->setVisible(false);
@@ -408,26 +411,27 @@ void MainGame::update(float elapsed)
 					item->canRespawn = false;
 					
 					finishPortal->setVisible(true);
+				}
+				if (currentMap == 3)
+				{
+					auto hud = HUDLayer::GetInstance();
 
+					auto atkbtn = hud->getChildByTag(1);
+					auto rollbtn = hud->getChildByTag(2);
+					auto skill1btn = hud->getChildByTag(3);
+					auto skill2btn = hud->getChildByTag(4);
+
+					atkbtn->setPositionX(atkbtn->getPositionX() - 5);
+					skill1btn->setPositionX(skill1btn->getPositionX() - 5);
+					skill2btn->setPositionX(skill2btn->getPositionX() - 5);
+					rollbtn->setPositionY(rollbtn->getPositionY() - 15);
+
+					this->runAction(Sequence::create(DelayTime::create(2.0f),
+						CallFunc::create([=]() {
+							experimental::AudioEngine::stop(finalBossMusic);
+							congratzMusic = experimental::AudioEngine::play2d("sounds/congratz.mp3", false, 0.7f);
+						}), nullptr));
 					
-					if (currentMap == 3)
-					{
-						auto hud = HUDLayer::GetInstance();
-
-						auto atkbtn = hud->getChildByTag(1);
-						auto rollbtn = hud->getChildByTag(2);
-						auto skill1btn = hud->getChildByTag(3);
-						auto skill2btn = hud->getChildByTag(4);
-
-						atkbtn->setPositionX(atkbtn->getPositionX() - 5);
-						skill1btn->setPositionX(skill1btn->getPositionX() - 5);
-						skill2btn->setPositionX(skill2btn->getPositionX() - 5);
-						rollbtn->setPositionY(rollbtn->getPositionY() - 15);
-
-						experimental::AudioEngine::stop(finalBossMusic);
-						congratzMusic = experimental::AudioEngine::play2d("sounds/congratz.mp3", false, 0.5f * MainMenuScene::GetInstance()->musicVolume);
-					}
-
 				}
 			}
 			if (congratz && ppp->isSpawn && finishPortal->isVisible()) 
@@ -443,7 +447,8 @@ void MainGame::update(float elapsed)
 					{
 						this->lastLevel = std::stoi( ppp->level->getString() );
 						this->lastHP = ppp->baseHP;
-						this->lastExp = ppp->lastSeenExp;
+						this->lastExp = ppp->currentEXP;
+						this->lastBaseEXP = ppp->baseEXP;
 						this->delAll(++currentMap);
 						this->gameStarto();
 					}
@@ -557,7 +562,7 @@ void MainGame::checkAttackRange(Enemy * eee, int index)
 					ppp->canAADamage[index] = false;
 				}
 			}
-			if (eee->mapNumber!=1 && eee->canDamage && !ppp->isRolling && !eee->isCaster
+			if ((std::fabsf(ppp->getPositionY() - eee->getPositionY()) >= 60) && eee->canDamage && !ppp->isRolling && !eee->isCaster
 				&& (((eee->direction == 1 || (eee->mapNumber == 3 && eee->waveNumber == 1)) && ppp->getPositionX() - eee->getPositionX() <= eee->skillRange)
 					|| ((eee->direction == 0 || (eee->mapNumber == 3 && eee->waveNumber == 1)) && eee->getPositionX() - ppp->getPositionX() <= eee->skillRange))) {
 				if (!ppp->isDead && ppp->state != 1)
@@ -1299,8 +1304,7 @@ void MainGame::changeMap(int level)
 				MainMenuScene::GetInstance()->buttonClickSound();
 				break;
 			case ui::Widget::TouchEventType::ENDED:
-				experimental::AudioEngine::stop(finalBossMusic);
-				experimental::AudioEngine::stop(congratzMusic);
+				experimental::AudioEngine::stopAll();
 
 				MainGame::GetInstance()->delAll();
 				MainGame::GetInstance()->setVisible(false);
@@ -1383,6 +1387,8 @@ void MainGame::changeMap(int level)
 	ppp->baseHP = lastHP;
 	ppp->hp->setString(std::to_string(lastHP));
 	ppp->attackSpeed = 0.14f - ((0.14f / 20)*lastLevel);
+	ppp->currentEXP = lastExp;
+	ppp->baseEXP = lastBaseEXP;
 	ppp->score = this->lastScore;
 
 	if (ppp)

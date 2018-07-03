@@ -63,8 +63,7 @@ void MainScene::setupMenuPause()
 			MainMenuScene::GetInstance()->buttonClickSound();
 			break;
 		case ui::Widget::TouchEventType::ENDED:
-			experimental::AudioEngine::stop(MainGame::GetInstance()->finalBossMusic);
-			experimental::AudioEngine::stop(MainGame::GetInstance()->congratzMusic);
+			experimental::AudioEngine::stopAll();
 			Director::getInstance()->resume();
 			HUDLayer::GetInstance()->resetHUDstate();
 			
@@ -110,8 +109,7 @@ void MainScene::setupMenuPause()
 			MainMenuScene::GetInstance()->buttonClickSound();
 			break;
 		case ui::Widget::TouchEventType::ENDED:
-			experimental::AudioEngine::resume(MainGame::GetInstance()->finalBossMusic);
-			experimental::AudioEngine::resume(MainGame::GetInstance()->congratzMusic);
+			experimental::AudioEngine::resumeAll();
 			Director::getInstance()->resume();
 			
 			HUDLayer::GetInstance()->setVisible(true);

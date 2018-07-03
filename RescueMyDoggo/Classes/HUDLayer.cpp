@@ -44,8 +44,8 @@ void HUDLayer::setupPause()
 			MainMenuScene::GetInstance()->buttonClickSound();
 			break;
 		case ui::Widget::TouchEventType::ENDED:
-			experimental::AudioEngine::pause(MainGame::GetInstance()->finalBossMusic);
-			experimental::AudioEngine::pause(MainGame::GetInstance()->congratzMusic);
+			this->runAction(Sequence::create(DelayTime::create(0.5f), CallFunc::create([=]() {experimental::AudioEngine::pauseAll(); }), nullptr));
+			
 			this->setVisible(false);
 			Director::getInstance()->pause();
 			MainScene::GetInstance()->gamePauseLayer->setVisible(true);

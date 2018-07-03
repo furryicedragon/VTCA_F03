@@ -425,7 +425,7 @@ void Enemy::dead() {
 		this->canDrop = true;
 		//this->stopAllActions();
 		this->forbidAllAction();
-		experimental::AudioEngine::play2d("sounds/monsterdie.mp3");
+		experimental::AudioEngine::play2d("sounds/monsterdie.mp3", false, 0.7f);
 		if(this->checkFrame("die"))
 			this->runAction(Sequence::create(makeAnimation("die", 0.12f), FadeOut::create(0), CallFunc::create([=]() {this->autoRespawn(); }), nullptr));
 
