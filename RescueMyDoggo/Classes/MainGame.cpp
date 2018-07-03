@@ -557,7 +557,7 @@ void MainGame::checkAttackRange(Enemy * eee, int index)
 					ppp->canAADamage[index] = false;
 				}
 			}
-			if (eee->canDamage && !ppp->isRolling && !eee->isCaster
+			if (eee->mapNumber!=1 && eee->canDamage && !ppp->isRolling && !eee->isCaster
 				&& (((eee->direction == 1 || (eee->mapNumber == 3 && eee->waveNumber == 1)) && ppp->getPositionX() - eee->getPositionX() <= eee->skillRange)
 					|| ((eee->direction == 0 || (eee->mapNumber == 3 && eee->waveNumber == 1)) && eee->getPositionX() - ppp->getPositionX() <= eee->skillRange))) {
 				if (!ppp->isDead && ppp->state != 1)

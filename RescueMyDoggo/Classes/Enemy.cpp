@@ -239,6 +239,7 @@ void Enemy::moving() {
 void Enemy::attack() {
 	if (this->isSpawned) {
 		float howFar = ppp->getPosition().x - (this->getPosition().x + this->getContentSize().width / 2);
+		if (howFar < skillRange) {
 		if (howFar < 0) this->direction = 0;
 		else this->direction = 1;
 		//if (checkFrame("projectile"))
@@ -266,8 +267,8 @@ void Enemy::attack() {
 		}
 
 		this->attackHelper->runAction(Sequence::create(DelayTime::create(0.12*useSkillLastFN*skillCD), CallFunc::create([=]() {this->isOnCD = false; }), nullptr));
+		}
 	}
-
 }
 void Enemy::casterSpell()
 	{
@@ -322,14 +323,13 @@ void Enemy::mobilitySS()
 	this->movementHelper->stopActionByTag(123);
 	float howFar = ppp->getPosition().x - (this->getPosition().x + this->getContentSize().width / 2);
 	if (howFar < 0) howFar *= -1;
-	if (howFar < skillRange) {
 		if (this->bossNumber == 1 && this->mapNumber == 1)
 			this->runAction(Sequence::create(DelayTime::create(castSpeed*(mobilitySSAt + 1)),
 				JumpTo::create(castSpeed*mobilitySpeed, Vec2(ppp->getPosition().x - this->getContentSize().width / 2, this->getPosition().y), 72, 1), CallFunc::create([=]() {this->mobilityUsing = false; this->canDamage = true;  this->invulnerable = false; }), DelayTime::create(castSpeed*mobilityDoneAfterF), CallFunc::create([=]() {this->canDamage = false; }), nullptr));
 		else
 		this->runAction(Sequence::create(DelayTime::create(castSpeed*(mobilitySSAt + 1)),
 			MoveTo::create(castSpeed*mobilitySpeed, Vec2(ppp->getPosition().x - this->getContentSize().width / 2, this->getPosition().y)), CallFunc::create([=]() {this->mobilityUsing = false; this->canDamage = true; this->invulnerable = false; }), DelayTime::create(castSpeed*mobilityDoneAfterF), CallFunc::create([=]() {this->canDamage = false; }), nullptr));
-	}
+
 			
 }
 void Enemy::attackLandedEffect() {
