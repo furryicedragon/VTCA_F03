@@ -108,6 +108,8 @@ public:
 	int highScore;
 	void saveHighScore();
 
+	Label* boss1hp, *boss2hp;
+	void displayBossHP(int index, int hp, int damage);
 	int finalBossMusic, congratzMusic;
 private:
 	virtual void update(float elapsed) override;

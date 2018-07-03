@@ -5,7 +5,7 @@
 USING_NS_CC;
 
 #define MaxMap 3
-#define BYPASS 0
+#define Bypass 0
 #define SpeedRun 0
 
 MainGame * MainGame::instance = NULL;
@@ -113,6 +113,14 @@ bool MainGame::init()
 	finishPortal->runAction(RepeatForever::create(animation("Enemies/Effect/Gate", 0.06f)));
 	finishPortal->setPosition(Vec2(finishPoint["x"].asFloat()*this->map->getScale(), finishPoint["y"].asFloat()*this->map->getScale()));
 	finishPortal->setVisible(false);
+
+	boss1hp = Label::createWithSystemFont("", "Arial", 30.0f);
+	boss1hp->setVisible(false);
+	this->addChild(boss1hp, 10);
+
+	boss2hp = Label::createWithSystemFont("", "Arial", 30.0f);
+	boss2hp->setVisible(false);
+	this->addChild(boss2hp, 10);
 
 	this->isGameStart = false;
 
@@ -293,7 +301,7 @@ void MainGame::update(float elapsed)
 		this->HPonHead->setPosition(pos);
 		this->HitDame->setPosition(pos);
 		this->nothingBar->setPosition(pos);
-		
+
 		if (doneAddingEnemy) {
 			this->dropMoneyInit();
 			this->collectMoney();
@@ -391,7 +399,7 @@ void MainGame::update(float elapsed)
 			checkCollision(ppp);
 			if(currentWave!=0)
 			this->waveXMapXInit();
-			if ( ( (allEnemy[9]->isDead && allEnemy[4]->isDead) || BYPASS ) && !congratz) {
+			if ( ( (allEnemy[9]->isDead && allEnemy[4]->isDead) || Bypass) && !congratz) {
 				for (auto item : allEnemy)
 				{
 					congratz = true;
@@ -417,7 +425,7 @@ void MainGame::update(float elapsed)
 						rollbtn->setPositionY(rollbtn->getPositionY() - 15);
 
 						experimental::AudioEngine::stop(finalBossMusic);
-						congratzMusic = experimental::AudioEngine::play2d("sounds/congratz.mp3", true, 0.5f * MainMenuScene::GetInstance()->musicVolume);
+						congratzMusic = experimental::AudioEngine::play2d("sounds/congratz.mp3", false, 0.5f * MainMenuScene::GetInstance()->musicVolume);
 					}
 
 				}
@@ -539,8 +547,12 @@ void MainGame::checkAttackRange(Enemy * eee, int index)
 				if (ppp->isAttacking && ppp->canAADamage[index])
 				{
 					if (!eee->isDead && eee->isSpawned && !eee->invulnerable)
+					{
 						this->displayDamage(ppp->damageCurrent, "grey", eee->getPosition(), eee->getContentSize());
+						displayBossHP(index, std::stoi(eee->hp->getString()), (int)ppp->damageCurrent);
+					}	
 					eee->getHit(ppp->damageCurrent);
+					
 
 					ppp->canAADamage[index] = false;
 				}
@@ -567,8 +579,12 @@ void MainGame::checkAttackRange(Enemy * eee, int index)
 						|| (i == 0 && checkRange(eee, item->skillRange))))
 				{
 					if (!eee->isDead && eee->isSpawned && !eee->invulnerable)
+					{
 						this->displayDamage(ppp->damageCurrent / 100 * item->skillDamage, "grey", eee->getPosition(), eee->getContentSize());
+						displayBossHP(index, std::stoi(eee->hp->getString()), (int)ppp->damageCurrent);
+					}
 					eee->getHit(ppp->damageCurrent / 100 * item->skillDamage);
+					
 
 					item->canDamage[index] = false;
 				}
@@ -614,6 +630,11 @@ void MainGame::waveXMapXInit() {
 
 			boss2 = true; 
 		}
+
+		if (boss1)
+			boss1hp->setPosition(allEnemy[4]->getPositionX(), allEnemy[4]->getPositionY() + 60);
+		if (boss2)
+			boss2hp->setPosition(allEnemy[9]->getPositionX(), allEnemy[9]->getPositionY() + 60);
 }
 
 void MainGame::spawnEffect(Enemy* enemy2Spawn,int index)
@@ -811,6 +832,7 @@ void MainGame::allEnemyInit()
 		boss1m1->ppp = ppp;
 		boss1m1->setVisible(false);
 		boss1m1->isSpawned = false;
+		boss1hp->setString(boss1m1->hp->getString());
 		//boss1m1->setAnchorPoint(Vec2(0, 0));
 		if (boss1m1) {
 			allEnemy.push_back(boss1m1);
@@ -955,6 +977,7 @@ void MainGame::allEnemyInit()
 		boss2m1->ppp = ppp;
 		boss2m1->setVisible(false);
 		boss2m1->isSpawned = false;
+		boss2hp->setString(boss2m1->hp->getString());
 		//boss2m1->setAnchorPoint(Vec2(0, 0));
 		if (boss2m1) {
 			allEnemy.push_back(boss2m1);
@@ -1418,6 +1441,14 @@ void MainGame::changeMap(int level)
 	finishPortal->runAction(RepeatForever::create(animation("Enemies/Effect/Gate", 0.06f)));
 	finishPortal->setPosition(Vec2(finishPoint["x"].asFloat()*this->map->getScale(), finishPoint["y"].asFloat()*this->map->getScale()));
 	finishPortal->setVisible(false);
+
+	boss1hp = Label::createWithSystemFont("", "Arial", 30.0f);
+	boss1hp->setVisible(false);
+	this->addChild(boss1hp, 10);
+
+	boss2hp = Label::createWithSystemFont("", "Arial", 30.0f);
+	boss2hp->setVisible(false);
+	this->addChild(boss2hp, 10);
 }
 
 void MainGame::saveHighScore()
@@ -1429,4 +1460,28 @@ void MainGame::saveHighScore()
 	}
 	def->setIntegerForKey("highScore", highScore);
 	def->flush();
+}
+
+void MainGame::displayBossHP(int index, int hp, int damage)
+{
+	if (index == 4)
+	{
+		int display = hp - damage;
+		if (display < 0)
+			display = 0;
+		boss1hp->setString(std::to_string(display));
+		boss1hp->setVisible(true);
+
+		this->runAction(Sequence::create(DelayTime::create((display == 0) ? 1.0f : 2.0f), CallFunc::create([=]() {boss1hp->setVisible(false); }), nullptr));
+	}
+	if (index == 9)
+	{
+		int display = hp - damage;
+		if (display < 0)
+			display = 0;
+		boss2hp->setString(std::to_string(display));
+		boss2hp->setVisible(true);
+
+		this->runAction(Sequence::create(DelayTime::create((display == 0) ? 1.0f : 2.0f), CallFunc::create([=]() {boss2hp->setVisible(false); }), nullptr));
+	}
 }

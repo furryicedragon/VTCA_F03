@@ -2,7 +2,7 @@
 USING_NS_CC;
 using namespace std;
 
-#define GodMode 0
+#define GodMode 1
 
 Player* Player::create()
 {
