@@ -5,6 +5,7 @@
 USING_NS_CC;
 
 #define MaxMap 3
+#define BYPASS 1
 
 MainGame * MainGame::instance = NULL;
 auto def = UserDefault::getInstance();
@@ -389,7 +390,7 @@ void MainGame::update(float elapsed)
 			checkCollision(ppp);
 			if(currentWave!=0)
 			this->waveXMapXInit();
-			if (/*allEnemy[9]->isDead && allEnemy[4]->isDead &&*/ !congratz) {
+			if ( ( (allEnemy[9]->isDead && allEnemy[4]->isDead) || BYPASS ) && !congratz) {
 				for (auto item : allEnemy)
 				{
 					congratz = true;
@@ -1106,6 +1107,7 @@ void MainGame::gameStarto()
 		ppp->statPlayer = HUDLayer::GetInstance()->statPlayer;
 	if (!this->isGameStart) 
 	{
+		congratz = false;
 		isGameStart = true;
 		this->spawnPlayer();
 	}
