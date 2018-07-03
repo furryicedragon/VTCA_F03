@@ -11,7 +11,6 @@ auto def = UserDefault::getInstance();
 
 bool MainGame::init()
 {
-	def->deleteValueForKey("highScore");
 	doneAddingEnemy = false;
 	if (!Node::init()) 
 	{

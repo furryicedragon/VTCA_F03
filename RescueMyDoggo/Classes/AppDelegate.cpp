@@ -36,6 +36,8 @@ AppDelegate::AppDelegate()
 	AudioEngine::preload("sounds/fireball.mp3");
 	AudioEngine::preload("sounds/hit.mp3");
 	AudioEngine::preload("sounds/playerdie.mp3");
+	AudioEngine::preload("sounds/button_click.mp3");
+	AudioEngine::preload("sounds/monsterdie.mp3");
 }
 
 AppDelegate::~AppDelegate() 
