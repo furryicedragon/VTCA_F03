@@ -25,7 +25,8 @@ USING_NS_CC;
 
 #define UI_barfg "UIUX/LoadingBarFileRed.png"
 #define UI_barbg "UIUX/LoadingBarFile.png"
-#define BG_audio "sounds/Polyphia-The_Worst.mp3"
+#define BG_audio_1 "sounds/Polyphia-The_Worst.mp3"
+#define BG_audio_2 "sounds/Polyphia-Crosty.mp3"
 
 #define BT_HomeGame "UIUX/button_start.png"
 #define BT_RetryGame "UIUX/retry_button.png"
@@ -65,14 +66,16 @@ public:
 	static MainMenuScene * instance;
 	static MainMenuScene * GetInstance();
 
-	float bgMusic = 0.3f, gameMusic = 0.3f;
+	float musicVolume = 0.3f, sfxVolume = 1.0f;
 
+	void buttonClickSound();
 	void bgAudio();
 
 	void update();
 
 	void loadbar();
 	ProgressTimer* mouseBar;
+	int bg_music_main;
 
 	void exitGame();
 

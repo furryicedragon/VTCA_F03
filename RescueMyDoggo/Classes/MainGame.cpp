@@ -5,7 +5,8 @@
 USING_NS_CC;
 
 #define MaxMap 3
-#define BYPASS 1
+#define BYPASS 0
+#define SpeedRun 0
 
 MainGame * MainGame::instance = NULL;
 auto def = UserDefault::getInstance();
@@ -414,6 +415,9 @@ void MainGame::update(float elapsed)
 						skill1btn->setPositionX(skill1btn->getPositionX() - 5);
 						skill2btn->setPositionX(skill2btn->getPositionX() - 5);
 						rollbtn->setPositionY(rollbtn->getPositionY() - 15);
+
+						experimental::AudioEngine::stop(finalBossMusic);
+						congratzMusic = experimental::AudioEngine::play2d("sounds/congratz.mp3", true, 0.5f * MainMenuScene::GetInstance()->musicVolume);
 					}
 
 				}
@@ -527,64 +531,68 @@ bool MainGame::checkRange(Enemy* enemy2Check, int theRange) {
 }
 void MainGame::checkAttackRange(Enemy * eee, int index)
 {
-	if ((index != 4 || boss1)||(index!=9 || boss2)&&!ppp->isDead) {
-		if (checkRange(eee,69)) 
-		{
-			if (ppp->isAttacking && ppp->canAADamage[index])
+	if (!eee->isDead)
+	{
+		if ((index != 4 || boss1) || (index != 9 || boss2) && !ppp->isDead) {
+			if (checkRange(eee, 69))
 			{
-				if (!eee->isDead && eee->isSpawned && !eee->invulnerable)
-					this->displayDamage(ppp->damageCurrent, "grey", eee->getPosition(),eee->getContentSize());
-				eee->getHit(ppp->damageCurrent);
-
-				ppp->canAADamage[index] = false;
-			}
-		}
-		if (eee->canDamage && !ppp->isRolling && !eee->isCaster
-			&& (((eee->direction == 1||(eee->mapNumber==3 && eee->waveNumber==1)) && ppp->getPositionX()  - eee->getPositionX() <= eee->skillRange) 
-				|| ((eee->direction==0 || (eee->mapNumber==3 && eee->waveNumber==1)) && eee->getPositionX() - ppp->getPositionX() > eee->skillRange) ) ) {
-			if (!ppp->isDead && ppp->state != 1)
-				this->displayDamage(eee->skillDamage, "blue", ppp->getPosition(), Size(0, 0));
-			ppp->getHit(eee->skillDamage, eee->getPosition().x);
-
-			eee->canDamage = false;
-		}
-		int i = 0;
-		float rectPos = ppp->listSkill.at(1)->getPosition().x;
-		if (!ppp->listSkill.at(1)->isFlippedX()) 
-			rectPos -= ppp->listSkill.at(1)->getContentSize().width/2;
-		Rect skillRect = Rect(rectPos, ppp->listSkill.at(1)->getPosition().y-69, 300, /*100*/269);
-		Rect eeeRect = eee->getBoundingBox();
-		for (auto item : ppp->listSkill)
-		{
-			if ((ppp->usingSkill||i==1) && item->canDamage[index]
-				&& ((skillRect.intersectsRect(eee->getBoundingBox()) && i==1)
-					|| (i ==0 && checkRange(eee,item->skillRange))))
-			{
+				if (ppp->isAttacking && ppp->canAADamage[index])
+				{
 					if (!eee->isDead && eee->isSpawned && !eee->invulnerable)
-						this->displayDamage(ppp->damageCurrent / 100 * item->skillDamage, "grey", eee->getPosition(),eee->getContentSize());
-					eee->getHit(ppp->damageCurrent / 100 * item->skillDamage);
-					
-					item->canDamage[index] = false;
+						this->displayDamage(ppp->damageCurrent, "grey", eee->getPosition(), eee->getContentSize());
+					eee->getHit(ppp->damageCurrent);
+
+					ppp->canAADamage[index] = false;
+				}
 			}
-			i++;
-		}
+			if (eee->canDamage && !ppp->isRolling && !eee->isCaster
+				&& (((eee->direction == 1 || (eee->mapNumber == 3 && eee->waveNumber == 1)) && ppp->getPositionX() - eee->getPositionX() <= eee->skillRange)
+					|| ((eee->direction == 0 || (eee->mapNumber == 3 && eee->waveNumber == 1)) && eee->getPositionX() - ppp->getPositionX() <= eee->skillRange))) {
+				if (!ppp->isDead && ppp->state != 1)
+					this->displayDamage(eee->skillDamage, "blue", ppp->getPosition(), Size(0, 0));
+				ppp->getHit(eee->skillDamage, eee->getPosition().x);
+
+				eee->canDamage = false;
+			}
+			int i = 0;
+			float rectPos = ppp->listSkill.at(1)->getPosition().x;
+			if (!ppp->listSkill.at(1)->isFlippedX())
+				rectPos -= ppp->listSkill.at(1)->getContentSize().width / 2;
+			Rect skillRect = Rect(rectPos, ppp->listSkill.at(1)->getPosition().y - 69, 300, /*100*/269);
+			Rect eeeRect = eee->getBoundingBox();
+			for (auto item : ppp->listSkill)
+			{
+				if ((ppp->usingSkill || i == 1) && item->canDamage[index]
+					&& ((skillRect.intersectsRect(eee->getBoundingBox()) && i == 1)
+						|| (i == 0 && checkRange(eee, item->skillRange))))
+				{
+					if (!eee->isDead && eee->isSpawned && !eee->invulnerable)
+						this->displayDamage(ppp->damageCurrent / 100 * item->skillDamage, "grey", eee->getPosition(), eee->getContentSize());
+					eee->getHit(ppp->damageCurrent / 100 * item->skillDamage);
+
+					item->canDamage[index] = false;
+				}
+				i++;
+			}
 
 
-		if (eee->isCaster && !ppp->isRolling && !eee->canDamage && std::fabsf(eee->spell->getPosition().x - ppp->getPosition().x) < 22 && std::fabsf(eee->spell->getPositionY() - ppp->getPositionY())<40 && ((eee->mapNumber==1 && eee->waveNumber==1) || (eee->mapNumber==2 && eee->bossNumber==2))) {
-			eee->spell->setPosition(0, 0);
-			eee->spell->setVisible(false);
-			eee->spell->stopAllActions();
-			eee->attackLandedEffect();
-		}
-		if (eee->isCaster && eee->canDamage && !ppp->isRolling && std::fabsf(eee->spellLanded->getPosition().x-ppp->getPosition().x)<9) {
-			
-			if (!ppp->isDead && ppp->state != 1)
-				this->displayDamage(eee->skillDamage, "blue", ppp->getPosition(),Size(0,0));
-			ppp->getHit(eee->skillDamage, eee->getPosition().x);
-			
-			eee->canDamage = false;
+			if (eee->isCaster && !ppp->isRolling && !eee->canDamage && std::fabsf(eee->spell->getPosition().x - ppp->getPosition().x) < 22 && std::fabsf(eee->spell->getPositionY() - ppp->getPositionY())<40 && ((eee->mapNumber == 1 && eee->waveNumber == 1) || (eee->mapNumber == 2 && eee->bossNumber == 2))) {
+				eee->spell->setPosition(0, 0);
+				eee->spell->setVisible(false);
+				eee->spell->stopAllActions();
+				eee->attackLandedEffect();
+			}
+			if (eee->isCaster && eee->canDamage && !ppp->isRolling && std::fabsf(eee->spellLanded->getPosition().x - ppp->getPosition().x)<9) {
+
+				if (!ppp->isDead && ppp->state != 1)
+					this->displayDamage(eee->skillDamage, "blue", ppp->getPosition(), Size(0, 0));
+				ppp->getHit(eee->skillDamage, eee->getPosition().x);
+
+				eee->canDamage = false;
+			}
 		}
 	}
+	
 
 }
 void MainGame::waveXMapXInit() {
@@ -594,12 +602,16 @@ void MainGame::waveXMapXInit() {
 			this->checkAttackRange(item, i);
 			i++;
 		}
-		if (ppp->w1kills > 7 && !boss1) {
+		if ( (ppp->w1kills > (SpeedRun ? 1 : 7)) && !boss1) {
 			this->spawnEffect(allEnemy[4], 1);
 			boss1 = true;
 		}
-		if (ppp->w2kills > 7 && !boss2) { 
+		if ( (ppp->w2kills > (SpeedRun ? 1 : 7)) && !boss2) { 
 			this->spawnEffect(allEnemy[9], 1);
+
+			if (this->currentMap == 3)
+				finalBossMusic = experimental::AudioEngine::play2d("sounds/finalboss.mp3", true, 0.7f);
+
 			boss2 = true; 
 		}
 }
@@ -924,7 +936,7 @@ void MainGame::allEnemyInit()
 			boss2m1->moveSpeed = 369;
 			boss2m1->norAtkDmgAfterF = 11;
 			boss2m1->doneAtkAfterF = 3;
-			boss2m1->castSpeed = 0.8f;
+			boss2m1->castSpeed = 0.08f;
 			boss2m1->skillCD = 2;
 			boss2m1->skillRange = 300;
 			boss2m1->mobilitySSAt = 4;
@@ -1115,6 +1127,8 @@ void MainGame::gameStarto()
 
 void MainGame::restartGame()
 {
+	experimental::AudioEngine::stop(finalBossMusic);
+	experimental::AudioEngine::stop(congratzMusic);
 	canRetry = false;
 	this->runAction(Sequence::create(DelayTime::create(0.5f), CallFunc::create([=]() {this->delAll(); this->gameStarto(); }), nullptr));
 	
@@ -1259,9 +1273,12 @@ void MainGame::changeMap(int level)
 			switch (type)
 			{
 			case ui::Widget::TouchEventType::BEGAN:
-				experimental::AudioEngine::play2d("sounds/button_click.mp3");
+				MainMenuScene::GetInstance()->buttonClickSound();
 				break;
 			case ui::Widget::TouchEventType::ENDED:
+				experimental::AudioEngine::stop(finalBossMusic);
+				experimental::AudioEngine::stop(congratzMusic);
+
 				MainGame::GetInstance()->delAll();
 				MainGame::GetInstance()->setVisible(false);
 
@@ -1339,7 +1356,7 @@ void MainGame::changeMap(int level)
 	ppp->mapScale = map->getScale();
 	ppp->setPosition(sPx, sPy);
 
-	ppp->damageCurrent = 16 * lastLevel;
+	ppp->damageCurrent = (SpeedRun ? 1000 : 16) * lastLevel;
 	ppp->baseHP = lastHP;
 	ppp->hp->setString(std::to_string(lastHP));
 	ppp->attackSpeed = 0.14f - ((0.14f / 20)*lastLevel);

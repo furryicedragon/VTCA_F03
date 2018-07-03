@@ -41,9 +41,11 @@ void HUDLayer::setupPause()
 		switch (type)
 		{
 		case ui::Widget::TouchEventType::BEGAN:
-			experimental::AudioEngine::play2d("sounds/button_click.mp3");
+			MainMenuScene::GetInstance()->buttonClickSound();
 			break;
 		case ui::Widget::TouchEventType::ENDED:
+			experimental::AudioEngine::pause(MainGame::GetInstance()->finalBossMusic);
+			experimental::AudioEngine::pause(MainGame::GetInstance()->congratzMusic);
 			this->setVisible(false);
 			Director::getInstance()->pause();
 			MainScene::GetInstance()->gamePauseLayer->setVisible(true);

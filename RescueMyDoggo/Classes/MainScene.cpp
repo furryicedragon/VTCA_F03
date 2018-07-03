@@ -27,6 +27,7 @@ bool MainScene::init()
 	}
 
 	setupMenuPause();
+	setupPauseOption();
 	setupGameOverLayer();
 
 	MainScene::instance = this;
@@ -59,12 +60,13 @@ void MainScene::setupMenuPause()
 		switch (type)
 		{
 		case ui::Widget::TouchEventType::BEGAN:
-			experimental::AudioEngine::play2d("sounds/button_click.mp3");
+			MainMenuScene::GetInstance()->buttonClickSound();
 			break;
 		case ui::Widget::TouchEventType::ENDED:
+			experimental::AudioEngine::stop(MainGame::GetInstance()->finalBossMusic);
+			experimental::AudioEngine::stop(MainGame::GetInstance()->congratzMusic);
 			Director::getInstance()->resume();
 			HUDLayer::GetInstance()->resetHUDstate();
-
 			
 			if (MainGame::GetInstance()->currentMap == 1) MainGame::GetInstance()->delAll();
 			else MainGame::GetInstance()->delAll(MainGame::GetInstance()->currentMap);
@@ -86,9 +88,11 @@ void MainScene::setupMenuPause()
 		switch (type)
 		{
 		case ui::Widget::TouchEventType::BEGAN:
-			experimental::AudioEngine::play2d("sounds/button_click.mp3");
+			MainMenuScene::GetInstance()->buttonClickSound();
 			break;
 		case ui::Widget::TouchEventType::ENDED:
+			pauseSettingLayer->setVisible(true);
+			gamePauseLayer->setVisible(false);
 			break;
 		}
 	});
@@ -103,9 +107,11 @@ void MainScene::setupMenuPause()
 		switch (type)
 		{
 		case ui::Widget::TouchEventType::BEGAN:
-			experimental::AudioEngine::play2d("sounds/button_click.mp3");
+			MainMenuScene::GetInstance()->buttonClickSound();
 			break;
 		case ui::Widget::TouchEventType::ENDED:
+			experimental::AudioEngine::resume(MainGame::GetInstance()->finalBossMusic);
+			experimental::AudioEngine::resume(MainGame::GetInstance()->congratzMusic);
 			Director::getInstance()->resume();
 			
 			HUDLayer::GetInstance()->setVisible(true);
@@ -124,7 +130,7 @@ void MainScene::setupMenuPause()
 		switch (type)
 		{
 		case ui::Widget::TouchEventType::BEGAN:
-			experimental::AudioEngine::play2d("sounds/button_click.mp3");
+			MainMenuScene::GetInstance()->buttonClickSound();
 			break;
 
 		case ui::Widget::TouchEventType::ENDED:
@@ -145,9 +151,112 @@ void MainScene::setupMenuPause()
 	this->addChild(gamePauseLayer, 12, 9902);
 }
 
-void MainScene::setingPause()
+void MainScene::setupPauseOption()
 {
-	
+	auto visibleSize = Director::getInstance()->getVisibleSize();
+
+	this->pauseSettingLayer = Layer::create();
+
+	auto _bgOption = Sprite::create(GUI_backsetingpause);
+	_bgOption->setScale(0.85f);
+	_bgOption->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 2));
+
+	Size _bgOptionSize = _bgOption->getContentSize();
+
+	auto SFXlabel = Label::createWithSystemFont("SFX", "Arial", 30.0f);
+	SFXlabel->setPosition(Vec2(_bgOptionSize.width * 0.5, _bgOptionSize.height * 0.58));
+	_bgOption->addChild(SFXlabel);
+
+	auto sliderSFXvolume = cocos2d::ui::Slider::create();
+	sliderSFXvolume->loadBarTexture(SLI_bg);
+	sliderSFXvolume->loadSlidBallTextures(SLI_normal, SLI_press, SLI_disable);
+	sliderSFXvolume->loadProgressBarTexture(SLI_pressbar);
+	sliderSFXvolume->setScale(1.5);
+	sliderSFXvolume->setPosition(Vec2(_bgOptionSize.width * 0.5, _bgOptionSize.height * 0.5));
+
+	sliderSFXvolume->addEventListener([&](Ref* sender, ui::Slider::EventType type) {
+		switch (type)
+		{
+		case cocos2d::ui::Slider::EventType::ON_PERCENTAGE_CHANGED:
+			ui::Slider* slider_receive = dynamic_cast<ui::Slider*>(sender);
+			int percent = slider_receive->getPercent();
+
+			MainMenuScene::GetInstance()->sfxVolume = (float)percent / 100;
+			break;
+		}
+	});
+	sliderSFXvolume->setPercent(MainMenuScene::GetInstance()->sfxVolume * 100);
+	_bgOption->addChild(sliderSFXvolume);
+
+	auto musicLabel = Label::createWithSystemFont("Music", "Arial", 30.0f);
+	musicLabel->setPosition(Vec2(_bgOptionSize.width * 0.5, _bgOptionSize.height * 0.38));
+	_bgOption->addChild(musicLabel);
+
+	auto sliderMusicVolume = cocos2d::ui::Slider::create();
+	sliderMusicVolume->loadBarTexture(SLI_bg);
+	sliderMusicVolume->loadSlidBallTextures(SLI_normal, SLI_press, SLI_disable);
+	sliderMusicVolume->loadProgressBarTexture(SLI_pressbar);
+	sliderMusicVolume->setScale(1.5);
+	sliderMusicVolume->setPosition(Vec2(_bgOptionSize.width * 0.5, _bgOptionSize.height * 0.3));
+
+	sliderMusicVolume->addEventListener([&](Ref* sender, ui::Slider::EventType type) {
+		switch (type)
+		{
+		case cocos2d::ui::Slider::EventType::ON_PERCENTAGE_CHANGED:
+			ui::Slider* slider_receive = dynamic_cast<ui::Slider*>(sender);
+			int percent = slider_receive->getPercent();
+
+			MainMenuScene::GetInstance()->musicVolume = (float)percent / 100;
+			break;
+		}
+	});
+	sliderMusicVolume->setPercent(experimental::AudioEngine::getVolume(MainMenuScene::GetInstance()->bg_music_main) * 100);
+	_bgOption->addChild(sliderMusicVolume);
+
+	auto btBack = ui::Button::create(BT_back, BT_backclick);
+	btBack->setScale(0.5f);
+	btBack->setPosition(Vec2(_bgOptionSize.width * 0.2, _bgOptionSize.height * 0.1));
+	btBack->addTouchEventListener([&](Ref* sender, ui::Widget::TouchEventType type)
+	{
+		switch (type)
+		{
+		case ui::Widget::TouchEventType::BEGAN:
+			MainMenuScene::GetInstance()->buttonClickSound();
+			break;
+
+		case ui::Widget::TouchEventType::ENDED:
+			pauseSettingLayer->setVisible(false);
+			gamePauseLayer->setVisible(true);
+
+			break;
+		}
+	});
+	_bgOption->addChild(btBack);
+
+	auto btAccept = ui::Button::create(BT_accept, BT_acceptclick);
+	btAccept->setScale(0.5f);
+	btAccept->setPosition(Vec2(_bgOptionSize.width * 0.8, _bgOptionSize.height * 0.1));
+	btAccept->addTouchEventListener([&](Ref* sender, ui::Widget::TouchEventType type)
+	{
+		switch (type)
+		{
+
+		case ui::Widget::TouchEventType::BEGAN:
+			MainMenuScene::GetInstance()->buttonClickSound();
+			break;
+
+		case ui::Widget::TouchEventType::ENDED:
+			pauseSettingLayer->setVisible(false);
+			gamePauseLayer->setVisible(true);
+
+			break;
+		}
+	});
+	_bgOption->addChild(btAccept);
+	pauseSettingLayer->addChild(_bgOption);
+	pauseSettingLayer->setVisible(false);
+
+	this->addChild(pauseSettingLayer, 19);
 }
 
 void MainScene::setupGameOverLayer()
@@ -182,9 +291,11 @@ void MainScene::setupGameOverLayer()
 		switch (type)
 		{
 		case ui::Widget::TouchEventType::BEGAN:
-			experimental::AudioEngine::play2d("sounds/button_click.mp3");
+			MainMenuScene::GetInstance()->buttonClickSound();
 			break;
 		case ui::Widget::TouchEventType::ENDED:
+			experimental::AudioEngine::stop(MainGame::GetInstance()->finalBossMusic);
+			experimental::AudioEngine::stop(MainGame::GetInstance()->congratzMusic);
 			MainGame::GetInstance()->delAll();
 			MainGame::GetInstance()->setVisible(false);
 
@@ -209,9 +320,11 @@ void MainScene::setupGameOverLayer()
 		switch (type)
 		{
 		case ui::Widget::TouchEventType::BEGAN:
-			experimental::AudioEngine::play2d("sounds/button_click.mp3");
+			MainMenuScene::GetInstance()->buttonClickSound();
 			break;
 		case ui::Widget::TouchEventType::ENDED:
+			experimental::AudioEngine::stop(MainGame::GetInstance()->finalBossMusic);
+			experimental::AudioEngine::stop(MainGame::GetInstance()->congratzMusic);
 			MainScene::GetInstance()->gameOverLayer->setVisible(false);
 
 			MainGame::GetInstance()->restartGame();

@@ -107,6 +107,8 @@ public:
 
 	int highScore;
 	void saveHighScore();
+
+	int finalBossMusic, congratzMusic;
 private:
 	virtual void update(float elapsed) override;
 	bool checkCollision(Player* pPlayer);

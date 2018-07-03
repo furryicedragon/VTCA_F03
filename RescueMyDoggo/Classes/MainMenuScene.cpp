@@ -10,8 +10,6 @@ USING_NS_CC;
 
 using namespace std;
 
-int bg_music_main;
-
 MainMenuScene * MainMenuScene::instance = NULL;
 
 bool MainMenuScene::init()
@@ -53,7 +51,7 @@ void MainMenuScene::setupMenuGame()
 
 	auto startItem = MenuItemImage::create(GUI_startnomal, GUI_startclick, [&](Ref* sender)
 	{
-		experimental::AudioEngine::play2d("sounds/button_click.mp3");
+		this->buttonClickSound();
 		MainGame::GetInstance()->setVisible(true);
 		this->setVisible(false);
 		MainGame::GetInstance()->gameStarto();
@@ -70,7 +68,7 @@ void MainMenuScene::setupMenuGame()
 	auto optionItem = MenuItemImage::create(BT_optionnomal, BT_optionclick, [&](Ref* sender)
 	{
 		//Code nhẩy vào tùy chỉnh game!
-		experimental::AudioEngine::play2d("sounds/button_click.mp3");
+		this->buttonClickSound();
 		_menuGame->setVisible(false);
 		titleSprite->setVisible(false);
 		setupSeting->setVisible(true);
@@ -85,7 +83,7 @@ void MainMenuScene::setupMenuGame()
 	auto exitItem = MenuItemImage::create(BT_exitnomal, BT_exitclick, [&](Ref* sender)
 	{
 		//Code để thoát game!
-		experimental::AudioEngine::play2d("sounds/button_click.mp3");
+		this->buttonClickSound();
 		exitGame();
 	});
 
@@ -108,45 +106,57 @@ void MainMenuScene::setupOption()
 
 	Size _bgOptionSize = _bgOption->getContentSize();
 
-	auto sliderbgMusic = cocos2d::ui::Slider::create();
-	sliderbgMusic->loadBarTexture(SLI_bg);
-	sliderbgMusic->loadSlidBallTextures(SLI_normal, SLI_press, SLI_disable);
-	sliderbgMusic->loadProgressBarTexture(SLI_pressbar);
-	sliderbgMusic->setScale(1.5);
-	sliderbgMusic->setPosition(Vec2(_bgOptionSize.width * 0.5, _bgOptionSize.height * 0.5));
+	auto SFXlabel = Label::createWithSystemFont("SFX", "Arial", 30.0f);
+	SFXlabel->setPosition(Vec2(_bgOptionSize.width * 0.5, _bgOptionSize.height * 0.58));
+	_bgOption->addChild(SFXlabel);
+	
+	auto sliderSFXvolume = cocos2d::ui::Slider::create();
+	sliderSFXvolume->loadBarTexture(SLI_bg);
+	sliderSFXvolume->loadSlidBallTextures(SLI_normal, SLI_press, SLI_disable);
+	sliderSFXvolume->loadProgressBarTexture(SLI_pressbar);
+	sliderSFXvolume->setScale(1.5);
+	sliderSFXvolume->setPosition(Vec2(_bgOptionSize.width * 0.5, _bgOptionSize.height * 0.5));
 
-	sliderbgMusic->addEventListener([&](Ref* sender, ui::Slider::EventType type) {
+	sliderSFXvolume->addEventListener([&](Ref* sender, ui::Slider::EventType type) {
 		switch (type)
 		{
 		case cocos2d::ui::Slider::EventType::ON_PERCENTAGE_CHANGED:
 			ui::Slider* slider_receive = dynamic_cast<ui::Slider*>(sender);
-			int bGPercent = slider_receive->getPercent();
+			int percent = slider_receive->getPercent();
 
-			experimental::AudioEngine::setVolume(bg_music_main, (float)bGPercent / 100);
-
+			this->sfxVolume = (float)percent / 100;
 			break;
 		}
 	});
-	sliderbgMusic->setPercent(experimental::AudioEngine::getVolume(bg_music_main) * 100);
-	_bgOption->addChild(sliderbgMusic);
+	sliderSFXvolume->setPercent(sfxVolume * 100);
+	_bgOption->addChild(sliderSFXvolume);
 
-	auto slidergameMusic = cocos2d::ui::Slider::create();
-	slidergameMusic->loadBarTexture(SLI_bg);
-	slidergameMusic->loadSlidBallTextures(SLI_normal, SLI_press, SLI_disable);
-	slidergameMusic->loadProgressBarTexture(SLI_pressbar);
-	slidergameMusic->setScale(1.5);
-	slidergameMusic->setPosition(Vec2(_bgOptionSize.width * 0.5, _bgOptionSize.height * 0.3));
-	slidergameMusic->setPercent(gameMusic);
+	auto musicLabel = Label::createWithSystemFont("Music", "Arial", 30.0f);
+	musicLabel->setPosition(Vec2(_bgOptionSize.width * 0.5, _bgOptionSize.height * 0.38));
+	_bgOption->addChild(musicLabel);
 
-	slidergameMusic->addEventListener([&](Ref* sender, ui::Slider::EventType type) {
+	auto sliderMusicVolume = cocos2d::ui::Slider::create();
+	sliderMusicVolume->loadBarTexture(SLI_bg);
+	sliderMusicVolume->loadSlidBallTextures(SLI_normal, SLI_press, SLI_disable);
+	sliderMusicVolume->loadProgressBarTexture(SLI_pressbar);
+	sliderMusicVolume->setScale(1.5);
+	sliderMusicVolume->setPosition(Vec2(_bgOptionSize.width * 0.5, _bgOptionSize.height * 0.3));
+
+	sliderMusicVolume->addEventListener([&](Ref* sender, ui::Slider::EventType type) {
 		switch (type)
 		{
 		case cocos2d::ui::Slider::EventType::ON_PERCENTAGE_CHANGED:
+			ui::Slider* slider_receive = dynamic_cast<ui::Slider*>(sender);
+			int percent = slider_receive->getPercent();
+
+			musicVolume = (float)percent / 100;
+			experimental::AudioEngine::setVolume(bg_music_main, musicVolume);
 
 			break;
 		}
 	});
-	_bgOption->addChild(slidergameMusic);
+	sliderMusicVolume->setPercent(experimental::AudioEngine::getVolume(bg_music_main) * 100);
+	_bgOption->addChild(sliderMusicVolume);
 
 	auto btBack = ui::Button::create(BT_back, BT_backclick);
 	btBack->setScale(0.5f);
@@ -156,17 +166,16 @@ void MainMenuScene::setupOption()
 		switch (type)
 		{
 		case ui::Widget::TouchEventType::BEGAN:
-			experimental::AudioEngine::play2d("sounds/button_click.mp3");
+			this->buttonClickSound();
 			break;
 
 		case ui::Widget::TouchEventType::ENDED:
 			setupSeting->setVisible(false);
 			
-			bool a = MainScene::GetInstance()->gamePauseLayer->isVisible();
-			if (a == false) _menuGame->setVisible(true);
-			else {}
+			if (!MainScene::GetInstance()->gamePauseLayer->isVisible()) 
+				_menuGame->setVisible(true);
+
 			titleSprite->setVisible(true);
-			bgMusic = experimental::AudioEngine::getVolume(bg_music_main);
 			break;
 		}
 	});
@@ -181,17 +190,16 @@ void MainMenuScene::setupOption()
 		{
 
 		case ui::Widget::TouchEventType::BEGAN:
-			experimental::AudioEngine::play2d("sounds/button_click.mp3");
+			this->buttonClickSound();
 			break;
 
 		case ui::Widget::TouchEventType::ENDED:
 			setupSeting->setVisible(false);
 			
-			bool a = MainScene::GetInstance()->gamePauseLayer->isVisible();
-			if (a == false) _menuGame->setVisible(true);
-			else {}
+			if (!MainScene::GetInstance()->gamePauseLayer->isVisible()) 
+				_menuGame->setVisible(true);
+
 			titleSprite->setVisible(true);
-			bgMusic = experimental::AudioEngine::getVolume(bg_music_main);
 			break;
 		}
 	});
@@ -201,9 +209,14 @@ void MainMenuScene::setupOption()
 	_background->addChild(setupSeting, 19, 9981);
 }
 
+void MainMenuScene::buttonClickSound()
+{
+	experimental::AudioEngine::play2d("sounds/button_click.mp3", false, sfxVolume);
+}
+
 void MainMenuScene::bgAudio()
 {
-	bg_music_main = experimental::AudioEngine::play2d(BG_audio, true, bgMusic);
+	bg_music_main = experimental::AudioEngine::play2d(RandomHelper::random_int(0, 1) ? BG_audio_1 : BG_audio_2 , true, musicVolume);
 }
 
 void MainMenuScene::update()
