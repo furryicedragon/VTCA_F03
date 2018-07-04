@@ -289,6 +289,7 @@ void Enemy::casterSpell()
 		makeAnimation("projectile", castSpeed), CallFunc::create([=]() {this->spell->setVisible(false); this->attackLandedEffect(); }), nullptr));
 	
 	if ((this->waveNumber == 1 && this->mapNumber == 1)||(this->mapNumber==2 && this->bossNumber==2)) {
+		this->spell->runAction(RepeatForever::create(makeAnimation("projectile", castSpeed)));
 			this->spell->runAction(Sequence::create(
 				CallFunc::create([=]() {this->interuptable=true; }),
 				DelayTime::create(castSpeed * skillAtkAfterF),
@@ -296,7 +297,6 @@ void Enemy::casterSpell()
 			this->interuptable = false;
 			this->spell->setPosition(move2X, move2Y);
 			this->spell->setVisible(true); 
-			this->spell->runAction(RepeatForever::create(makeAnimation("projectile", castSpeed)));
 		}),
 				MoveBy::create(0.69f, Vec2(range, 0)),
 			CallFunc::create([=]() {this->spell->setVisible(false);  this->spell->setPosition(0, 0); }), nullptr));
