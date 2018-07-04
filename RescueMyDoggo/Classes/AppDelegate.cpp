@@ -25,6 +25,7 @@ static cocos2d::Size largeResolutionSize = cocos2d::Size(960, 960);
 
 AppDelegate::AppDelegate()
 {
+	AudioEngine::setMaxAudioInstance(20);
 	AudioEngine::preload("sounds/Polyphia-The_Worst.mp3");
 	AudioEngine::preload("sounds/Polyphia-Crosty.mp3");
 	AudioEngine::preload("sounds/slash1.mp3");
@@ -35,12 +36,17 @@ AppDelegate::AppDelegate()
 	AudioEngine::preload("sounds/dashstab.mp3");
 	AudioEngine::preload("sounds/defeat.mp3");
 	AudioEngine::preload("sounds/fireball.mp3");
-	AudioEngine::preload("sounds/hit.mp3");
+	AudioEngine::preload("sounds/fireball_impact.mp3");
+	AudioEngine::preload("sounds/playerhit.mp3");
+	AudioEngine::preload("sounds/monsterhit.mp3");
 	AudioEngine::preload("sounds/playerdie.mp3");
 	AudioEngine::preload("sounds/button_click.mp3");
 	AudioEngine::preload("sounds/monsterdie.mp3");
 	AudioEngine::preload("sounds/finalboss.mp3");
 	AudioEngine::preload("sounds/congratz.mp3");
+	AudioEngine::preload("sounds/map1.mp3");
+	AudioEngine::preload("sounds/map2.mp3");
+	AudioEngine::preload("sounds/map3.mp3");
 }
 
 AppDelegate::~AppDelegate() 

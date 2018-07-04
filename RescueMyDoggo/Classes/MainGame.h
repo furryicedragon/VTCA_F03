@@ -110,7 +110,7 @@ public:
 
 	Label* boss1hp, *boss2hp;
 	void displayBossHP(int index, int hp, int damage);
-	int finalBossMusic, congratzMusic;
+	int finalBossMusic, congratzMusic, bgm;
 private:
 	virtual void update(float elapsed) override;
 	bool checkCollision(Player* pPlayer);

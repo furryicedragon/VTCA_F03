@@ -3,6 +3,7 @@ USING_NS_CC;
 using namespace std;
 
 #define GodMode 0
+#define SuperMan 0
 
 Player* Player::create()
 {
@@ -33,7 +34,7 @@ void Player::initOption()
 	this->setHP(100);
 	this->baseHP = 100;
 	this->baseEXP = 100;
-	if (!GodMode)
+	if (!SuperMan)
 		this->damageCurrent = 24;
 	else
 		this->damageCurrent = 9000;
@@ -328,7 +329,7 @@ void Player::getHit(int damage, float eeePosX) {
 		int healthP = std::stoi(this->hp->getString());
 		healthP -= damage;
 
-		experimental::AudioEngine::play2d("sounds/hit.mp3", false, 0.7f);
+		experimental::AudioEngine::play2d("sounds/playerhit.mp3", false, 0.7f);
 		if (healthP < 0 || healthP == 0) {
 			this->hp->setString("0");
 			this->dead();
@@ -379,6 +380,7 @@ void Player::dead()
 		//this->runAction(Sequence::create(animation("Death", 0.12), CallFunc::create([=]() {this->runAction(FadeOut::create(1.0)); }), nullptr));
 		//this->runAction(animation("Death", 0.12f));
 	this->setSpriteFrame(pppFrames->getSpriteFrameByName(std::to_string(this->direction)+"dead0.png"));
+	experimental::AudioEngine::stopAll();
 	experimental::AudioEngine::play2d("sounds/playerdie.mp3", false, 0.3f);
 }
 

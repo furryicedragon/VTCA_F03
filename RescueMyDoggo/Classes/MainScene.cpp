@@ -51,11 +51,11 @@ void MainScene::setupMenuPause()
 	Size _bgOptionPause = gamePause_bg->getContentSize();
 
 	////show button ra menu hay chơi lại khi chết dưới cái back
-	auto btHome = ui::Button::create(BT_restartnomal, BT_restartclick);
+	auto btRestart = ui::Button::create(BT_restartnomal, BT_restartclick);
 
-	btHome->setPosition(Vec2(_bgOptionPause.width * 0.5f, _bgOptionPause.height * 0.52f));
+	btRestart->setPosition(Vec2(_bgOptionPause.width * 0.5f, _bgOptionPause.height * 0.52f));
 	//btHome->setScale(0.9f);
-	btHome->addTouchEventListener([&](Ref* sender, ui::Widget::TouchEventType type)
+	btRestart->addTouchEventListener([&](Ref* sender, ui::Widget::TouchEventType type)
 	{
 		switch (type)
 		{
@@ -76,7 +76,7 @@ void MainScene::setupMenuPause()
 			break;
 		}
 	});
-	gamePause_bg->addChild(btHome);
+	gamePause_bg->addChild(btRestart);
 
 	auto btOption = ui::Button::create(BT_optionnomal, BT_optionclick);
 
@@ -294,6 +294,7 @@ void MainScene::setupGameOverLayer()
 		case ui::Widget::TouchEventType::ENDED:
 			experimental::AudioEngine::stop(MainGame::GetInstance()->finalBossMusic);
 			experimental::AudioEngine::stop(MainGame::GetInstance()->congratzMusic);
+			experimental::AudioEngine::stop(MainGame::GetInstance()->bgm);
 			MainGame::GetInstance()->delAll();
 			MainGame::GetInstance()->setVisible(false);
 
@@ -323,6 +324,7 @@ void MainScene::setupGameOverLayer()
 		case ui::Widget::TouchEventType::ENDED:
 			experimental::AudioEngine::stop(MainGame::GetInstance()->finalBossMusic);
 			experimental::AudioEngine::stop(MainGame::GetInstance()->congratzMusic);
+			experimental::AudioEngine::stop(MainGame::GetInstance()->bgm);
 			MainScene::GetInstance()->gameOverLayer->setVisible(false);
 
 			MainGame::GetInstance()->restartGame();

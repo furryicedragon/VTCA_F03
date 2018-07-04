@@ -44,7 +44,7 @@ void HUDLayer::setupPause()
 			MainMenuScene::GetInstance()->buttonClickSound();
 			break;
 		case ui::Widget::TouchEventType::ENDED:
-			this->runAction(Sequence::create(DelayTime::create(0.5f), CallFunc::create([=]() {experimental::AudioEngine::pauseAll(); }), nullptr));
+			experimental::AudioEngine::pauseAll();
 			
 			this->setVisible(false);
 			Director::getInstance()->pause();

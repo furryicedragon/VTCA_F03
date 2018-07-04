@@ -411,21 +411,24 @@ void MainGame::update(float elapsed)
 					item->canRespawn = false;
 					
 					finishPortal->setVisible(true);
+
+					if (currentMap == 3)
+					{
+						auto hud = HUDLayer::GetInstance();
+
+						auto atkbtn = hud->getChildByTag(1);
+						auto rollbtn = hud->getChildByTag(2);
+						auto skill1btn = hud->getChildByTag(3);
+						auto skill2btn = hud->getChildByTag(4);
+
+						atkbtn->setPositionX(atkbtn->getPositionX() - 5);
+						skill1btn->setPositionX(skill1btn->getPositionX() - 5);
+						skill2btn->setPositionX(skill2btn->getPositionX() - 5);
+						rollbtn->setPositionY(rollbtn->getPositionY() - 15);
+					}
 				}
 				if (currentMap == 3)
 				{
-					auto hud = HUDLayer::GetInstance();
-
-					auto atkbtn = hud->getChildByTag(1);
-					auto rollbtn = hud->getChildByTag(2);
-					auto skill1btn = hud->getChildByTag(3);
-					auto skill2btn = hud->getChildByTag(4);
-
-					atkbtn->setPositionX(atkbtn->getPositionX() - 5);
-					skill1btn->setPositionX(skill1btn->getPositionX() - 5);
-					skill2btn->setPositionX(skill2btn->getPositionX() - 5);
-					rollbtn->setPositionY(rollbtn->getPositionY() - 15);
-
 					this->runAction(Sequence::create(DelayTime::create(2.0f),
 						CallFunc::create([=]() {
 							experimental::AudioEngine::stop(finalBossMusic);
@@ -520,7 +523,9 @@ void MainGame::spawnPlayer()
 	this->addChild(zap);
 	zap->runAction(Sequence::create(DelayTime::create(0.69f), CallFunc::create([=]() {ppp->spawnEffect(); }), animation("Spawn", 0.1f),
 		CallFunc::create([=]() {this->removeChild(zap, true); HUDLayer::GetInstance()->toggleVisiblity(); 
-								this->HPonHead->setVisible(true); this->HitDame->setVisible(true); this->nothingBar->setVisible(true); }), nullptr));
+								this->HPonHead->setVisible(true); this->HitDame->setVisible(true); this->nothingBar->setVisible(true); 
+								experimental::AudioEngine::stop(bgm);
+								bgm = experimental::AudioEngine::play2d("sounds/map" + std::to_string(this->currentMap) + ".mp3", true, 0.5f * MainMenuScene::GetInstance()->musicVolume); }), nullptr));
 }
 
 
@@ -555,14 +560,14 @@ void MainGame::checkAttackRange(Enemy * eee, int index)
 					{
 						this->displayDamage(ppp->damageCurrent, "grey", eee->getPosition(), eee->getContentSize());
 						displayBossHP(index, std::stoi(eee->hp->getString()), (int)ppp->damageCurrent);
+						experimental::AudioEngine::play2d("sounds/monsterhit.mp3", false, 0.7f);
 					}	
 					eee->getHit(ppp->damageCurrent);
-					
 
 					ppp->canAADamage[index] = false;
 				}
 			}
-			if ((std::fabsf(ppp->getPositionY() - eee->getPositionY()) >= 60) && eee->canDamage && !ppp->isRolling && !eee->isCaster
+			if ((std::fabsf(ppp->getPositionY() - eee->getPositionY()) <= 60) && eee->canDamage && !ppp->isRolling && !eee->isCaster
 				&& (((eee->direction == 1 || (eee->mapNumber == 3 && eee->waveNumber == 1)) && ppp->getPositionX() - eee->getPositionX() <= eee->skillRange)
 					|| ((eee->direction == 0 || (eee->mapNumber == 3 && eee->waveNumber == 1)) && eee->getPositionX() - ppp->getPositionX() <= eee->skillRange))) {
 				if (!ppp->isDead && ppp->state != 1)
@@ -587,6 +592,10 @@ void MainGame::checkAttackRange(Enemy * eee, int index)
 					{
 						this->displayDamage(ppp->damageCurrent / 100 * item->skillDamage, "grey", eee->getPosition(), eee->getContentSize());
 						displayBossHP(index, std::stoi(eee->hp->getString()), (int)ppp->damageCurrent);
+						if (i == 0)
+							experimental::AudioEngine::play2d("sounds/dashstab_hit.mp3", false, 0.7f);
+						else if (i == 1)
+							experimental::AudioEngine::play2d("sounds/fireball_impact.mp3", false, 0.7f);
 					}
 					eee->getHit(ppp->damageCurrent / 100 * item->skillDamage);
 					
@@ -631,7 +640,11 @@ void MainGame::waveXMapXInit() {
 			this->spawnEffect(allEnemy[9], 1);
 
 			if (this->currentMap == 3)
+			{
+				experimental::AudioEngine::stop(bgm);
 				finalBossMusic = experimental::AudioEngine::play2d("sounds/finalboss.mp3", true, 0.7f);
+			}
+				
 
 			boss2 = true; 
 		}
