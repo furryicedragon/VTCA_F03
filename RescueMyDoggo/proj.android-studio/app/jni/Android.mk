@@ -21,6 +21,7 @@ $(LOCAL_PATH)/../../../Classes/HUDLayer.cpp \
 $(LOCAL_PATH)/../../../Classes/Joystick.cpp \
 $(LOCAL_PATH)/../../../Classes/JoystickBase.cpp \
 $(LOCAL_PATH)/../../../Classes/MainScene.cpp \
+$(LOCAL_PATH)/../../../Classes/MainMenuScene.cpp \
 $(LOCAL_PATH)/../../../Classes/Player.cpp \
 $(LOCAL_PATH)/../../../Classes/Skill.cpp \
 $(LOCAL_PATH)/../../../Classes/StatPlayer.cpp

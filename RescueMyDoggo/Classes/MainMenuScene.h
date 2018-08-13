@@ -56,12 +56,10 @@ class MainMenuScene : public cocos2d::Layer
 public:
 
 	virtual bool init() override;
-	cocos2d::Sprite* _background, *_bgOption, *titleSprite;
+	cocos2d::Sprite* _background, *titleSprite;
 	void setupMenuGame();
-	void setupOption();
 
 	Menu* _menuGame;
-	Layer* setupSeting;
 
 	static MainMenuScene * instance;
 	static MainMenuScene * GetInstance();
@@ -71,10 +69,7 @@ public:
 	void buttonClickSound();
 	void bgAudio();
 
-	void update();
-
 	void loadbar();
-	ProgressTimer* mouseBar;
 	int bg_music_main;
 
 	void exitGame();

@@ -22,10 +22,8 @@ public:
 	static MainScene * GetInstance();
 
 	void setupMenuPause();
-	void setupPauseOption();
 	Layer* gameOverLayer;
 	Layer* gamePauseLayer;
-	Layer* pauseSettingLayer;
 	void setupGameOverLayer();
 };
 #endif // !MainScene_hpp

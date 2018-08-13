@@ -40,9 +40,6 @@ void HUDLayer::setupPause()
 	{
 		switch (type)
 		{
-		case ui::Widget::TouchEventType::BEGAN:
-			MainMenuScene::GetInstance()->buttonClickSound();
-			break;
 		case ui::Widget::TouchEventType::ENDED:
 			experimental::AudioEngine::pauseAll();
 			
