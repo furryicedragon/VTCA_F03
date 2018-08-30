@@ -409,7 +409,7 @@ void Enemy::autoRespawn()
 				CallFunc::create([=]() { 
 			this->isDead = false; 
 			this->isSpawned = true; 
-			this->setHP(100);
+			this->setHP(this->baseHP);
 			this->canRespawn = false; }), nullptr));
 	}
 

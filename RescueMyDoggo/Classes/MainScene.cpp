@@ -180,12 +180,12 @@ void MainScene::setupGameOverLayer()
 			MainMenuScene::GetInstance()->setVisible(true);
 			
 			MainScene::GetInstance()->gameOverLayer->setVisible(false);
-			MainScene::GetInstance()->gamePauseLayer->setVisible(false);
 			break;
 		}
 	});
 	gameover_bg->addChild(btMenu);
 
+	// retry button
 	auto btRetry = ui::Button::create(BT_restartnomal, BT_restartclick);
 
 	btRetry->setPosition(Vec2(_bgOptionDead.width * 0.3, _bgOptionDead.height * 0.2));
@@ -198,14 +198,17 @@ void MainScene::setupGameOverLayer()
 			MainMenuScene::GetInstance()->buttonClickSound();
 			break;
 		case ui::Widget::TouchEventType::ENDED:
-			experimental::AudioEngine::stop(MainGame::GetInstance()->finalBossMusic);
-			experimental::AudioEngine::stop(MainGame::GetInstance()->congratzMusic);
-			experimental::AudioEngine::stop(MainGame::GetInstance()->bgm);
+			experimental::AudioEngine::stopAll();
+			Director::getInstance()->resume();
+			HUDLayer::GetInstance()->resetHUDstate();
+
+			if (MainGame::GetInstance()->currentMap == 1) MainGame::GetInstance()->delAll();
+			else MainGame::GetInstance()->delAll(MainGame::GetInstance()->currentMap);
+			MainGame::GetInstance()->gameStarto();
+
 			MainScene::GetInstance()->gameOverLayer->setVisible(false);
 
-			MainGame::GetInstance()->restartGame();
 			break;
-
 		}
 	});
 	gameover_bg->addChild(btRetry);

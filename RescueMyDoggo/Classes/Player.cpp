@@ -31,13 +31,18 @@ void Player::initOption()
 	this->setOpacity(255);
 	this->runAction(FadeOut::create(0));
 	this->canShowStatUp = true;
-	this->setHP(100);
-	this->baseHP = 100;
 	this->baseEXP = 100;
 	if (!SuperMan)
+	{
+		this->baseHP = 100;
 		this->damageCurrent = 24;
+	}
 	else
+	{
+		this->baseHP = 10000;
 		this->damageCurrent = 9000;
+	}
+	this->setHP(baseHP);
 	this->score = 0;
 
 	canAADamage.resize(8, false);
@@ -393,7 +398,7 @@ void Player::statUp()
 {
 	this->damageCurrent += 10;
 	this->attackSpeed = 0.14f - (0.14f / 20);
-	baseHP += 80;
+	baseHP += 125;
 
 	std::stringstream sstream;
 	sstream << std::fixed << std::setprecision(0) << baseHP;
@@ -401,9 +406,9 @@ void Player::statUp()
 	this->hp->setString(sstream.str());
 	
 	
-	//statPlus->setScale(3);
+	//statPlus->setScale(2);
 	//statPlus->setAnchorPoint(Vec2(0.5, 0));
-	statPlus->setPosition(this->getContentSize().width / 2,this->getContentSize().height + 50);
+	statPlus->setPosition(this->getContentSize().width / 2, this->getPositionY() + 50);
 	statPlus->setSystemFontSize(20);
 
 		this->statPlus->runAction(Sequence::create(
@@ -433,10 +438,6 @@ void Player::statUp()
 		}),
 			MoveBy::create(1, Vec2(0, 100)),
 			CallFunc::create([=]() {statPlus->setVisible(false); }), nullptr));
-
-
-
-
 }
 
 void Player::levelUp() {

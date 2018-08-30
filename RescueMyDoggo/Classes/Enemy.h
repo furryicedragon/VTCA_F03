@@ -33,6 +33,7 @@ public:
 	int inviTime;
 	int getHitTime;
 	int direction;
+	int baseHP;
 	float mobilitySpeed;
 	float skillCD;
 	float skillRange;
