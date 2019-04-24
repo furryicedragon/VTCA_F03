@@ -1,7 +1,7 @@
 #include "AppDelegate.h"
 #include "MainScene.h"
 
-// #define USE_AUDIO_ENGINE 1
+#define USE_AUDIO_ENGINE 1
 // #define USE_SIMPLE_AUDIO_ENGINE 1
 
 #if USE_AUDIO_ENGINE && USE_SIMPLE_AUDIO_ENGINE
@@ -18,13 +18,35 @@ using namespace CocosDenshion;
 
 USING_NS_CC;
 
-static cocos2d::Size designResolutionSize = cocos2d::Size(480, 320);
-static cocos2d::Size smallResolutionSize = cocos2d::Size(480, 320);
-static cocos2d::Size mediumResolutionSize = cocos2d::Size(1024, 768);
-static cocos2d::Size largeResolutionSize = cocos2d::Size(2048, 1536);
+static cocos2d::Size designResolutionSize = cocos2d::Size(1280, 720);
+static cocos2d::Size smallResolutionSize = cocos2d::Size(960, 960);
+static cocos2d::Size mediumResolutionSize = cocos2d::Size(960, 960);
+static cocos2d::Size largeResolutionSize = cocos2d::Size(960, 960);
 
 AppDelegate::AppDelegate()
 {
+	AudioEngine::setMaxAudioInstance(20);
+	AudioEngine::preload("sounds/Polyphia-The_Worst.mp3");
+	AudioEngine::preload("sounds/Polyphia-Crosty.mp3");
+	AudioEngine::preload("sounds/slash1.mp3");
+	AudioEngine::preload("sounds/slash2.mp3");
+	AudioEngine::preload("sounds/slash3.mp3");
+	AudioEngine::preload("sounds/slash4.mp3");
+	AudioEngine::preload("sounds/coin_pickup.mp3");
+	AudioEngine::preload("sounds/dashstab.mp3");
+	AudioEngine::preload("sounds/defeat.mp3");
+	AudioEngine::preload("sounds/fireball.mp3");
+	AudioEngine::preload("sounds/fireball_impact.mp3");
+	AudioEngine::preload("sounds/playerhit.mp3");
+	AudioEngine::preload("sounds/monsterhit.mp3");
+	AudioEngine::preload("sounds/playerdie.mp3");
+	AudioEngine::preload("sounds/button_click.mp3");
+	AudioEngine::preload("sounds/monsterdie.mp3");
+	AudioEngine::preload("sounds/finalboss.mp3");
+	AudioEngine::preload("sounds/congratz.mp3");
+	AudioEngine::preload("sounds/map1.mp3");
+	AudioEngine::preload("sounds/map2.mp3");
+	AudioEngine::preload("sounds/map3.mp3");
 }
 
 AppDelegate::~AppDelegate() 
@@ -59,7 +81,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
     auto glview = director->getOpenGLView();
     if(!glview) {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32) || (CC_TARGET_PLATFORM == CC_PLATFORM_MAC) || (CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
-        glview = GLViewImpl::createWithRect("RescueMyDoggo", cocos2d::Rect(0, 0, designResolutionSize.width, designResolutionSize.height));
+        glview = GLViewImpl::createWithRect("RescueMyDoggo", cocos2d::Rect(0, 0, designResolutionSize.width, designResolutionSize.height)/*, 2*/);
 #else
         glview = GLViewImpl::create("RescueMyDoggo");
 #endif
@@ -76,20 +98,20 @@ bool AppDelegate::applicationDidFinishLaunching() {
     glview->setDesignResolutionSize(designResolutionSize.width, designResolutionSize.height, ResolutionPolicy::NO_BORDER);
     auto frameSize = glview->getFrameSize();
     // if the frame's height is larger than the height of medium size.
-    if (frameSize.height > mediumResolutionSize.height)
-    {        
-        director->setContentScaleFactor(MIN(largeResolutionSize.height/designResolutionSize.height, largeResolutionSize.width/designResolutionSize.width));
-    }
-    // if the frame's height is larger than the height of small size.
-    else if (frameSize.height > smallResolutionSize.height)
-    {        
-        director->setContentScaleFactor(MIN(mediumResolutionSize.height/designResolutionSize.height, mediumResolutionSize.width/designResolutionSize.width));
-    }
-    // if the frame's height is smaller than the height of medium size.
-    else
-    {        
-        director->setContentScaleFactor(MIN(smallResolutionSize.height/designResolutionSize.height, smallResolutionSize.width/designResolutionSize.width));
-    }
+    //if (frameSize.height > mediumResolutionSize.height)
+    //{        
+    //    director->setContentScaleFactor(MIN(largeResolutionSize.height/designResolutionSize.height, largeResolutionSize.width/designResolutionSize.width));
+    //}
+    //// if the frame's height is larger than the height of small size.
+    //else if (frameSize.height > smallResolutionSize.height)
+    //{        
+    //    director->setContentScaleFactor(MIN(mediumResolutionSize.height/designResolutionSize.height, mediumResolutionSize.width/designResolutionSize.width));
+    //}
+    //// if the frame's height is smaller than the height of medium size.
+    //else
+    //{        
+    //    director->setContentScaleFactor(MIN(smallResolutionSize.height/designResolutionSize.height, smallResolutionSize.width/designResolutionSize.width));
+    //}
 
     register_all_packages();
 

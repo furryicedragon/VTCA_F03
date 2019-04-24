@@ -6,8 +6,9 @@
 # Icon must end with two \r
 Icon
 
-# ignore the whole Cocos2d folder
+# Ignore the whole Cocos2d folder and Debug folders
 cocos2d/
+Debug.win32/
 
 # Thumbnails
 ._*
@@ -85,6 +86,7 @@ proj.android-studio/app/local.properties
 proj.android-studio/*/build/
 cocos2d/cocos/platform/android/libcocos2dx/build/
 cocos2d/cocos/platform/android/java/libs/gps/build/
+RescueMydoggo/proj.android-studio/app/obj/local
 
 # proj.ios_mac
 cocos2d/build/build/
@@ -119,3 +121,6 @@ proj.win32/Release.*/
 *cmake_install.cmake
 *Makefile
 lib/
+*.db
+*.opendb
+*.VC.db
